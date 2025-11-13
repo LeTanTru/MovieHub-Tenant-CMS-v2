@@ -26,6 +26,12 @@ const menuConfig: MenuItem[] = [
     ]
   },
   {
+    key: 'user-management',
+    label: 'Quản lý phim',
+    icon: AiOutlineUser,
+    permissionCode: [apiConfig.employee.getList.permissionCode]
+  },
+  {
     key: 'system-management',
     label: 'Quản lý hệ thống',
     icon: Settings,

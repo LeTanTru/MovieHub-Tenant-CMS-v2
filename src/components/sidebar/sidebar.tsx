@@ -256,37 +256,38 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
   );
 }
 
-const renderMenu = (items: MenuItem[]) => (
-  <SidebarMenu>
-    {items.map((item) =>
-      item.children ? (
-        <CollapsibleMenuItem key={item.key} item={item} />
-      ) : (
-        <SidebarMenuItem key={item.key}>
-          <SidebarMenuButton
-            className='rounded-none focus-visible:ring-0!'
-            asChild
-          >
-            {item.path ? (
-              <Link href={item.path}>
-                {item.icon && <item.icon />}
-                <span>{item.label}</span>
-              </Link>
-            ) : (
-              <Button
-                variant='ghost'
-                className='bg-background hover:bg-background! justify-start pl-12'
-              >
-                {item.icon && <item.icon />}
-                <span>{item.label}</span>
-              </Button>
-            )}
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      )
-    )}
-  </SidebarMenu>
-);
+const renderMenu = (items: MenuItem[]) => {
+  return (
+    <SidebarMenu>
+      {items.map((item) =>
+        item.children && item.children.length > 0 ? (
+          <CollapsibleMenuItem key={item.key} item={item} />
+        ) : // <SidebarMenuItem key={item.key}>
+        //   <SidebarMenuButton
+        //     className='rounded-none focus-visible:ring-0!'
+        //     asChild
+        //   >
+        //     {item.path ? (
+        //       <Link href={item.path}>
+        //         {item.icon && <item.icon />}
+        //         <span>{item.label}</span>
+        //       </Link>
+        //     ) : (
+        //       <Button
+        //         variant='ghost'
+        //         className='bg-background hover:bg-background! justify-start pl-12'
+        //       >
+        //         {item.icon && <item.icon />}
+        //         <span>{item.label}</span>
+        //       </Button>
+        //     )}
+        //   </SidebarMenuButton>
+        // </SidebarMenuItem>
+        null
+      )}
+    </SidebarMenu>
+  );
+};
 
 const AppSidebar = () => {
   const { hasPermission } = useValidatePermission();

@@ -16,7 +16,6 @@ import { useChangeEmployeeStatusMutation } from '@/queries';
 import { employeeSearchSchema } from '@/schemaValidations';
 import {
   Column,
-  CustomerResType,
   EmployeeResType,
   EmployeeSearchType,
   SearchFormProps
@@ -37,7 +36,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
     override: (handlers) => {
       handlers.additionalColumns = () => ({
         changeStatus: (
-          record: CustomerResType,
+          record: EmployeeResType,
           buttonProps?: Record<string, any>
         ) => {
           return (
@@ -76,7 +75,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
 
   const changeStatusMutation = useChangeEmployeeStatusMutation();
 
-  const handleChangeStatus = async (record: CustomerResType) => {
+  const handleChangeStatus = async (record: EmployeeResType) => {
     const message =
       record.status === STATUS_ACTIVE
         ? 'Khóa tài khoản thành công'
@@ -120,9 +119,9 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
     {
       title: 'Email',
       dataIndex: 'email',
-      width: 250,
+      width: 220,
       render: (value) => (
-        <span className='line-clamp-1' title={value}>
+        <span className='line-clamp-1 block truncate' title={value}>
           {value ?? '----'}
         </span>
       )
@@ -176,7 +175,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
           columns={columns}
           dataSource={data || []}
           pagination={pagination}
-          loading={loading}
+          loading={loading || changeStatusMutation.isPending}
           changePagination={handlers.changePagination}
         />
       </ListPageWrapper>

@@ -9,6 +9,8 @@ import {
   GROUP_KIND_MANAGER,
   GROUP_KIND_USER,
   GROUP_KIND_USER_VIP,
+  KIND_USER,
+  KIND_USER_VIP,
   LOGIN_TYPE_EMPLOYEE,
   LOGIN_TYPE_MANAGER,
   STATUS_ACTIVE,
@@ -125,5 +127,16 @@ export const loginOptions = [
   {
     label: 'Nhân viên',
     value: LOGIN_TYPE_EMPLOYEE
+  }
+];
+
+export const userKinds = [
+  {
+    label: 'Người dùng',
+    value: KIND_USER
+  },
+  {
+    label: 'Người dùng VIP',
+    value: KIND_USER_VIP
   }
 ];
