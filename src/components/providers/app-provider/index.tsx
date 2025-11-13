@@ -1,7 +1,6 @@
 'use client';
 
 import { KIND_MANAGER, storageKeys } from '@/constants';
-import { useAuth } from '@/hooks';
 import { useEmployeeProfileQuery, useManagerProfileQuery } from '@/queries';
 import { useAuthStore } from '@/store';
 import { getData } from '@/utils';
