@@ -7,7 +7,7 @@ export const useChangeAudienceStatusMutation = () => {
   return useMutation({
     mutationKey: [`change-${queryKeys.AUDIENCE}-status`],
     mutationFn: (body: { id: string; status: number }) =>
-      http.put<ApiResponse<any>>(apiConfig.employee.changeStatus, {
+      http.put<ApiResponse<any>>(apiConfig.user.changeStatus, {
         body
       })
   });

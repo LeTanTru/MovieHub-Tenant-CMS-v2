@@ -18,7 +18,7 @@ import {
   useUploadAvatarMutation
 } from '@/queries';
 import { route } from '@/routes';
-import { customerSchema, updateProfileSchema } from '@/schemaValidations';
+import { customerSchema } from '@/schemaValidations';
 import { useAuthStore } from '@/store';
 import { CustomerBodyType } from '@/types';
 import { getData, notify, removeData, renderImageUrl } from '@/utils';

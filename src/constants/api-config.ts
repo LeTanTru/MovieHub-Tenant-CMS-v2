@@ -31,6 +31,40 @@ const apiConfig = defineApiConfig({
       headers: baseHeader
     }
   },
+  category: {
+    getById: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/category/admin/get/:id`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'CAT_V'
+    },
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/category/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'CAT_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/category/create`,
+      method: 'POST',
+      headers: baseHeader,
+      permissionCode: 'CAT_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/category/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'CAT_D'
+    }
+  },
+  comment: {
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'CAT_L'
+    }
+  },
   employee: {
     changeStatus: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/change-status`,
@@ -105,6 +139,161 @@ const apiConfig = defineApiConfig({
       permissionCode: 'GR_U'
     }
   },
+  movie: {
+    getById: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/admin/get/:id`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_V'
+    },
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/create`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'MOV_D'
+    },
+    update: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/update`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'MOV_U'
+    }
+  },
+  movieItem: {
+    getById: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/admin/get/:id`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_I_V'
+    },
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_I_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/create`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_I_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'MOV_I_D'
+    },
+    update: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/update`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'MOV_I_U'
+    },
+    updateOrdering: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/update-ordering`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'MOV_I_U'
+    }
+  },
+  moviePerson: {
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_P_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/create`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'MOV_P_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'MOV_P_D'
+    },
+    update: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/update`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'MOV_P_U'
+    },
+    updateOrdering: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/update-ordering`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'MOV_P_U'
+    }
+  },
+  person: {
+    autoComplete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/person/admin/auto-complete`,
+      method: 'GET',
+      headers: baseHeader
+    },
+    getById: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/person/admin/get/:id`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'PSN_V'
+    },
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/person/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'PSN_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/person/create`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'PSN_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/person/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'PSN_D'
+    },
+    update: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/person/update`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'PSN_U'
+    }
+  },
+  review: {
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/review/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'REV_L'
+    }
+  },
+  permission: {
+    getList: {
+      baseUrl: `${AppConstants.metaApiUrl}/v1/permission/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'PER_L'
+    }
+  },
   user: {
     changeStatus: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/user/change-status`,
@@ -137,14 +326,6 @@ const apiConfig = defineApiConfig({
       permissionCode: 'USR_U'
     }
   },
-  permission: {
-    getList: {
-      baseUrl: `${AppConstants.metaApiUrl}/v1/permission/list`,
-      method: 'GET',
-      headers: baseHeader,
-      permissionCode: 'PER_L'
-    }
-  },
   file: {
     upload: {
       baseUrl: `${AppConstants.mediaUrl}/v1/file/upload`,
@@ -165,6 +346,76 @@ const apiConfig = defineApiConfig({
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sns/send-signal`,
       method: 'POST',
       headers: baseHeader
+    }
+  },
+  sidebar: {
+    getById: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/admin/get/:id`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'SBD_V'
+    },
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/admin/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'SBD_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/create`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'SBD_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'SBD_D'
+    },
+    update: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/update`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'SBD_U'
+    },
+    updateOrdering: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/update-ordering`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'SBD_U'
+    }
+  },
+  videoLibary: {
+    getById: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/video-libary/get/:id`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'VID_L_V'
+    },
+    getList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/video-libary/list`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'VID_L_L'
+    },
+    create: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/video-libary/create`,
+      method: 'GET',
+      headers: baseHeader,
+      permissionCode: 'VID_L_C'
+    },
+    delete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/video-libary/delete/:id`,
+      method: 'DELETE',
+      headers: baseHeader,
+      permissionCode: 'VID_L_D'
+    },
+    update: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/video-libary/update`,
+      method: 'PUT',
+      headers: baseHeader,
+      permissionCode: 'VID_L_U'
     }
   }
 });
