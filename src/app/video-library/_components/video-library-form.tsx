@@ -256,6 +256,8 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                   <UploadVideoField
                     control={form.control}
                     name='content'
+                    label='Video'
+                    required
                     uploadVideoFn={async (file: Blob, onProgress) => {
                       const res = await uploadVideoMutation.mutateAsync({
                         file,

@@ -127,7 +127,13 @@ export default function TimePickerField({
                       }
                     )}
                   >
-                    <span suppressHydrationWarning className='text-gray-300'>
+                    <span
+                      suppressHydrationWarning
+                      className={cn({
+                        'text-gray-300': !field.value,
+                        'text-destructive': !!fieldState.error
+                      })}
+                    >
                       {formatDisplay(hour, minute, second)}
                     </span>
                   </Button>
