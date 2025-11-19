@@ -160,6 +160,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                     return res.data?.filePath ?? '';
                   }}
                   label='Ảnh xem trước'
+                  aspect={2 / 3}
                 />
               </Col>
               <Col span={12}>

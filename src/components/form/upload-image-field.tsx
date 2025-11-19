@@ -305,7 +305,10 @@ export default function UploadImageField<T extends FieldValues>({
             </DialogTitle>
           </DialogHeader>
 
-          <AspectRatio ratio={aspect} className='bg-muted h-full'>
+          <AspectRatio
+            ratio={aspect < 1 ? 1 : aspect}
+            className='bg-muted h-full'
+          >
             {previewUrl && shouldCrop ? (
               <Cropper
                 aspectRatio={aspect}
