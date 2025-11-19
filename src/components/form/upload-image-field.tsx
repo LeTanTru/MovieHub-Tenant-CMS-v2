@@ -306,19 +306,22 @@ export default function UploadImageField<T extends FieldValues>({
             </DialogTitle>
           </DialogHeader>
 
-          <AspectRatio ratio={aspect} className='bg-muted'>
+          <AspectRatio
+            ratio={aspect < 1 ? 1 : aspect}
+            className='bg-muted h-full'
+          >
             {previewUrl && shouldCrop ? (
               <Cropper
                 aspectRatio={aspect}
-                className='1 h-full w-full'
+                className='h-full w-full'
                 image={previewUrl}
                 zoom={zoom}
                 onCropChange={handleCropChange}
                 onZoomChange={setZoom}
               >
-                <CropperDescription className='2' />
-                <CropperImage className='3' />
-                <CropperCropArea className='4' />
+                <CropperDescription />
+                <CropperImage />
+                <CropperCropArea />
               </Cropper>
             ) : (
               previewUrl && (
@@ -348,7 +351,7 @@ export default function UploadImageField<T extends FieldValues>({
                   value={[zoom]}
                   min={1}
                   max={3}
-                  step={0.1}
+                  step={0.01}
                   onValueChange={(val) => setZoom(val[0])}
                 />
                 <ZoomInIcon className='shrink-0 opacity-60' size={16} />
