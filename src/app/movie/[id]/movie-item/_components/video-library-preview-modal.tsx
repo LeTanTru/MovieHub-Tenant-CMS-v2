@@ -66,7 +66,7 @@ export default function VideoLibraryPreviewModal({
         <MediaPlayer
           viewType='video'
           streamType='on-demand'
-          logLevel='warn'
+          logLevel='silent'
           crossOrigin
           playsInline
           muted

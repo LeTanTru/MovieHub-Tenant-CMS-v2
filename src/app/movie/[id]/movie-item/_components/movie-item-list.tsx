@@ -17,7 +17,8 @@ import {
   MOVIE_TYPE_SINGLE,
   movieItemKindOptions,
   movieItemSeriesKindOptions,
-  movieItemSingleKindOptions
+  movieItemSingleKindOptions,
+  storageKeys
 } from '@/constants';
 import {
   useDisclosure,
@@ -35,12 +36,14 @@ import {
   SearchFormProps,
   VideoLibraryResType
 } from '@/types';
-import { formatDate } from '@/utils';
+import { formatDate, getData, setData } from '@/utils';
 import { PlayCircle, Save } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function MovieItemList({ queryKey }: { queryKey: string }) {
+  const [selectedKey, setSelectedKey] = useState<number | string | null>(null);
+
   const {
     searchParams: { type }
   } = useQueryParams<{ type: string }>();
@@ -104,7 +107,12 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
     objectName: 'mục phim',
     data,
     apiConfig: apiConfig.movieItem.updateOrdering,
-    sortField: 'ordering'
+    sortField: 'ordering',
+    mappingData: (record) => ({
+      id: record.id,
+      ordering: record.ordering,
+      parentId: record?.parent?.id
+    })
   });
 
   const columns: Column<MovieItemResType>[] = [
@@ -167,6 +175,10 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
     }
   ];
 
+  useEffect(() => {
+    setSelectedKey(getData(storageKeys.SELECTED_MOVIE_ITEM));
+  }, []);
+
   return (
     <PageWrapper
       breadcrumbs={[
@@ -187,6 +199,21 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
           dataSource={sortedData}
           loading={loading || loadingUpdateOrdering}
           onDragEnd={onDragEnd}
+          onSelectRow={(record) => {
+            if (record.kind === MOVIE_ITEM_KIND_TRAILER) return;
+            if (selectedKey === record.id) {
+              setSelectedKey(null);
+              setData(storageKeys.SELECTED_MOVIE_ITEM, '');
+            } else {
+              setSelectedKey(record.id);
+              setData(storageKeys.SELECTED_MOVIE_ITEM, record.id);
+            }
+          }}
+          rowClassName={(row) =>
+            row.id.toString() === selectedKey?.toString()
+              ? 'bg-gray-400/50 hover:bg-gray-400/50'
+              : ''
+          }
         />
         {sortedData.length > 1 && (
           <div className='mr-4 flex justify-end py-4'>

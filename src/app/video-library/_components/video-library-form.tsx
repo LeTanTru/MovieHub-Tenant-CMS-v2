@@ -208,7 +208,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                   <MediaPlayer
                     viewType='video'
                     streamType='on-demand'
-                    logLevel='error'
+                    logLevel='silent'
                     crossOrigin
                     playsInline
                     muted

@@ -195,7 +195,7 @@ const apiConfig = defineApiConfig({
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/create`,
-      method: 'GET',
+      method: 'POST',
       headers: baseHeader,
       permissionCode: 'MOV_I_C'
     },
@@ -203,7 +203,8 @@ const apiConfig = defineApiConfig({
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
-      permissionCode: 'MOV_I_D'
+      permissionCode: 'MOV_I_D',
+      isRequiredTenantId: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/update`,
