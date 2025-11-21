@@ -21,9 +21,14 @@ import {
   MOVIE_TYPE_SINGLE,
   movieItemSeriesKindOptions,
   movieItemSingleKindOptions,
-  STATUS_ACTIVE
+  STATUS_ACTIVE,
+  storageKeys
 } from '@/constants';
 import { useQueryParams, useSaveBase } from '@/hooks';
+import {
+  useMovieItemListQuery,
+  useUpdateOrderingMovieItemMutation
+} from '@/queries';
 import { route } from '@/routes';
 import { movieItemSchema } from '@/schemaValidations';
 import {
@@ -31,7 +36,7 @@ import {
   MovieItemResType,
   VideoLibraryResType
 } from '@/types';
-import { formatDate, generatePath, renderListPageUrl } from '@/utils';
+import { formatDate, generatePath, getData, renderListPageUrl } from '@/utils';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -43,6 +48,12 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
     id: string;
     movieItemId: string;
   }>();
+
+  const movieItemListQuery = useMovieItemListQuery({ movieId });
+  const movieItemList = movieItemListQuery.data?.data.content || [];
+
+  const updateOrderingMovieItemMutation = useUpdateOrderingMovieItemMutation();
+
   const {
     data,
     loading,
@@ -93,8 +104,32 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
   }, [data, movieId]);
 
   const onSubmit = async (values: MovieItemBodyType) => {
+    let ordering = 0;
+    const parentId = getData(storageKeys.SELECTED_MOVIE_ITEM);
+
+    if (!parentId) ordering = movieItemList.length;
+    else {
+      const orderingList = movieItemList.map((movieItem) => ({
+        id: movieItem.id.toString(),
+        ordering: movieItem.ordering,
+        parentId: movieItem?.parent?.id
+      }));
+      const parent = orderingList.find(
+        (item) => item.id.toString() === parentId
+      );
+      const newOrderingList = orderingList.map((item) => {
+        if (parent && item.ordering <= parent?.ordering) return item;
+        return { ...item, ordering: item.ordering + 1 };
+      });
+      ordering += 1;
+      await updateOrderingMovieItemMutation.mutateAsync(newOrderingList);
+    }
+
     await handleSubmit({
       ...values,
+      ordering,
+      movieId,
+      parentId,
       releaseDate: formatDate(
         values.releaseDate,
         DATE_TIME_FORMAT,
