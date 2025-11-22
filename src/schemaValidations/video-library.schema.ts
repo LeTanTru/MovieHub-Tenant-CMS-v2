@@ -5,6 +5,7 @@ export const videoLibrarySchema = z.object({
   description: z.string().nonempty('Bắt buộc'),
   introEnd: z.union([z.string(), z.number()]).nullable().optional(),
   introStart: z.union([z.string(), z.number()]).nullable().optional(),
+  outroStart: z.union([z.string(), z.number()]).nullable().optional(),
   name: z.string().nonempty('Bắt buộc'),
   shortDescription: z.string().nonempty('Bắt buộc'),
   status: z.number({ error: 'Bắt buộc' }),

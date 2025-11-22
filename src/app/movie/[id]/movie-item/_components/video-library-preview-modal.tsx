@@ -15,12 +15,20 @@ import {
   VolumeToggleButton
 } from '@/components/video-player';
 import { VideoLibraryResType } from '@/types';
-import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
+import {
+  isHLSProvider,
+  MediaPlayer,
+  MediaProvider,
+  MediaProviderAdapter,
+  MediaProviderChangeEvent,
+  Poster
+} from '@vidstack/react';
 import {
   DefaultVideoLayout,
   defaultLayoutIcons
 } from '@vidstack/react/player/layouts/default';
-import { renderImageUrl, renderVideoUrl, renderVttUrl } from '@/utils';
+import { getData, renderImageUrl, renderVideoUrl, renderVttUrl } from '@/utils';
+import { storageKeys } from '@/constants';
 
 export default function VideoLibraryPreviewModal({
   open,
@@ -73,6 +81,7 @@ export default function VideoLibraryPreviewModal({
           preferNativeHLS={false}
           autoPlay={false}
           src={renderVideoUrl(videoLibrary?.content)}
+          onProviderChange={onProviderChange}
         >
           <MediaProvider slot='media'>
             <Poster
@@ -108,4 +117,20 @@ export default function VideoLibraryPreviewModal({
       </div>
     </Modal>
   );
+}
+
+function onProviderChange(
+  provider: MediaProviderAdapter | null,
+  nativeEvent: MediaProviderChangeEvent
+) {
+  if (isHLSProvider(provider)) {
+    provider.config = {
+      xhrSetup(xhr) {
+        xhr.setRequestHeader(
+          'Authorization',
+          `Bearer ${getData(storageKeys.ACCESS_TOKEN)}`
+        );
+      }
+    };
+  }
 }
