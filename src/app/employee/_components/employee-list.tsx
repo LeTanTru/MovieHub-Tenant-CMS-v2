@@ -6,12 +6,13 @@ import { BaseTable } from '@/components/table';
 import {
   apiConfig,
   FieldTypes,
+  MAX_PAGE_SIZE,
   STATUS_ACTIVE,
   STATUS_LOCK,
   statusOptions
 } from '@/constants';
 import { useListBase } from '@/hooks';
-import { useChangeEmployeeStatusMutation } from '@/queries';
+import { useChangeEmployeeStatusMutation, useGroupListQuery } from '@/queries';
 import { employeeSearchSchema } from '@/schemaValidations';
 import {
   Column,
@@ -23,6 +24,9 @@ import { notify, renderImageUrl } from '@/utils';
 import { AiOutlineCheck, AiOutlineLock, AiOutlineUser } from 'react-icons/ai';
 
 export default function EmployeeList({ queryKey }: { queryKey: string }) {
+  const groupListQuery = useGroupListQuery({ size: MAX_PAGE_SIZE });
+  const groupList = groupListQuery.data?.data.content || [];
+
   const { data, pagination, loading, handlers, listQuery } = useListBase<
     EmployeeResType,
     EmployeeSearchType
@@ -143,6 +147,22 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       ),
       align: 'center'
     },
+    {
+      title: 'Vai trò',
+      dataIndex: 'kind',
+      width: 120,
+      render: (_, record) => {
+        return (
+          <span
+            className='line-clamp-1 block truncate'
+            title={record.group.name}
+          >
+            {record.group.name ?? '------'}
+          </span>
+        );
+      },
+      align: 'center'
+    },
     handlers.renderStatusColumn(),
     handlers.renderActionColumn({
       actions: { edit: true, changeStatus: true, delete: true }
@@ -157,7 +177,12 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
     },
     {
       key: 'kind',
-      placeholder: 'Vai trò'
+      placeholder: 'Vai trò',
+      type: FieldTypes.SELECT,
+      options: groupList.map((group) => ({
+        label: group.name,
+        value: group.kind
+      }))
     },
     {
       key: 'status',

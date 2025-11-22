@@ -20,6 +20,7 @@ import {
   apiConfig,
   ErrorCode,
   STATUS_ACTIVE,
+  storageKeys,
   videoLibraryErrorMaps
 } from '@/constants';
 import { useSaveBase } from '@/hooks';
@@ -28,6 +29,7 @@ import { route } from '@/routes';
 import { videoLibrarySchema } from '@/schemaValidations';
 import { VideoLibraryBodyType, VideoLibraryResType } from '@/types';
 import {
+  getData,
   renderImageUrl,
   renderListPageUrl,
   renderVideoUrl,
@@ -40,7 +42,14 @@ import {
   DefaultVideoLayout,
   defaultLayoutIcons
 } from '@vidstack/react/player/layouts/default';
-import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
+import {
+  isHLSProvider,
+  MediaPlayer,
+  MediaProvider,
+  MediaProviderAdapter,
+  MediaProviderChangeEvent,
+  Poster
+} from '@vidstack/react';
 import {
   CaptionButton,
   FullscreenToggleButton,
@@ -82,10 +91,36 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     }
   });
 
+  function timeToSeconds(time: string): number {
+    const parts = time.split(':');
+
+    if (parts.length !== 3) {
+      throw new Error('Định dạng thời gian phải là HH:mm:ss');
+    }
+
+    const [hours, minutes, seconds] = parts.map((p) => parseInt(p, 10));
+
+    if (
+      isNaN(hours) ||
+      isNaN(minutes) ||
+      isNaN(seconds) ||
+      hours < 0 ||
+      minutes < 0 ||
+      minutes >= 60 ||
+      seconds < 0 ||
+      seconds >= 60
+    ) {
+      throw new Error('Giá trị giờ, phút, giây không hợp lệ');
+    }
+
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
   const defaultValues: VideoLibraryBodyType = {
     content: '',
     description: '',
     introEnd: 0,
+    outroStart: 0,
     introStart: 0,
     name: '',
     shortDescription: '',
@@ -99,6 +134,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       description: data?.description ?? '',
       introEnd: data?.introEnd ?? 0,
       introStart: data?.introStart ?? 0,
+      outroStart: data?.outroStart ?? 0,
       name: data?.name ?? '',
       shortDescription: data?.shortDescription ?? '',
       status: STATUS_ACTIVE,
@@ -113,7 +149,15 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     await handleSubmit(
       {
         ...values,
-        content: videoUrl
+        introStart: timeToSeconds(
+          values.introStart ? (values.introStart as string) : '00:00:00'
+        ),
+        introEnd: timeToSeconds(
+          values.introEnd ? (values.introEnd as string) : '00:00:00'
+        ),
+        outroStart: timeToSeconds(
+          values.outroStart ? (values.outroStart as string) : '00:00:00'
+        )
       },
       form,
       videoLibraryErrorMaps
@@ -181,26 +225,39 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
               </Col>
             </Row>
             {isEditing && (
-              <Row>
-                <Col>
-                  <TimePickerField
-                    control={form.control}
-                    name='introStart'
-                    label='Thời gian bắt đầu intro'
-                    placeholder='Thời gian bắt đầu intro'
-                    required
-                  />
-                </Col>
-                <Col>
-                  <TimePickerField
-                    control={form.control}
-                    name='introEnd'
-                    label='Thời gian kết thúc intro'
-                    placeholder='Thời gian kết thúc intro'
-                    required
-                  />
-                </Col>
-              </Row>
+              <>
+                <Row>
+                  <Col>
+                    <TimePickerField
+                      control={form.control}
+                      name='introStart'
+                      label='Thời gian bắt đầu intro'
+                      placeholder='Thời gian bắt đầu intro'
+                      required
+                    />
+                  </Col>
+                  <Col>
+                    <TimePickerField
+                      control={form.control}
+                      name='introEnd'
+                      label='Thời gian kết thúc intro'
+                      placeholder='Thời gian kết thúc intro'
+                      required
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <TimePickerField
+                      control={form.control}
+                      name='outroStart'
+                      label='Thời gian bắt đầu outro'
+                      placeholder='Thời gian bắt đầu outro'
+                      required
+                    />
+                  </Col>
+                </Row>
+              </>
             )}
             <Row>
               <Col span={24}>
@@ -216,6 +273,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     autoPlay={false}
                     src={renderVideoUrl(data.content)}
                     fullscreenOrientation={'none'}
+                    onProviderChange={onProviderChange}
                   >
                     <MediaProvider slot='media'>
                       <Poster
@@ -311,4 +369,20 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       </BaseForm>
     </PageWrapper>
   );
+}
+
+function onProviderChange(
+  provider: MediaProviderAdapter | null,
+  nativeEvent: MediaProviderChangeEvent
+) {
+  if (isHLSProvider(provider)) {
+    provider.config = {
+      xhrSetup(xhr) {
+        xhr.setRequestHeader(
+          'Authorization',
+          `Bearer ${getData(storageKeys.ACCESS_TOKEN)}`
+        );
+      }
+    };
+  }
 }
