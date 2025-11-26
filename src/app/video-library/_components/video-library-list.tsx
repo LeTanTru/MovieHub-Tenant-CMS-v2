@@ -21,7 +21,7 @@ import {
   VideoLibraryResType,
   VideoLibrarySearchType
 } from '@/types';
-import { notify, renderImageUrl } from '@/utils';
+import { formatSecondsToHMS, notify, renderImageUrl } from '@/utils';
 import { PlayCircle } from 'lucide-react';
 import { useState } from 'react';
 import { AiFillWarning, AiOutlineFileImage } from 'react-icons/ai';
@@ -104,6 +104,17 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
       )
     },
     {
+      title: 'Thời lượng',
+      dataIndex: 'duration',
+      render: (value) => (
+        <span className='line-clamp-1 block truncate'>
+          {formatSecondsToHMS(value) ?? '------'}
+        </span>
+      ),
+      width: 120,
+      align: 'center'
+    },
+    {
       title: 'Tình trạng',
       dataIndex: 'state',
       render: (value) =>
@@ -114,7 +125,7 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
             </div>
           </ToolTip>
         ) : value === VIDEO_LIBRARY_STATE_COMPLETE ? (
-          <ToolTip title='Đang xử lý'>
+          <ToolTip title='Đã hoàn thành'>
             <div>
               <RiCheckboxCircleFill className='mx-auto size-5 text-green-600' />
             </div>

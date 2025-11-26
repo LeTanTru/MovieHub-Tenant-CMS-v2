@@ -153,7 +153,7 @@ export const videoLibraryErrorMaps: ErrorMaps<VideoLibraryBodyType> = {
       'name',
       {
         type: 'manual',
-        message: 'Tên danh mục đã tồn tại'
+        message: 'Tên video đã tồn tại'
       }
     ]
   ]

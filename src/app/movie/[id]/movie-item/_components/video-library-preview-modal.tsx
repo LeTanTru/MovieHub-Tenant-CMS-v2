@@ -28,7 +28,7 @@ import {
   defaultLayoutIcons
 } from '@vidstack/react/player/layouts/default';
 import { getData, renderImageUrl, renderVideoUrl, renderVttUrl } from '@/utils';
-import { storageKeys } from '@/constants';
+import { storageKeys, VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL } from '@/constants';
 
 export default function VideoLibraryPreviewModal({
   open,
@@ -81,7 +81,11 @@ export default function VideoLibraryPreviewModal({
           preferNativeHLS={false}
           autoPlay={false}
           src={renderVideoUrl(videoLibrary?.content)}
-          onProviderChange={onProviderChange}
+          onProviderChange={
+            videoLibrary?.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL
+              ? onProviderChange
+              : undefined
+          }
         >
           <MediaProvider slot='media'>
             <Poster

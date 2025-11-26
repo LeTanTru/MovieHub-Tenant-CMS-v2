@@ -36,7 +36,13 @@ import {
   SearchFormProps,
   VideoLibraryResType
 } from '@/types';
-import { formatDate, getData, renderImageUrl, setData } from '@/utils';
+import {
+  formatDate,
+  formatSecondsToHMS,
+  getData,
+  renderImageUrl,
+  setData
+} from '@/utils';
 import { PlayCircle, Save } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -75,7 +81,10 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
           <ToolTip title={`Xem video`} sideOffset={0}>
             <span>
               <Button
-                onClick={() => handleOpenVideoLibraryPreviewModal(record)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenVideoLibraryPreviewModal(record);
+                }}
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                 {...buttonProps}
               >
@@ -140,11 +149,12 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
       dataIndex: 'title',
       render: (value, record) => (
         <span
-          className={cn({
+          className={cn('line-clamp-1 block truncate', {
             'font-bold uppercase': record.kind === MOVIE_ITEM_KIND_SEASON,
             'ml-4 italic': record.kind === MOVIE_ITEM_KIND_TRAILER,
             'ml-4': record.kind === MOVIE_ITEM_KIND_EPISODE
           })}
+          title={`${record.kind === MOVIE_ITEM_KIND_SEASON ? `Mùa ${record.label}: ` : ''} ${record.kind === MOVIE_ITEM_KIND_EPISODE ? `${record.label}. ` : ''}${value}`}
         >
           {record.kind === MOVIE_ITEM_KIND_SEASON && `Mùa ${record.label}: `}
           {record.kind === MOVIE_ITEM_KIND_EPISODE && `${record.label}. `}
@@ -157,6 +167,17 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
       dataIndex: 'releaseDate',
       width: 150,
       render: (value) => formatDate(value, DEFAULT_DATE_FORMAT),
+      align: 'center'
+    },
+    {
+      title: 'Thời lượng',
+      width: 120,
+      render: (_, record) => {
+        if (record.video) {
+          return formatSecondsToHMS(record.video.duration);
+        }
+        return '';
+      },
       align: 'center'
     },
     {
@@ -178,6 +199,9 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
           record.kind !== MOVIE_ITEM_KIND_SEASON,
         edit: true,
         delete: true
+      },
+      columnProps: {
+        fixed: true
       }
     })
   ];
