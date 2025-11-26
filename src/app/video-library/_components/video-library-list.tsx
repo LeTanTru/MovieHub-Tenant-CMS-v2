@@ -21,7 +21,7 @@ import {
   VideoLibraryResType,
   VideoLibrarySearchType
 } from '@/types';
-import { notify, renderImageUrl } from '@/utils';
+import { formatSecondsToHMS, notify, renderImageUrl } from '@/utils';
 import { PlayCircle } from 'lucide-react';
 import { useState } from 'react';
 import { AiFillWarning, AiOutlineFileImage } from 'react-icons/ai';
@@ -102,6 +102,17 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
           {value ?? '------'}
         </span>
       )
+    },
+    {
+      title: 'Thời lượng',
+      dataIndex: 'duration',
+      render: (value) => (
+        <span className='line-clamp-1 block truncate'>
+          {formatSecondsToHMS(value) ?? '------'}
+        </span>
+      ),
+      width: 120,
+      align: 'center'
     },
     {
       title: 'Tình trạng',

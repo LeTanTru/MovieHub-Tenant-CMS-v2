@@ -63,12 +63,11 @@ export const MOVIE_ITEM_KIND_SEASON = 1;
 export const MOVIE_ITEM_KIND_EPISODE = 2;
 export const MOVIE_ITEM_KIND_TRAILER = 3;
 
-export const AGE_RATING_G = 1;
-export const AGE_RATING_PG = 2;
-export const AGE_RATING_PG13 = 3;
-export const AGE_RATING_R = 4;
-export const AGE_RATING_NC17 = 5;
-export const AGE_RATING_18 = 6;
+export const AGE_RATING_P = 1;
+export const AGE_RATING_K = 2;
+export const AGE_RATING_T13 = 3;
+export const AGE_RATING_T16 = 4;
+export const AGE_RATING_T18 = 5;
 
 export const MOVIE_IS_FEATURED = 1;
 export const MOVIE_IS_NOT_FEATURED = 0;

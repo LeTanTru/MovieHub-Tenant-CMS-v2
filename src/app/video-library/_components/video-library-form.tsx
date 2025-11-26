@@ -37,7 +37,8 @@ import {
   renderImageUrl,
   renderListPageUrl,
   renderVideoUrl,
-  renderVttUrl
+  renderVttUrl,
+  timeToSeconds
 } from '@/utils';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -95,32 +96,6 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       mode: id === 'create' ? 'create' : 'edit'
     }
   });
-
-  function timeToSeconds(time: string): number {
-    console.log('🚀 ~ timeToSeconds ~ time:', time);
-    const parts = time.split(':');
-
-    if (parts.length !== 3) {
-      throw new Error('Định dạng thời gian phải là HH:mm:ss');
-    }
-
-    const [hours, minutes, seconds] = parts.map((p) => parseInt(p, 10));
-
-    if (
-      isNaN(hours) ||
-      isNaN(minutes) ||
-      isNaN(seconds) ||
-      hours < 0 ||
-      minutes < 0 ||
-      minutes >= 60 ||
-      seconds < 0 ||
-      seconds >= 60
-    ) {
-      throw new Error('Giá trị giờ, phút, giây không hợp lệ');
-    }
-
-    return hours * 3600 + minutes * 60 + seconds;
-  }
 
   const defaultValues: VideoLibraryBodyType = {
     content: '',
