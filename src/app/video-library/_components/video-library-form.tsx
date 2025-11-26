@@ -66,6 +66,7 @@ import {
 } from '@/components/video-player';
 import { AxiosProgressEvent } from 'axios';
 import { logger } from '@/logger';
+import { cn } from '@/lib';
 
 export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
@@ -130,7 +131,8 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     shortDescription: '',
     status: STATUS_ACTIVE,
     thumbnailUrl: '',
-    sourceType: VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL
+    sourceType: VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL,
+    duration: 0
   };
 
   const initialValues: VideoLibraryBodyType = useMemo(() => {
@@ -140,6 +142,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       introEnd: data?.introEnd ?? 0,
       introStart: data?.introStart ?? 0,
       outroStart: data?.outroStart ?? 0,
+      duration: data?.duration ?? 0,
       name: data?.name ?? '',
       shortDescription: data?.shortDescription ?? '',
       status: STATUS_ACTIVE,
@@ -163,6 +166,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
         ),
         outroStart: timeToSeconds(
           values.outroStart ? (values.outroStart as string) : '00:00:00'
+        ),
+        duration: timeToSeconds(
+          values.duration ? (values.duration as string) : '00:00:00'
         ),
         thumbnailUrl,
         content: videoUrl
@@ -195,7 +201,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       <BaseForm
         onSubmit={onSubmit}
         defaultValues={defaultValues}
-        schema={videoLibrarySchema}
+        schema={videoLibrarySchema(
+          data?.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL
+        )}
         initialValues={initialValues}
       >
         {(form) => {
@@ -243,9 +251,12 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     options={videoLibrarySourceTypeOptions}
                     label='Nguồn video'
                     required
+                    disabled={isEditing}
                   />
                 </Col>
               </Row>
+
+              {/* isEditing */}
               {isEditing && (
                 <>
                   <Row>
@@ -255,7 +266,6 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         name='introStart'
                         label='Thời gian bắt đầu intro'
                         placeholder='Thời gian bắt đầu intro'
-                        required
                       />
                     </Col>
                     <Col>
@@ -264,20 +274,39 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         name='introEnd'
                         label='Thời gian kết thúc intro'
                         placeholder='Thời gian kết thúc intro'
-                        required
                       />
                     </Col>
                   </Row>
-                  <Row>
+                  <Row
+                    className={cn({
+                      'mb-0':
+                        isEditing &&
+                        data?.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL
+                    })}
+                  >
                     <Col>
                       <TimePickerField
                         control={form.control}
                         name='outroStart'
                         label='Thời gian bắt đầu outro'
                         placeholder='Thời gian bắt đầu outro'
-                        required
                       />
                     </Col>
+                    <Col>
+                      <TimePickerField
+                        control={form.control}
+                        name='duration'
+                        label='Thời lượng'
+                        placeholder='Thời lượng'
+                        required={
+                          data?.sourceType ===
+                          VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  {/* source type EXTERNAL & isEditing */}
+                  <Row>
                     {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL &&
                       isEditing && (
                         <Col>
@@ -295,6 +324,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         </Col>
                       )}
                   </Row>
+                  {/* If has video url */}
                   {(videoUrl || form.watch('content')) &&
                     isEditing &&
                     sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL && (
@@ -316,6 +346,8 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     )}
                 </>
               )}
+
+              {/* Source = EXTERNAL & not isEditing */}
               {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL ? (
                 !isEditing && (
                   <>
@@ -333,7 +365,18 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                           }}
                         />
                       </Col>
+                      <Col>
+                        <TimePickerField
+                          control={form.control}
+                          name='duration'
+                          label='Thời lượng'
+                          placeholder='Thời lượng'
+                          required
+                        />
+                      </Col>
                     </Row>
+
+                    {/* if has video url or content */}
                     {(videoUrl || form.watch('content')) && (
                       <Row>
                         <Col span={24}>
@@ -354,8 +397,10 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                   </>
                 )
               ) : (
+                // source type = INTERNAL && isEditing
                 <Row>
                   <Col span={24}>
+                    {/* Play preview video */}
                     {isEditing && data ? (
                       <MediaPlayer
                         viewType='video'
@@ -405,6 +450,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         />
                       </MediaPlayer>
                     ) : (
+                      // Upload video
                       <UploadVideoField
                         control={form.control}
                         name='content'

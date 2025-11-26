@@ -127,25 +127,25 @@ const apiConfig = defineApiConfig({
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/create`,
       method: 'POST',
       headers: baseHeader,
-      permissionCode: 'GR_C'
+      permissionCode: 'GR_T_C'
     },
     getById: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/get/:id`,
       method: 'GET',
       headers: baseHeader,
-      permissionCode: 'GR_V'
+      permissionCode: 'GR_T_V'
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/list`,
       method: 'GET',
       headers: baseHeader,
-      permissionCode: 'GR_L'
+      permissionCode: 'GR_T_L'
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/update`,
       method: 'PUT',
       headers: baseHeader,
-      permissionCode: 'GR_U'
+      permissionCode: 'GR_T_U'
     }
   },
   movie: {

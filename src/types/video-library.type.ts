@@ -26,7 +26,9 @@ export type VideoLibraryResType = {
   sourceType: number;
 };
 
-export type VideoLibraryBodyType = z.infer<typeof videoLibrarySchema>;
+export type VideoLibraryBodyType = z.infer<
+  ReturnType<typeof videoLibrarySchema>
+>;
 
 export type VideoLibrarySearchType = z.infer<typeof videoLibrarySearchSchema> &
   BaseSearchType;

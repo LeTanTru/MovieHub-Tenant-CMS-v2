@@ -114,7 +114,7 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
             </div>
           </ToolTip>
         ) : value === VIDEO_LIBRARY_STATE_COMPLETE ? (
-          <ToolTip title='Đang xử lý'>
+          <ToolTip title='Đã hoàn thành'>
             <div>
               <RiCheckboxCircleFill className='mx-auto size-5 text-green-600' />
             </div>

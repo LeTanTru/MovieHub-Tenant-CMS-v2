@@ -14,7 +14,7 @@ import {
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Control, Controller } from 'react-hook-form';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/form';
 
 type Props = {
@@ -54,7 +54,6 @@ export default function TimePickerField({
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        // Xử lý giá trị: number (giây) hoặc string "HH:mm:ss"
         let hour = 0,
           minute = 0,
           second = 0;
@@ -84,9 +83,7 @@ export default function TimePickerField({
           else if (timeFormat === 'HH:mm') result = `${pad(hh)}:${pad(mm)}`;
           else if (timeFormat === 'mm:ss') result = `${pad(mm)}:${pad(ss)}`;
 
-          // Cập nhật field: có thể lưu chuỗi hoặc số giây
           field.onChange(result);
-          // Nếu muốn lưu số giây thay vì chuỗi, dùng:
           // field.onChange(hh * 3600 + mm * 60 + ss);
         };
 
@@ -155,6 +152,14 @@ export default function TimePickerField({
                             variant={hour === h ? 'primary' : 'ghost'}
                             className='aspect-square shrink-0 sm:w-full'
                             onClick={() => updateTime('hour', h)}
+                            ref={(el) => {
+                              if (hour === h && el) {
+                                el.scrollIntoView({
+                                  block: 'center',
+                                  behavior: 'smooth'
+                                });
+                              }
+                            }}
                           >
                             {pad(h)}
                           </Button>
@@ -176,6 +181,14 @@ export default function TimePickerField({
                             variant={minute === m ? 'primary' : 'ghost'}
                             className='aspect-square shrink-0 sm:w-full'
                             onClick={() => updateTime('minute', m)}
+                            ref={(el) => {
+                              if (minute === m && el) {
+                                el.scrollIntoView({
+                                  block: 'center',
+                                  behavior: 'smooth'
+                                });
+                              }
+                            }}
                           >
                             {pad(m)}
                           </Button>
@@ -197,6 +210,14 @@ export default function TimePickerField({
                             variant={second === s ? 'primary' : 'ghost'}
                             className='aspect-square shrink-0 sm:w-full'
                             onClick={() => updateTime('second', s)}
+                            ref={(el) => {
+                              if (second === s && el) {
+                                el.scrollIntoView({
+                                  block: 'center',
+                                  behavior: 'smooth'
+                                });
+                              }
+                            }}
                           >
                             {pad(s)}
                           </Button>
@@ -213,7 +234,7 @@ export default function TimePickerField({
             </Popover>
             {fieldState.error && (
               <div className='animate-in fade-in absolute -bottom-6 left-2 z-0 mt-1 text-sm text-red-500'>
-                <FormMessage />
+                {fieldState.error.message}
               </div>
             )}
           </FormItem>

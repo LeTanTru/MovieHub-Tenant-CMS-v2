@@ -62,6 +62,8 @@ export default function AppProvider({
   }, [accessToken, isAuthenticated, kind]);
 
   useEffect(() => {
+    if (!accessToken) return;
+
     const handleGetClientToken = async () => {
       const res = await getClientTokenMutation.mutateAsync({
         appName: envConfig.NEXT_PUBLIC_APP_NAME
@@ -70,7 +72,7 @@ export default function AppProvider({
     };
 
     handleGetClientToken();
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     const socket = new WebSocket(envConfig.NEXT_PUBLIC_API_SOCKET);
