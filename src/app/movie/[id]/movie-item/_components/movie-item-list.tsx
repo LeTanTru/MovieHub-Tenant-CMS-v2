@@ -75,7 +75,10 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
           <ToolTip title={`Xem video`} sideOffset={0}>
             <span>
               <Button
-                onClick={() => handleOpenVideoLibraryPreviewModal(record)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenVideoLibraryPreviewModal(record);
+                }}
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                 {...buttonProps}
               >
