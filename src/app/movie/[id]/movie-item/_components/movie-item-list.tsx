@@ -171,7 +171,7 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
     },
     {
       title: 'Thời lượng',
-      width: 150,
+      width: 120,
       render: (_, record) => {
         if (record.video) {
           return formatSecondsToHMS(record.video.duration);
