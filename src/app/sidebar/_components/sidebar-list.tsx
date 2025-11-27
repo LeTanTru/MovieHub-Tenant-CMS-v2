@@ -1,6 +1,6 @@
 'use client';
 
-import { AvatarField, Button } from '@/components/form';
+import { AvatarField, Button, ToolTip } from '@/components/form';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
 import { CircleLoading } from '@/components/loading';
 import { DragDropTable } from '@/components/table';
@@ -39,7 +39,7 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
     handleUpdate
   } = useDragDrop<MovieSidebarResType>({
     key: `${queryKey}-list`,
-    objectName: 'mục phim',
+    objectName: 'phim mới',
     data,
     apiConfig: apiConfig.sidebar.updateOrdering,
     sortField: 'ordering'
@@ -82,26 +82,18 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
       )
     },
     {
-      title: 'Tiêu đề phim',
-      dataIndex: ['movieItem', 'movie', 'title'],
-      render: (value) => <span>{value}</span>
-    },
-    {
-      title: 'Tập phim',
-      dataIndex: ['movieItem', 'title'],
-      render: (value, record) => (
-        <span className='line-clamp-1 block truncate'>
-          {record.movieItem.label}.&nbsp;{value}
-        </span>
-      ),
-      width: 250
+      title: 'Phim',
+      dataIndex: ['movie', 'title'],
+      render: (value) => (
+        <span className='line-clamp-1 block truncate'>{value}</span>
+      )
     },
     {
       title: 'Ngày phát hành',
-      dataIndex: ['movieItem', 'releaseDate'],
-      render: (value, record) => (
+      dataIndex: ['movie', 'releaseDate'],
+      render: (_, record) => (
         <span className='line-clamp-1 block truncate'>
-          {formatDate(record.movieItem.releaseDate, DEFAULT_DATE_FORMAT)}
+          {formatDate(record.movie.releaseDate, DEFAULT_DATE_FORMAT)}
         </span>
       ),
       width: 150,
@@ -111,10 +103,12 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
       title: 'Màu chủ đạo',
       dataIndex: ['mainColor'],
       render: (value) => (
-        <div
-          className='mx-auto h-4 w-20 rounded'
-          style={{ background: value }}
-        ></div>
+        <ToolTip title={value}>
+          <div
+            className='mx-auto h-4 w-20 rounded'
+            style={{ background: value }}
+          ></div>
+        </ToolTip>
       ),
       width: 150,
       align: 'center'

@@ -18,7 +18,7 @@ import { useUploadLogoMutation } from '@/queries';
 import { route } from '@/routes';
 import { movieSidebarSchema } from '@/schemaValidations';
 import {
-  MovieItemResType,
+  MovieResType,
   MovieSidebarBodyType,
   MovieSidebarResType
 } from '@/types';
@@ -61,7 +61,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
     description: '',
     mainColor: '#000000',
     mobileThumbnailUrl: '',
-    movieItemId: '',
+    movieId: '',
     webThumbnailUrl: ''
   };
 
@@ -71,7 +71,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
       active: data?.active ?? false,
       mainColor: data?.mainColor ?? '#000000',
       mobileThumbnailUrl: data?.mobileThumbnailUrl || '',
-      movieItemId: data?.movieItem?.id?.toString() ?? '',
+      movieId: data?.movie?.id?.toString() ?? '',
       webThumbnailUrl: data?.webThumbnailUrl || ''
     };
   }, [data]);
@@ -90,7 +90,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
           href: renderListPageUrl(route.sidebar.getList.path, queryString)
         },
         {
-          label: `${!isEditing ? 'Thêm mới' : 'Cập nhật'} phim mới`
+          label: `${!isEditing ? 'Thêm mới' : 'Cập nhật'} phim`
         }
       ]}
       notFound={responseCode === ErrorCode.MOVIE_ITEM_ERROR_NOT_FOUND}
@@ -151,18 +151,19 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
               </Row>
               <Row>
                 <Col>
-                  <AutoCompleteField<any, MovieItemResType>
+                  <AutoCompleteField<any, MovieResType>
                     control={form.control}
-                    name='movieItemId'
-                    apiConfig={apiConfig.movieItem.getList}
-                    mappingData={(item: MovieItemResType) => ({
+                    name='movieId'
+                    apiConfig={apiConfig.movie.getList}
+                    mappingData={(item: MovieResType) => ({
                       label: item.title,
                       value: item.id.toString()
                     })}
                     searchParams={['title']}
                     allowClear
-                    label='Mục phim'
-                    placeholder='Mục phim'
+                    label='Phim'
+                    placeholder='Phim'
+                    required
                   />
                 </Col>
                 <Col>
