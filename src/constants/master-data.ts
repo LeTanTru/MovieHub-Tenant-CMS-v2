@@ -8,6 +8,8 @@ import {
   CMD_CLIENT_PING,
   CMD_CLIENT_VERIFY_TOKEN,
   CMD_DONE_CONVERT_VIDEO,
+  COLLECTION_TYPE_SECTION,
+  COLLECTION_TYPE_TOPIC,
   GENDER_FEMALE,
   GENDER_MALE,
   GENDER_OTHER,
@@ -1614,5 +1616,16 @@ export const videoLibrarySourceTypeOptions = [
   {
     label: 'Sử dụng nguồn bên ngoài',
     value: VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL
+  }
+];
+
+export const collectionTypeOptions = [
+  {
+    label: 'Chủ đề',
+    value: COLLECTION_TYPE_TOPIC
+  },
+  {
+    label: 'Phần',
+    value: COLLECTION_TYPE_SECTION
   }
 ];

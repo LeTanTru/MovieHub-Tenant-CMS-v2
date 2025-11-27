@@ -1,0 +1,26 @@
+import z from 'zod';
+
+const filterSchema = z.object({
+  type: z.number().optional().nullable(),
+  ageRating: z.number().optional().nullable(),
+  language: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  isFeatured: z.boolean().optional().nullable(),
+  categoryIds: z.array(z.string()).optional().nullable()
+});
+
+export const collectionSchema = z.object({
+  color: z.string().nonempty('Bắt buộc'),
+  filter: filterSchema,
+  name: z.string().nonempty('Bắt buộc'),
+  ordering: z.number(),
+  randomData: z.boolean(),
+  styleId: z.string(),
+  type: z.number()
+});
+
+export const collectionSearchSchema = z.object({
+  name: z.string().optional().nullable(),
+  style: z.string().optional().nullable(),
+  type: z.string().optional().nullable()
+});

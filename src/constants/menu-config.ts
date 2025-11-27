@@ -1,7 +1,7 @@
 import apiConfig from '@/constants/api-config';
 import { route } from '@/routes';
 import { MenuItem } from '@/types';
-import { Settings } from 'lucide-react';
+import { LucideLayoutGrid, Settings } from 'lucide-react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { RiMovie2Fill } from 'react-icons/ri';
 
@@ -70,7 +70,7 @@ const menuConfig: MenuItem[] = [
   {
     key: 'ui-management',
     label: 'Quản lý giao diện',
-    icon: Settings,
+    icon: LucideLayoutGrid,
     permissionCode: [
       apiConfig.style.getList.permissionCode,
       apiConfig.collection.getList.permissionCode

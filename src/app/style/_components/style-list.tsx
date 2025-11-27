@@ -77,6 +77,7 @@ export default function StyleList({ queryKey }: { queryKey: string }) {
       actions: { edit: true, changeStatus: true, delete: true }
     })
   ];
+
   return (
     <PageWrapper breadcrumbs={[{ label: 'Thiết kế' }]}>
       <ListPageWrapper

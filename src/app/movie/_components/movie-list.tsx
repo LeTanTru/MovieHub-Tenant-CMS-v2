@@ -10,7 +10,6 @@ import {
   countryOptions,
   DEFAULT_DATE_FORMAT,
   ErrorCode,
-  featureOptions,
   FieldTypes,
   languageOptions,
   movieTypeOptions

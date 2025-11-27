@@ -1,0 +1,22 @@
+import {
+  collectionItemSchema,
+  collectionItemSearchSchema
+} from '@/schemaValidations';
+import { MovieResType } from '@/types/movie.type';
+import z from 'zod';
+
+export type CollectionItemResType = {
+  collectionId: number;
+  createdDate: string;
+  id: number;
+  modifiedDate: string;
+  movie: MovieResType;
+  ordering: number;
+  status: number;
+};
+
+export type CollectionItemBodyType = z.infer<typeof collectionItemSchema>;
+
+export type CollectionItemSearchType = z.infer<
+  typeof collectionItemSearchSchema
+>;

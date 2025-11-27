@@ -1,6 +1,7 @@
 import {
   AppVersionBodyType,
   CategoryBodyType,
+  CollectionBodyType,
   EmployeeBodyType,
   ErrorMaps,
   GroupBodyType,
@@ -201,11 +202,11 @@ export const styleErrorMaps: ErrorMaps<StyleBodyType> = {
   ]
 };
 
-// export const collectionErrorMaps: ErrorMaps<StyleBodyType> = {
-//   [ErrorCode.STYLE_ERROR_TYPE_EXISTED]: [
-//     ['name', { type: 'manual', message: 'Tên thiết kế đã tồn tại' }]
-//   ]
-// };
+export const collectionErrorMaps: ErrorMaps<CollectionBodyType> = {
+  [ErrorCode.COLLECTION_ERROR_NAME_EXISTED]: [
+    ['name', { type: 'manual', message: 'Tên bộ sưu tập đã tồn tại' }]
+  ]
+};
 
 // export const collectionItemErrorMaps: ErrorMaps<StyleBodyType> = {
 //   [ErrorCode.STYLE_ERROR_TYPE_EXISTED]: [

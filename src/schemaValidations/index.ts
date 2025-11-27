@@ -3,6 +3,8 @@ export * from './app-version.schema';
 export * from './audience.schema';
 export * from './auth.schema';
 export * from './category.schema';
+export * from './collection-item.schema';
+export * from './collection.schema';
 export * from './customer.schema';
 export * from './employee.schema';
 export * from './group-permission.schema';
