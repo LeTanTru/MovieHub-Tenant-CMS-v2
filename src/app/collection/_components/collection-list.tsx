@@ -98,9 +98,13 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
       title: 'Thiết kế',
       dataIndex: ['style', 'name'],
       render: (value) => {
-        return <span className='line-clamp-1 block truncate'>{value}</span>;
+        return (
+          <span title={value} className='line-clamp-1 block truncate'>
+            {value}
+          </span>
+        );
       },
-      width: 120,
+      width: 200,
       align: 'center'
     },
     {

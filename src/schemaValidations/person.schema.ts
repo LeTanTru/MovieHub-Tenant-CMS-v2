@@ -1,14 +1,14 @@
 import z from 'zod';
 
 export const personSchema = z.object({
-  avatarPath: z.string().nonempty('Bắt buộc'),
-  bio: z.string().nonempty('Bắt buộc'),
-  country: z.string().nonempty('Bắt buộc'),
-  dateOfBirth: z.string().nonempty('Bắt buộc'),
+  avatarPath: z.string().optional().nullable(),
+  bio: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  dateOfBirth: z.string().optional().nullable(),
   gender: z.number({ error: 'Bắt buộc' }),
   kinds: z.array(z.number()).nonempty('Bắt buộc'),
   name: z.string().nonempty('Bắt buộc'),
-  otherName: z.string().nonempty('Bắt buộc')
+  otherName: z.string().optional().nullable()
 });
 
 export const personSearchSchema = z.object({

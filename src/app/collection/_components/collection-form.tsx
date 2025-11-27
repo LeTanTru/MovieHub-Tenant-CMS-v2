@@ -242,12 +242,22 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                       type='button'
                       variant='primary'
                       onClick={() => {
-                        form.setValue('filter.ageRating', 0);
-                        form.setValue('filter.categoryIds', []);
-                        form.setValue('filter.country', '');
-                        form.setValue('filter.isFeatured', false);
-                        form.setValue('filter.language', '');
-                        form.setValue('filter.type', 0);
+                        form.setValue('filter.ageRating', 0, {
+                          shouldDirty: true
+                        });
+                        form.setValue('filter.categoryIds', [], {
+                          shouldDirty: true
+                        });
+                        form.setValue('filter.country', '', {
+                          shouldDirty: true
+                        });
+                        form.setValue('filter.language', '', {
+                          shouldDirty: true
+                        });
+                        form.setValue('filter.isFeatured', false, {
+                          shouldDirty: true
+                        });
+                        form.setValue('filter.type', 0, { shouldDirty: true });
                       }}
                     >
                       Đặt lại bộ lọc

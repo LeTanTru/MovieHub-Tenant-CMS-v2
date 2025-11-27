@@ -163,7 +163,6 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
                   name='otherName'
                   label='Nghệ danh'
                   placeholder='Nghệ danh'
-                  required
                 />
               </Col>
             </Row>
@@ -174,7 +173,6 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
                   name='dateOfBirth'
                   label='Ngày sinh'
                   placeholder='Ngày sinh'
-                  required
                 />
               </Col>
               <Col>
@@ -206,7 +204,6 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
                   name='country'
                   label='Quốc tịch'
                   placeholder='Quốc tịch'
-                  required
                 />
               </Col>
             </Row>
@@ -217,7 +214,6 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
                   control={form.control}
                   label='Tiểu sử'
                   placeholder='Tiểu sử'
-                  required
                 />
               </Col>
             </Row>

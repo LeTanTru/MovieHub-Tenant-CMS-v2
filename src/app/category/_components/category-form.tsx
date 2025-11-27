@@ -85,11 +85,12 @@ export default function CategoryForm({ queryKey }: { queryKey: string }) {
         defaultValues={defaultValues}
         schema={categorySchema}
         initialValues={initialValues}
+        className='w-1/2!'
       >
         {(form) => (
           <>
             <Row>
-              <Col>
+              <Col span={24}>
                 <InputField
                   control={form.control}
                   name='name'
@@ -100,7 +101,7 @@ export default function CategoryForm({ queryKey }: { queryKey: string }) {
               </Col>
             </Row>
 
-            <>{renderActions(form)}</>
+            <>{renderActions(form, { span: 5 })}</>
             {loading && (
               <div className='absolute inset-0 bg-white/80'>
                 <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
