@@ -82,12 +82,13 @@ export default function CollectionItemForm({ queryKey }: { queryKey: string }) {
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         schema={collectionItemSchema}
+        className='w-1/2!'
       >
         {(form) => {
           return (
             <>
               <Row>
-                <Col>
+                <Col span={24}>
                   <AutoCompleteField<any, MovieResType>
                     control={form.control}
                     name='movieId'
@@ -106,11 +107,12 @@ export default function CollectionItemForm({ queryKey }: { queryKey: string }) {
                       value: item.id.toString()
                     })}
                     searchParams={['title']}
+                    init
                   />
                 </Col>
               </Row>
 
-              <>{renderActions(form)}</>
+              <>{renderActions(form, { span: 5 })}</>
               {loading && (
                 <div className='absolute inset-0 bg-white/80'>
                   <CircleLoading className='stroke-dodger-blue mt-20 size-8' />

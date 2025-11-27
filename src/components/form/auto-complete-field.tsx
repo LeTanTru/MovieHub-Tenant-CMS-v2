@@ -60,6 +60,7 @@ type AutoCompleteFieldProps<
   labelClassName?: string;
   disabled?: boolean;
   apiConfig: ApiConfig;
+  init?: boolean;
   onValueChange?: (value: string | number | null) => void;
   mappingData: (option: TOption) => AutoCompleteOption | null;
   renderOption?: (option: AutoCompleteOption<TOption>) => React.ReactNode;
@@ -84,6 +85,7 @@ export default function AutoCompleteField<
   labelClassName,
   disabled = false,
   apiConfig,
+  init = false,
   onValueChange,
   mappingData,
   renderOption
@@ -126,7 +128,7 @@ export default function AutoCompleteField<
       }
       return http.get<ApiResponseList<TOption>>(apiConfig, { params });
     },
-    enabled: false
+    enabled: init
   });
 
   const loading = query.isLoading || query.isFetching;
