@@ -1,6 +1,8 @@
 import {
   AppVersionBodyType,
   CategoryBodyType,
+  CollectionBodyType,
+  CollectionItemBodyType,
   EmployeeBodyType,
   ErrorMaps,
   GroupBodyType,
@@ -201,14 +203,17 @@ export const styleErrorMaps: ErrorMaps<StyleBodyType> = {
   ]
 };
 
-// export const collectionErrorMaps: ErrorMaps<StyleBodyType> = {
-//   [ErrorCode.STYLE_ERROR_TYPE_EXISTED]: [
-//     ['name', { type: 'manual', message: 'Tên thiết kế đã tồn tại' }]
-//   ]
-// };
+export const collectionErrorMaps: ErrorMaps<CollectionBodyType> = {
+  [ErrorCode.COLLECTION_ERROR_NAME_EXISTED]: [
+    ['name', { type: 'manual', message: 'Tên bộ sưu tập đã tồn tại' }]
+  ]
+};
 
-// export const collectionItemErrorMaps: ErrorMaps<StyleBodyType> = {
-//   [ErrorCode.STYLE_ERROR_TYPE_EXISTED]: [
-//     ['name', { type: 'manual', message: 'Tên thiết kế đã tồn tại' }]
-//   ]
-// };
+export const collectionItemErrorMaps: ErrorMaps<CollectionItemBodyType> = {
+  [ErrorCode.COLLECTION_ITEM_ERROR_MOVIE_EXISTED]: [
+    [
+      'movieId',
+      { type: 'manual', message: 'Phim này đã tồn tại trong bộ sưu tập' }
+    ]
+  ]
+};
