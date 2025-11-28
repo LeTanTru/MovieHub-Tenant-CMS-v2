@@ -4,7 +4,12 @@ import { Button, ToolTip } from '@/components/form';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
 import { CircleLoading } from '@/components/loading';
 import { DragDropTable } from '@/components/table';
-import { apiConfig, collectionTypeOptions, FieldTypes } from '@/constants';
+import {
+  apiConfig,
+  collectionTypeOptions,
+  FieldTypes,
+  MAX_PAGE_SIZE
+} from '@/constants';
 import { useDragDrop, useListBase, useNavigate } from '@/hooks';
 import { route } from '@/routes';
 import { collectionSearchSchema } from '@/schemaValidations';
@@ -67,6 +72,9 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
           );
         }
       });
+      handlers.additionalParams = () => ({
+        size: MAX_PAGE_SIZE
+      });
     }
   });
 
@@ -100,7 +108,7 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
       render: (value) => {
         return (
           <span title={value} className='line-clamp-1 block truncate'>
-            {value}
+            {value || '------'}
           </span>
         );
       },

@@ -1,0 +1,12 @@
+import { apiConfig, queryKeys } from '@/constants';
+import { ApiResponseList, CollectionResType } from '@/types';
+import { http } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+
+export const useCollectionListQuery = () => {
+  return useQuery({
+    queryKey: [`${queryKeys.COLLECTION}-list`],
+    queryFn: () =>
+      http.get<ApiResponseList<CollectionResType>>(apiConfig.collection.getList)
+  });
+};
