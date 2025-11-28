@@ -2,6 +2,8 @@ export * from './account.query';
 export * from './audience.query';
 export * from './auth.query';
 export * from './category.query';
+export * from './collection-item.query';
+export * from './collection.query';
 export * from './employee.query';
 export * from './file.query';
 export * from './group.query';

@@ -28,7 +28,7 @@ import {
   movieTypeOptions
 } from '@/constants';
 import { useSaveBase } from '@/hooks';
-import { useCategoryListQuery } from '@/queries';
+import { useCategoryListQuery, useCollectionListQuery } from '@/queries';
 import { route } from '@/routes';
 import { collectionSchema } from '@/schemaValidations';
 import { CollectionBodyType, CollectionResType, StyleResType } from '@/types';
@@ -41,6 +41,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
   const categoryListQuery = useCategoryListQuery();
+  const collectionListQuery = useCollectionListQuery();
 
   const categories =
     categoryListQuery?.data?.data?.content?.map((category) => ({
@@ -100,7 +101,8 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
     } else {
       const payload = {
         ...values,
-        filter: JSON.stringify(values.filter)
+        filter: JSON.stringify(values.filter),
+        ordering: collectionListQuery.data?.data.totalElements ?? 0
       };
       await handleSubmit(payload as any, form, collectionErrorMaps);
     }
@@ -172,6 +174,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                         value: item.id.toString()
                       })}
                       searchParams={['name']}
+                      init
                     />
                   </Col>
                 )}
