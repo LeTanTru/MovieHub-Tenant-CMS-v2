@@ -54,14 +54,20 @@ export default function GroupForm() {
   const createGroupMutation = useCreateGroupMutation();
   const updateGroupMutation = useUpdateGroupMutation();
 
-  const groupedPermissions = (permissions || []).reduce((acc, permission) => {
-    const group = permission.groupPermission.name || 'Unknown';
-    if (!acc[group]) {
-      acc[group] = [];
-    }
-    acc[group].push(permission);
-    return acc;
-  }, {} as any);
+  const groupedPermissions = [...(permissions || [])]
+    .sort(
+      (a, b) =>
+        (a.groupPermission?.ordering ?? 0) - (b.groupPermission?.ordering ?? 0)
+    )
+    .reduce((acc, permission) => {
+      const group = permission.groupPermission.name || 'Unknown';
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(permission);
+      return acc;
+    }, {} as any);
+  console.log('🚀 ~ GroupForm ~ groupedPermissions:', groupedPermissions);
 
   const defaultValues: GroupBodyType = {
     name: '',

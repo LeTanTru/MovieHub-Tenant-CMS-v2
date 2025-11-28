@@ -11,7 +11,7 @@ export type PermissionResType = {
   action: string;
   showMenu: boolean;
   description: string;
-  groupPermission: { id: string; name: string };
+  groupPermission: { id: string; name: string; ordering: number };
   permissionCode: string;
 };
 
