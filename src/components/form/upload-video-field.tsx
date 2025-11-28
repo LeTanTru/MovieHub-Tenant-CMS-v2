@@ -142,7 +142,7 @@ export default function UploadVideoField<T extends FieldValues>({
               <span>Đã tải video</span>
             ) : (
               <span
-                className={cn('font-medium text-gray-300', {
+                className={cn('text-gray-300', {
                   'text-destructive': !!error && !uploading
                 })}
               >

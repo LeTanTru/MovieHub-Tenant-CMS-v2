@@ -44,7 +44,9 @@ export default function BaseForm<T extends Record<string, any>>({
       form.reset(initialValues);
     }
   }, [initialValues, form]);
-  // logger.info('BaseForm ~ form:', form.formState.errors);
+  if (Object.keys(form.formState.errors).length) {
+    logger.info('BaseForm ~ form:', form.formState.errors);
+  }
 
   return (
     <Form {...form}>

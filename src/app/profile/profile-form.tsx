@@ -160,7 +160,7 @@ export default function ProfileForm() {
                     });
                     return res.data?.filePath ?? '';
                   }}
-                  label='Logo'
+                  label='Logo (16:9)'
                   aspect={16 / 9}
                 />
               </Col>

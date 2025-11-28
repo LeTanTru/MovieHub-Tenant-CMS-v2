@@ -23,6 +23,7 @@ export const videoLibrarySchema = (isRequiredDuration: boolean) =>
             data.duration !== null &&
             data.duration !== undefined &&
             data.duration !== '' &&
+            data.duration !== '00:00:00' &&
             data.duration !== 0
           );
         return true;
