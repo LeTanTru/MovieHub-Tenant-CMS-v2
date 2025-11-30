@@ -110,7 +110,7 @@ export default function LoginForm() {
                 required
               />
             </Col> */}
-            {/* <Col span={24}>
+            <Col span={24}>
               <SelectField
                 options={loginOptions}
                 name='loginType'
@@ -119,7 +119,7 @@ export default function LoginForm() {
                 placeholder='Vai trò'
                 required
               />
-            </Col> */}
+            </Col>
           </Row>
           <Row className='mb-0'>
             <Col className='my-0 px-0' span={24}>
