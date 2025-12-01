@@ -117,6 +117,19 @@ export const statusOptions = [
   }
 ];
 
+export const employeeStatusOptions = [
+  {
+    value: STATUS_ACTIVE,
+    label: 'Hoạt động',
+    color: '#28a745'
+  },
+  {
+    value: STATUS_LOCK,
+    label: 'Khóa',
+    color: '#dc3545'
+  }
+];
+
 export const FieldTypes = {
   STRING: 'STRING_TYPE',
   NUMBER: 'NUMBER_TYPE',

@@ -5,11 +5,11 @@ import { ListPageWrapper, PageWrapper } from '@/components/layout';
 import { BaseTable } from '@/components/table';
 import {
   apiConfig,
+  employeeStatusOptions,
   FieldTypes,
   MAX_PAGE_SIZE,
   STATUS_ACTIVE,
-  STATUS_LOCK,
-  statusOptions
+  STATUS_LOCK
 } from '@/constants';
 import { useListBase } from '@/hooks';
 import { useChangeEmployeeStatusMutation, useGroupListQuery } from '@/queries';
@@ -164,7 +164,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       },
       align: 'center'
     },
-    handlers.renderStatusColumn(),
+    handlers.renderStatusColumn({ statusOptions: employeeStatusOptions }),
     handlers.renderActionColumn({
       actions: { edit: true, changeStatus: true, delete: true }
     })
@@ -189,7 +189,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       key: 'status',
       placeholder: 'Trạng thái',
       type: FieldTypes.SELECT,
-      options: statusOptions
+      options: employeeStatusOptions
     }
   ];
 

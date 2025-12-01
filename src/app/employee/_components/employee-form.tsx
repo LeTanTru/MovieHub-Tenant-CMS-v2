@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Col,
   InputField,
@@ -13,9 +14,9 @@ import { CircleLoading } from '@/components/loading';
 import {
   apiConfig,
   employeeErrorMaps,
+  employeeStatusOptions,
   ErrorCode,
-  STATUS_ACTIVE,
-  statusOptions
+  STATUS_ACTIVE
 } from '@/constants';
 import { useSaveBase } from '@/hooks';
 import { useGroupListQuery, useUploadAvatarMutation } from '@/queries';
@@ -224,7 +225,7 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
                   </Col>
                   <Col>
                     <SelectField
-                      options={statusOptions || []}
+                      options={employeeStatusOptions || []}
                       control={form.control}
                       name='status'
                       label='Trạng thái'
@@ -281,7 +282,7 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
                 <Row>
                   <Col>
                     <SelectField
-                      options={statusOptions || []}
+                      options={employeeStatusOptions || []}
                       control={form.control}
                       name='status'
                       label='Trạng thái'

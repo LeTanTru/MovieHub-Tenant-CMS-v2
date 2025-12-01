@@ -3,7 +3,7 @@ import { queryKeys } from '@/constants';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Phim mới'
+  title: 'Phim nổi bật'
 };
 
 export default function PersonListPage() {

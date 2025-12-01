@@ -76,7 +76,7 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
           src={renderImageUrl(value)}
           className='rounded'
           previewClassName='rounded'
-          zoomSize={850}
+          zoomSize={500}
           icon={<AiOutlineFileImage className='size-7 text-slate-800' />}
         />
       )
@@ -154,7 +154,7 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
     ];
 
   return (
-    <PageWrapper breadcrumbs={[{ label: 'Phim mới' }]}>
+    <PageWrapper breadcrumbs={[{ label: 'Phim nổi bật' }]}>
       <ListPageWrapper
         searchForm={handlers.renderSearchForm({
           searchFields,

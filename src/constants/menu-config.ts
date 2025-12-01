@@ -68,14 +68,14 @@ const menuConfig: MenuItem[] = [
     label: 'Quản lý giao diện',
     icon: LucideLayoutGrid,
     permissionCode: [
+      apiConfig.sidebar.getList.permissionCode,
       apiConfig.style.getList.permissionCode,
-      apiConfig.collection.getList.permissionCode,
-      apiConfig.sidebar.getList.permissionCode
+      apiConfig.collection.getList.permissionCode
     ],
     children: [
       {
         key: 'sidebar-movie-list',
-        label: 'Phim mới',
+        label: 'Phim nổi bật',
         path: route.sidebar.getList.path,
         permissionCode: [apiConfig.sidebar.getList.permissionCode]
       },

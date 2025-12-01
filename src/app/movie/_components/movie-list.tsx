@@ -151,10 +151,14 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
         const ageRating = ageRatingOptions.find(
           (ageRating) => ageRating.value === value
         );
-        return (
-          <span className='line-clamp-1 block truncate' title={ageRating?.mean}>
-            {ageRating?.label ?? '------'}
-          </span>
+        return ageRating ? (
+          <ToolTip title={ageRating?.mean} sideOffset={0}>
+            <span className='line-clamp-1 block truncate'>
+              {ageRating?.label}
+            </span>
+          </ToolTip>
+        ) : (
+          '------'
         );
       },
       align: 'center',

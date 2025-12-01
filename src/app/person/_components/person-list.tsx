@@ -78,23 +78,23 @@ export default function PersonList({
       )
     },
     {
-      title: 'Tên',
-      dataIndex: 'name',
-      render: (value) => (
-        <span className='line-clamp-1 block truncate' title={value}>
-          {value ?? '------'}
-        </span>
+      title: kind === PERSON_KIND_ACTOR ? 'Tên diễn viên' : 'Tên đạo diễn',
+      render: (_, record) => (
+        <>
+          <span
+            className='line-clamp-1 block truncate'
+            title={`${record.otherName}`}
+          >
+            {record.otherName}
+          </span>
+          <span
+            className='line-clamp-1 block truncate text-xs text-zinc-500'
+            title={`${record.name}`}
+          >
+            {record.name}
+          </span>
+        </>
       )
-    },
-    {
-      title: 'Nghệ danh',
-      dataIndex: 'otherName',
-      render: (value) => (
-        <span className='line-clamp-1 block truncate' title={value}>
-          {value ?? '------'}
-        </span>
-      ),
-      width: 200
     },
     {
       title: 'Ngày sinh',

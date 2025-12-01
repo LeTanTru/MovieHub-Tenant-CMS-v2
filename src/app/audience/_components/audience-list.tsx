@@ -8,7 +8,7 @@ import {
   FieldTypes,
   STATUS_ACTIVE,
   STATUS_LOCK,
-  statusOptions,
+  employeeStatusOptions,
   userKinds
 } from '@/constants';
 import { useListBase } from '@/hooks';
@@ -181,7 +181,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
       key: 'status',
       placeholder: 'Trạng thái',
       type: FieldTypes.SELECT,
-      options: statusOptions
+      options: employeeStatusOptions
     }
   ];
 
