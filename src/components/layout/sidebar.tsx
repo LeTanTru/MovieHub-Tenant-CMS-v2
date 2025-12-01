@@ -22,7 +22,7 @@ export default function SidebarLayout({
       defaultOpen={state === 'expanded'}
     >
       <AppSidebar />
-      <div className='w-full overflow-y-hidden bg-gray-100'>
+      <div className='w-full overflow-y-hidden'>
         <Navbar />
         {children}
       </div>

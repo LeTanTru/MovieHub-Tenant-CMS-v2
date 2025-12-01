@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
-import { logoWithText } from '@/assets';
+import { logo, logoWithText } from '@/assets';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -365,13 +365,24 @@ const AppSidebar = () => {
                 href='/'
                 className='block! w-full! transition-all duration-200 ease-linear group-data-[collapsible=icon]:size-full! group-data-[collapsible=icon]:p-0! hover:bg-transparent!'
               >
-                <Image
-                  src={logoWithText}
-                  alt='logo'
-                  width={250}
-                  height={50}
-                  className='mx-auto w-4/5 object-cover'
-                />
+                {state === 'expanded' ? (
+                  <Image
+                    src={logoWithText}
+                    alt='logo'
+                    width={250}
+                    height={50}
+                    className='mx-auto w-4/5 object-cover'
+                    unoptimized
+                  />
+                ) : (
+                  <Image
+                    src={logo}
+                    alt='logo'
+                    width={50}
+                    height={50}
+                    className='mx-auto w-4/5 object-cover'
+                  />
+                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

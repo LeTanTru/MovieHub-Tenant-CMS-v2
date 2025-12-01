@@ -127,6 +127,31 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     };
   }, [data]);
 
+  // const textTracks = [
+  //   {
+  //     src: 'https://files.vidstack.io/sprite-fight/subs/english.vtt',
+  //     label: 'English',
+  //     language: 'en-US',
+  //     kind: 'subtitles',
+  //     type: 'vtt',
+  //     default: true
+  //   },
+  //   {
+  //     src: 'https://files.vidstack.io/sprite-fight/subs/spanish.vtt',
+  //     label: 'Spanish',
+  //     language: 'es-ES',
+  //     kind: 'subtitles',
+  //     type: 'vtt'
+  //   },
+  //   {
+  //     src: 'https://files.vidstack.io/sprite-fight/chapters.vtt',
+  //     language: 'en-US',
+  //     kind: 'chapters',
+  //     type: 'vtt',
+  //     default: true
+  //   }
+  // ];
+
   const onSubmit = async (
     values: VideoLibraryBodyType,
     form: UseFormReturn<VideoLibraryBodyType>
@@ -310,15 +335,43 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                       <Row>
                         <Col span={24}>
                           <MediaPlayer
-                            viewType='video'
-                            streamType='on-demand'
-                            src={videoUrl || form.watch('content')}
                             autoPlay={false}
-                            muted
+                            crossOrigin
+                            fullscreenOrientation={'none'}
                             logLevel='silent'
+                            muted
+                            onProviderChange={onProviderChange}
+                            playsInline
+                            preferNativeHLS={false}
+                            src={videoUrl || form.watch('content')}
+                            streamType='on-demand'
+                            viewType='video'
                           >
                             <MediaProvider />
-                            <DefaultVideoLayout icons={defaultLayoutIcons} />
+                            <DefaultVideoLayout
+                              thumbnails={renderVttUrl(data.vttUrl)}
+                              icons={defaultLayoutIcons}
+                              slots={{
+                                playButton: <PlayToggleButton />,
+                                muteButton: <VolumeToggleButton />,
+                                fullscreenButton: <FullscreenToggleButton />,
+                                pipButton: <PiPToggleButton />,
+                                settingsMenu: (
+                                  <SettingMenu
+                                    placement='top end'
+                                    tooltipPlacement='top'
+                                  />
+                                ),
+                                captionButton: <CaptionButton />,
+                                beforeSettingsMenu: (
+                                  <>
+                                    <SeekBackwardButton />
+                                    <SeekForwardButton />
+                                  </>
+                                ),
+                                googleCastButton: null
+                              }}
+                            />
                           </MediaPlayer>
                         </Col>
                       </Row>
@@ -360,15 +413,43 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                       <Row>
                         <Col span={24}>
                           <MediaPlayer
-                            viewType='video'
-                            streamType='on-demand'
-                            src={videoUrl || form.watch('content')}
                             autoPlay={false}
-                            muted
+                            crossOrigin
+                            fullscreenOrientation={'none'}
                             logLevel='silent'
+                            muted
+                            onProviderChange={onProviderChange}
+                            playsInline
+                            preferNativeHLS={false}
+                            src={videoUrl || form.watch('content')}
+                            streamType='on-demand'
+                            viewType='video'
                           >
                             <MediaProvider />
-                            <DefaultVideoLayout icons={defaultLayoutIcons} />
+                            <DefaultVideoLayout
+                              thumbnails={renderVttUrl(data.vttUrl)}
+                              icons={defaultLayoutIcons}
+                              slots={{
+                                playButton: <PlayToggleButton />,
+                                muteButton: <VolumeToggleButton />,
+                                fullscreenButton: <FullscreenToggleButton />,
+                                pipButton: <PiPToggleButton />,
+                                settingsMenu: (
+                                  <SettingMenu
+                                    placement='top end'
+                                    tooltipPlacement='top'
+                                  />
+                                ),
+                                captionButton: <CaptionButton />,
+                                beforeSettingsMenu: (
+                                  <>
+                                    <SeekBackwardButton />
+                                    <SeekForwardButton />
+                                  </>
+                                ),
+                                googleCastButton: null
+                              }}
+                            />
                           </MediaPlayer>
                         </Col>
                       </Row>
@@ -382,17 +463,17 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     {/* Play preview video */}
                     {isEditing && data ? (
                       <MediaPlayer
-                        viewType='video'
-                        streamType='on-demand'
-                        logLevel='silent'
-                        crossOrigin
-                        playsInline
-                        muted
-                        preferNativeHLS={false}
                         autoPlay={false}
-                        src={renderVideoUrl(data.content)}
+                        crossOrigin
                         fullscreenOrientation={'none'}
+                        logLevel='silent'
+                        muted
                         onProviderChange={onProviderChange}
+                        playsInline
+                        preferNativeHLS={false}
+                        src={renderVideoUrl(data.content)}
+                        streamType='on-demand'
+                        viewType='video'
                       >
                         <MediaProvider slot='media'>
                           <Poster
@@ -400,8 +481,8 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                             src={renderImageUrl(data.thumbnailUrl)}
                           />
                           {/* {textTracks.map((track) => (
-                          <Track {...(track as any)} key={track.src} />
-                        ))} */}
+                            <Track {...(track as any)} key={track.src} />
+                          ))} */}
                         </MediaProvider>
                         <DefaultVideoLayout
                           thumbnails={renderVttUrl(data.vttUrl)}
