@@ -21,9 +21,12 @@ import {
   ErrorCode,
   GENDER_MALE,
   genderOptions,
+  PERSON_KIND_ACTOR,
+  PERSON_KIND_DIRECTOR,
   personKinds,
   storageKeys,
-  TAB_PERSON_KIND_ACTOR
+  TAB_PERSON_KIND_ACTOR,
+  TAB_PERSON_KIND_DIRECTOR
 } from '@/constants';
 import { useSaveBase } from '@/hooks';
 import { logger } from '@/logger';
@@ -82,6 +85,13 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
     otherName: ''
   };
 
+  const getKinds = () => {
+    const kinds = [];
+    if (kind === TAB_PERSON_KIND_ACTOR) kinds.push(PERSON_KIND_ACTOR);
+    if (kind === TAB_PERSON_KIND_DIRECTOR) kinds.push(PERSON_KIND_DIRECTOR);
+    return kinds;
+  };
+
   const initialValues: PersonBodyType = useMemo(() => {
     return {
       avatarPath: data?.avatarPath ?? '',
@@ -89,11 +99,11 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
       country: data?.country ?? '',
       dateOfBirth: formatDate(data?.dateOfBirth, DEFAULT_DATE_FORMAT),
       gender: data?.gender ?? GENDER_MALE,
-      kinds: data?.kinds ?? [],
+      kinds: data?.kinds ?? getKinds(),
       name: data?.name ?? '',
       otherName: data?.otherName ?? ''
     };
-  }, [data]);
+  }, [data, kind]);
 
   const deleteFiles = async (files: string[]) => {
     const validFiles = files.filter(Boolean);

@@ -7,34 +7,43 @@ import {
   PERSON_KIND_ACTOR,
   PERSON_KIND_DIRECTOR,
   queryKeys,
-  storageKeys
+  storageKeys,
+  TAB_PERSON_KIND_ACTOR,
+  TAB_PERSON_KIND_DIRECTOR
 } from '@/constants';
 import { useIsMounted } from '@/hooks';
 import { getData, setData } from '@/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function PersonTab() {
   const [activeTab, setActiveTab] = useState(
-    getData(storageKeys.ACTIVE_TAB_PERSON_KIND) || 'actor-tab'
+    getData(storageKeys.ACTIVE_TAB_PERSON_KIND) || TAB_PERSON_KIND_ACTOR
   );
   const isMounted = useIsMounted();
 
   const tabs = [
     {
-      value: 'actor-tab',
+      value: TAB_PERSON_KIND_ACTOR,
       label: 'Diễn viên',
       component: (
         <PersonList queryKey={queryKeys.PERSON} kind={PERSON_KIND_ACTOR} />
       )
     },
     {
-      value: 'director-tab',
+      value: TAB_PERSON_KIND_DIRECTOR,
       label: 'Đạo diễn',
       component: (
         <PersonList queryKey={queryKeys.PERSON} kind={PERSON_KIND_DIRECTOR} />
       )
     }
   ];
+
+  useEffect(() => {
+    if (!getData(TAB_PERSON_KIND_ACTOR)) {
+      setActiveTab(TAB_PERSON_KIND_ACTOR);
+      setData(storageKeys.ACTIVE_TAB_PERSON_KIND, TAB_PERSON_KIND_ACTOR);
+    }
+  }, [activeTab]);
 
   if (!isMounted) return null;
 
