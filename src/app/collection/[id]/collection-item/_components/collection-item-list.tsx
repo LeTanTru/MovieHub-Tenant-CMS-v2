@@ -2,7 +2,6 @@
 
 import { AvatarField, Button } from '@/components/form';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
-import { CircleLoading } from '@/components/loading';
 import { DragDropTable } from '@/components/table';
 import {
   ageRatingOptions,
@@ -221,15 +220,10 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
               disabled={!isChanged || loading || loadingUpdateOrdering}
               className='w-40'
               variant={'primary'}
+              loading={loading || loadingUpdateOrdering}
             >
-              {loading || loadingUpdateOrdering ? (
-                <CircleLoading />
-              ) : (
-                <>
-                  <Save />
-                  Cập nhật
-                </>
-              )}
+              <Save />
+              Cập nhật
             </Button>
           </div>
         )}
