@@ -9,7 +9,6 @@ import {
 } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import PasswordField from '@/components/form/password-field';
-import { CircleLoading } from '@/components/loading';
 import { KIND_MANAGER, profileErrorMaps, storageKeys } from '@/constants';
 import { useAuth, useNavigate } from '@/hooks';
 import { logger } from '@/logger';
@@ -245,15 +244,10 @@ export default function ProfileForm() {
               <Button
                 disabled={!form.formState.isDirty || profileMutation.isPending}
                 variant={'primary'}
+                loading={profileMutation.isPending}
               >
-                {profileMutation.isPending ? (
-                  <CircleLoading />
-                ) : (
-                  <>
-                    <Save />
-                    Cập nhật
-                  </>
-                )}
+                <Save />
+                Cập nhật
               </Button>
             </Col>
           </Row>

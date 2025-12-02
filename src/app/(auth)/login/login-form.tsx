@@ -15,7 +15,6 @@ import { LoginBodyType, LoginResType } from '@/types/auth.type';
 import { notify, setData } from '@/utils';
 import Image from 'next/image';
 import PasswordField from '@/components/form/password-field';
-import { CircleLoading } from '@/components/loading';
 import { useAuthStore } from '@/store';
 import envConfig from '@/config';
 import { useLoginEmployeeMutation, useLoginManagerMutation } from '@/queries';
@@ -142,8 +141,9 @@ export default function LoginForm() {
               <Button
                 disabled={!form.formState.isDirty || loading}
                 variant={'primary'}
+                loading={loading}
               >
-                {loading ? <CircleLoading /> : 'Đăng nhập'}
+                Đăng nhập
               </Button>
             </Col>
           </Row>

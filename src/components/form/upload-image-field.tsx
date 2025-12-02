@@ -28,7 +28,6 @@ import { FormLabel } from '@/components/ui/form';
 import { cn } from '@/lib';
 import { useFileUpload } from '@/hooks';
 import { logger } from '@/logger';
-import { CircleLoading } from '@/components/loading';
 import {
   Control,
   FieldPath,
@@ -315,8 +314,9 @@ export default function UploadImageField<T extends FieldValues>({
                 className='-my-1 w-25'
                 onClick={handleApply}
                 disabled={!previewUrl || loading}
+                loading={loading}
               >
-                {loading ? <CircleLoading /> : 'Áp dụng'}
+                Áp dụng
               </Button>
             </DialogTitle>
           </DialogHeader>

@@ -1,7 +1,6 @@
 'use client';
 
 import { Button, Col, Row } from '@/components/form';
-import { CircleLoading } from '@/components/loading';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -212,15 +211,10 @@ export default function useSaveBase<
           disabled={!form.formState.isDirty || mutation.isPending}
           type='submit'
           variant={'primary'}
+          loading={mutation.isPending}
         >
-          {mutation.isPending ? (
-            <CircleLoading />
-          ) : (
-            <>
-              <Save />
-              {isCreate ? 'Thêm' : 'Cập nhật'}
-            </>
-          )}
+          <Save />
+          {isCreate ? 'Thêm' : 'Cập nhật'}
         </Button>
       </Col>
     </Row>

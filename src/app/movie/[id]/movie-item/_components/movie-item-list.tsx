@@ -3,7 +3,6 @@
 import VideoLibraryPreviewModal from '@/app/movie/[id]/movie-item/_components/video-library-preview-modal';
 import { AvatarField, Button, ToolTip } from '@/components/form';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
-import { CircleLoading } from '@/components/loading';
 import { DragDropTable } from '@/components/table';
 import {
   apiConfig,
@@ -270,15 +269,10 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
               disabled={!isChanged || loading || loadingUpdateOrdering}
               className='w-40'
               variant={'primary'}
+              loading={loading || loadingUpdateOrdering}
             >
-              {loading || loadingUpdateOrdering ? (
-                <CircleLoading />
-              ) : (
-                <>
-                  <Save />
-                  Cập nhật
-                </>
-              )}
+              <Save />
+              Cập nhật
             </Button>
           </div>
         )}

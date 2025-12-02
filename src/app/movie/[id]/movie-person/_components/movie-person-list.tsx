@@ -5,7 +5,6 @@ import { AvatarField, Button, InputField, ToolTip } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import { HasPermission } from '@/components/has-permission';
 import { ListPageWrapper } from '@/components/layout';
-import { CircleLoading } from '@/components/loading';
 import { DragDropTable } from '@/components/table';
 import { Separator } from '@/components/ui/separator';
 import { apiConfig, MAX_PAGE_SIZE, PERSON_KIND_ACTOR } from '@/constants';
@@ -387,15 +386,10 @@ export default function MoviePersonList({
               disabled={!isChanged || loading || loadingUpdateOrdering}
               className='w-40'
               variant={'primary'}
+              loading={loading || loadingUpdateOrdering}
             >
-              {loading || loadingUpdateOrdering ? (
-                <CircleLoading />
-              ) : (
-                <>
-                  <Save />
-                  Cập nhật
-                </>
-              )}
+              <Save />
+              Cập nhật
             </Button>
           </div>
         )}
