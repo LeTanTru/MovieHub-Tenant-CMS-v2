@@ -88,6 +88,7 @@ export default function MovieItemList({ queryKey }: { queryKey: string }) {
                 }}
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                 {...buttonProps}
+                disabled={!record.video}
               >
                 <PlayCircle className='text-dodger-blue size-4' />
               </Button>
