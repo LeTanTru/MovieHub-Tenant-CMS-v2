@@ -83,6 +83,13 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
     [pinCommentMutation, listQuery]
   );
 
+  const handleDeleteComment = useCallback(
+    async (id: string) => {
+      handlers.handleDeleteClick(id);
+    },
+    [handlers]
+  );
+
   const renderChildren = useCallback(
     (list: CommentResType[], level: number) =>
       list.map((c) => (
@@ -93,10 +100,11 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
           voteMap={voteMap}
           onVote={handleVote}
           onPin={handlePinComment}
+          onDelete={handleDeleteComment}
           renderChildren={renderChildren}
         />
       )),
-    [voteMap, handleVote, handlePinComment]
+    [voteMap, handleVote, handlePinComment, handleDeleteComment]
   );
 
   return (
