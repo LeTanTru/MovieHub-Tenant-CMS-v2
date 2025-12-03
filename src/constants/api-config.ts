@@ -113,6 +113,11 @@ const apiConfig = defineApiConfig({
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'CMT_VOTE'
+    },
+    voteList: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/vote-list/:movieId`,
+      method: 'GET',
+      headers: baseHeader
     }
   },
   employee: {

@@ -7,6 +7,7 @@ import { apiConfig } from '@/constants';
 import { useClickOutside, useSaveBase } from '@/hooks';
 import { commentSchema } from '@/schemaValidations';
 import { CommentBodyType, CommentResType } from '@/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -19,7 +20,9 @@ export default function CommentInput({
   movieId: string;
 }) {
   const formRef = useRef<any>(null);
+
   const [showPicker, setShowPicker] = useState(false);
+  const queryClient = useQueryClient();
 
   const wrapperRef = useClickOutside<HTMLDivElement>(() =>
     setShowPicker(false)
@@ -36,7 +39,8 @@ export default function CommentInput({
       queryKey,
       objectName: 'bình luận',
       pathParams: {},
-      mode: 'create'
+      mode: 'create',
+      showNotify: false
     }
   });
 
@@ -49,6 +53,7 @@ export default function CommentInput({
 
   const onSubmit = async (values: CommentBodyType) => {
     await handleSubmit(values);
+    queryClient.invalidateQueries({ queryKey: [`${queryKey}-list`] });
   };
 
   useEffect(() => {
