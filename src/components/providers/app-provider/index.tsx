@@ -10,17 +10,11 @@ import {
 import {
   useEmployeeProfileQuery,
   useGetClientTokenMutation,
-  useManagerProfileQuery,
+  useManageProfileQuery,
   useRefreshTokenMutation
 } from '@/queries';
 import { useAuthStore, useSocketStore } from '@/store';
-import {
-  getData,
-  isTokenExpired,
-  isTokenExpiringSoon,
-  removeData,
-  setData
-} from '@/utils';
+import { getData, isTokenExpiringSoon, removeData, setData } from '@/utils';
 import { useEffect, useState } from 'react';
 
 export default function AppProvider({
@@ -34,7 +28,7 @@ export default function AppProvider({
   const [clientToken, setClientToken] = useState<string>('');
   const { isAuthenticated, setLoading, setProfile } = useAuthStore();
   const { socket, setSocket } = useSocketStore();
-  const managerProfileQuery = useManagerProfileQuery();
+  const managerProfileQuery = useManageProfileQuery();
   const employeeProfileQuery = useEmployeeProfileQuery();
   const getClientTokenMutation = useGetClientTokenMutation();
   const refreshTokenMutation = useRefreshTokenMutation();
@@ -167,7 +161,7 @@ export default function AppProvider({
     };
 
     const interval = setInterval(() => {
-      if (isTokenExpired(accessToken)) {
+      if (isTokenExpiringSoon(accessToken)) {
         handleRefreshToken();
       }
     });

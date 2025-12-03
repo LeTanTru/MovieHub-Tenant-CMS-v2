@@ -37,6 +37,7 @@ type UseSaveBaseProps<R, T> = {
     queryKey: string;
     pathParams: { [key: string]: any };
     mode: 'create' | 'edit';
+    showNotify?: boolean;
   };
   override?: (handlers: HandlerType<T>) => HandlerType<T> | void;
 };
@@ -51,7 +52,8 @@ export default function useSaveBase<
     objectName = '',
     listPageUrl = '',
     pathParams,
-    mode
+    mode,
+    showNotify = true
   },
   override
 }: UseSaveBaseProps<R, T>) {
@@ -115,9 +117,10 @@ export default function useSaveBase<
             queryClient.invalidateQueries({
               queryKey: [queryKey, pathParams.id]
             });
-            notify.success(
-              `${isCreate ? 'Thêm mới' : 'Cập nhật'} ${objectName} thành công`
-            );
+            if (showNotify)
+              notify.success(
+                `${isCreate ? 'Thêm mới' : 'Cập nhật'} ${objectName} thành công`
+              );
             if (listPageUrl) {
               navigate(getBackPath());
             }

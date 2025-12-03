@@ -4,9 +4,9 @@ import { ApiResponse, ProfileBodyType, ProfileResType } from '@/types';
 import { http } from '@/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-export const useManagerProfileQuery = (enabled: boolean = false) => {
+export const useManageProfileQuery = (enabled: boolean = false) => {
   return useQuery({
-    queryKey: [`manager-${queryKeys.PROFILE}`],
+    queryKey: [`manage-${queryKeys.PROFILE}`],
     queryFn: () =>
       http.get<ApiResponse<ProfileResType>>(apiConfig.customer.getProfile),
     enabled: enabled

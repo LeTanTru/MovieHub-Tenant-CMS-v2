@@ -41,3 +41,8 @@ export type CommentSearchBodyType = z.infer<typeof commentSearchSchema> &
 export type CommentPinBodyType = z.infer<typeof commentPinSchema>;
 
 export type CommentVoteBodyType = z.infer<typeof commentVoteSchema>;
+
+export type CommentVoteResType = {
+  id: string;
+  type: number;
+};
