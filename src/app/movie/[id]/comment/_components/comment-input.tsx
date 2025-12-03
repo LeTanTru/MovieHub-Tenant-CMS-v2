@@ -122,6 +122,7 @@ export default function CommentInput({
                   control={form.control}
                   name='content'
                   placeholder='Viết bình luận'
+                  className='min-h-20'
                 />
               </Col>
             </Row>
