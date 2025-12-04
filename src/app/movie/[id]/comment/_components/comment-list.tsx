@@ -30,7 +30,7 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
   const voteCommentMutation = useVoteCommentMutation();
   const pinCommentMutation = usePinCommentMutation();
 
-  const { data, handlers, listQuery, queryFilter } = useListBase<
+  const { data, handlers, listQuery } = useListBase<
     CommentResType,
     CommentSearchType
   >({
@@ -39,7 +39,7 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
       objectName: 'bình luận',
       queryKey,
       defaultFilters: { movieId },
-      notShowFromSearchParams: ['movieId', 'parentId'],
+      notShowFromSearchParams: ['movieId', 'parentId', 'page', 'size'],
       showNotify: false
     }
   });
@@ -77,10 +77,15 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
     await listQuery.refetch();
   }, [listQuery]);
 
-  const handleLoadReplies = (parentId: string) => {
-    handlers.changeQueryFilter({ ...queryFilter, parentId });
-  };
-
+  const handleLoadReplies = useCallback(
+    (parentId: string) => {
+      handlers.changeQueryFilter({
+        parentId,
+        page: 0
+      });
+    },
+    [handlers.changeQueryFilter]
+  );
   const renderChildren = useCallback(
     (list: CommentResType[], level: number, rootId?: string) =>
       list.map((c) => (
@@ -103,7 +108,8 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
       handleVote,
       handlePinComment,
       handleDeleteComment,
-      handleReplySuccess
+      handleReplySuccess,
+      handleLoadReplies
     ]
   );
 

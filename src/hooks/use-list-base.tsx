@@ -601,7 +601,6 @@ export default function useListBase<
       setIsFetchingMore(false);
     }
   };
-
   const handleScrollLoadMore = (e: React.UIEvent<HTMLElement>) => {
     const target = e.currentTarget;
 
