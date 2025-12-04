@@ -50,9 +50,11 @@ export type CommentVoteResType = {
 export type CommentStoreType = {
   replyingCommentId: string | null;
   editingComment: CommentResType | null;
+  parentId: string;
 
   openReply: (id: string) => void;
   closeReply: () => void;
 
   setEditingComment: (c: CommentResType | null) => void;
+  setParentId: (parentId: string) => void;
 };

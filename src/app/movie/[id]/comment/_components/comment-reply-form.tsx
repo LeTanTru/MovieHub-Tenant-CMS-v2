@@ -133,9 +133,9 @@ export default function CommentReplyForm({
       schema={commentSchema}
       onSubmit={onSubmit}
       className='shadow-[0px_0px_2px_2px] shadow-gray-200'
+      ref={formRef}
     >
       {(form) => {
-        formRef.current = form;
         return (
           <Row className='mb-0'>
             <Col span={24}>
@@ -183,7 +183,9 @@ export default function CommentReplyForm({
                   variant='primary'
                   className='w-20!'
                   loading={loading}
-                  disabled={!form.watch('content') || !form.formState.isDirty}
+                  disabled={
+                    !form.watch('content') || !form.formState.validatingFields
+                  }
                 >
                   <Send />
                 </Button>

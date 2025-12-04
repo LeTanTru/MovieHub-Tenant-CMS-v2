@@ -10,7 +10,7 @@ const filterSchema = z.object({
 });
 
 export const collectionSchema = z.object({
-  color: z.string().nonempty('Bắt buộc'),
+  colors: z.array(z.string()),
   filter: filterSchema,
   name: z.string().nonempty('Bắt buộc'),
   ordering: z.number(),
