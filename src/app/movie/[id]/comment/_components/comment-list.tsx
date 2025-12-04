@@ -12,28 +12,11 @@ import {
   useVoteListCommentQuery
 } from '@/queries/comment.query';
 import { route } from '@/routes';
-import { CommentResType, CommentSearchBodyType } from '@/types';
+import { CommentResType, CommentSearchType } from '@/types';
 import { useParams } from 'next/navigation';
 import { useMemo, useCallback } from 'react';
 import CommentItem from './comment-item';
-
-const buildCommentTree = (comments: CommentResType[]) => {
-  const map: Record<string, CommentResType & { children?: CommentResType[] }> =
-    {};
-  const roots: (CommentResType & { children?: CommentResType[] })[] = [];
-
-  for (const c of comments) map[c.id] = { ...c, children: [] };
-
-  for (const c of comments) {
-    if (c.parent?.id && map[c.parent.id]) {
-      map[c.parent.id].children?.push(map[c.id]);
-    } else {
-      roots.push(map[c.id]);
-    }
-  }
-
-  return roots;
-};
+import { DotLoading } from '@/components/loading';
 
 export default function CommentList({ queryKey }: { queryKey: string }) {
   const { id: movieId } = useParams<{ id: string }>();
@@ -49,19 +32,17 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
 
   const { data, handlers, listQuery } = useListBase<
     CommentResType,
-    CommentSearchBodyType
+    CommentSearchType
   >({
     apiConfig: apiConfig.comment,
     options: {
       objectName: 'bình luận',
       queryKey,
       defaultFilters: { movieId },
-      notShowFromSearchParams: ['movieId'],
+      notShowFromSearchParams: ['movieId', 'parentId', 'page', 'size'],
       showNotify: false
     }
   });
-
-  const tree = useMemo(() => buildCommentTree(data), [data]);
 
   const voteMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -96,6 +77,15 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
     await listQuery.refetch();
   }, [listQuery]);
 
+  const handleLoadReplies = useCallback(
+    (parentId: string) => {
+      handlers.changeQueryFilter({
+        parentId,
+        page: 0
+      });
+    },
+    [handlers.changeQueryFilter]
+  );
   const renderChildren = useCallback(
     (list: CommentResType[], level: number, rootId?: string) =>
       list.map((c) => (
@@ -108,8 +98,9 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
           onVote={handleVote}
           onPin={handlePinComment}
           onDelete={handleDeleteComment}
-          renderChildren={renderChildren}
           onReplySuccess={handleReplySuccess}
+          onLoadReplies={handleLoadReplies}
+          renderChildren={renderChildren}
         />
       )),
     [
@@ -117,7 +108,8 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
       handleVote,
       handlePinComment,
       handleDeleteComment,
-      handleReplySuccess
+      handleReplySuccess,
+      handleLoadReplies
     ]
   );
 
@@ -127,14 +119,21 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
         { label: 'Phim', href: route.movie.getList.path },
         { label: 'Bình luận' }
       ]}
+      onScroll={handlers.handleScrollLoadMore}
     >
       <ListPageWrapper>
         <CommentInput queryKey={queryKey} movieId={movieId} />
 
-        {tree.length === 0 ? (
+        {data.length === 0 ? (
           <NoData content='Chưa có bình luận nào' />
         ) : (
-          <div className='-mt-4 px-4 pb-4'>{renderChildren(tree, 0)}</div>
+          <div className='px-4 pb-4'>
+            <h4 className='-mb-2 ml-2 font-semibold text-black'>
+              Bình luận ({data.length})
+            </h4>
+            {renderChildren(data, 0)}
+            {handlers.isFetchingMore && <DotLoading className='mt-4' />}
+          </div>
         )}
       </ListPageWrapper>
     </PageWrapper>
