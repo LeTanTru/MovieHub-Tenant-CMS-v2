@@ -101,6 +101,8 @@ type HandlerType<T extends { id: string }, S extends BaseSearchType> = {
   handleScrollLoadMore: (e: React.UIEvent<HTMLElement>) => void;
   isFetchingMore: boolean;
   hasMore: boolean;
+  setHiddenFilter: (key: keyof S, value: S[keyof S] | null) => void;
+  setHiddenFilters: (filters: Partial<S>) => void;
 };
 
 type ActionCondition<T> = boolean | ((record: T) => boolean);
@@ -122,6 +124,7 @@ type UseListBaseProps<T extends { id: string }, S extends BaseSearchType> = {
     excludeFromQueryFilter?: string[];
     notShowFromSearchParams?: string[];
     showNotify?: boolean;
+    defaultHiddenFilters?: Partial<S>;
   };
   override?: (handlers: HandlerType<T, S>) => HandlerType<T, S> | void;
 };
@@ -138,15 +141,18 @@ export default function useListBase<
     enabled = true,
     excludeFromQueryFilter = [],
     notShowFromSearchParams = [],
-    showNotify = true
+    showNotify = true,
+    defaultHiddenFilters = {} as Partial<S>
   } = options;
   const navigate = useNavigate();
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const [data, setData] = useState<T[]>([]);
-  const { hasPermission } = useValidatePermission();
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [hiddenFilters, setHiddenFiltersState] =
+    useState<Partial<S>>(defaultHiddenFilters);
+  const { hasPermission } = useValidatePermission();
 
   const [pagination, setPagination] = useState<PaginationType>({
     current: DEFAULT_TABLE_PAGE_START,
@@ -171,6 +177,7 @@ export default function useListBase<
     const filteredParams = Object.fromEntries(
       Object.entries({
         ...mergedSearchParams,
+        ...hiddenFilters,
         page: mergedSearchParams.page
           ? Number(mergedSearchParams.page) - 1
           : DEFAULT_TABLE_PAGE_START,
@@ -181,7 +188,7 @@ export default function useListBase<
     return {
       ...filteredParams
     } as S;
-  }, [mergedSearchParams, pageSize, excludeFromQueryFilter]);
+  }, [mergedSearchParams, hiddenFilters, pageSize, excludeFromQueryFilter]);
 
   // Clear undefined | null params
   useEffect(() => {
@@ -609,6 +616,31 @@ export default function useListBase<
     }
   };
 
+  const setHiddenFilter = (key: keyof S, value: S[keyof S] | null) => {
+    setHiddenFiltersState((prev) => {
+      const newFilters = { ...prev };
+      if (value === null || value === undefined) {
+        delete newFilters[key];
+      } else {
+        newFilters[key] = value;
+      }
+      return newFilters;
+    });
+
+    setPagination((p) => ({ ...p, current: 1 }));
+    setQueryParam('page', null);
+  };
+
+  const setHiddenFilters = (filters: Partial<S>) => {
+    setHiddenFiltersState((prev) => ({
+      ...prev,
+      ...filters
+    }));
+
+    setPagination((p) => ({ ...p, current: 1 }));
+    setQueryParam('page', null);
+  };
+
   const extendableHandlers = (): HandlerType<T, S> => {
     const handlers: HandlerType<T, S> = {
       changePagination,
@@ -631,7 +663,9 @@ export default function useListBase<
       loadMore,
       handleScrollLoadMore,
       isFetchingMore,
-      hasMore
+      hasMore,
+      setHiddenFilter,
+      setHiddenFilters
     };
 
     override?.(handlers);

@@ -1,7 +1,10 @@
 import { apiConfig, queryKeys } from '@/constants';
 import {
   ApiResponse,
+  ApiResponseList,
   CommentPinBodyType,
+  CommentResType,
+  CommentSearchType,
   CommentVoteBodyType,
   CommentVoteResType
 } from '@/types';
@@ -38,5 +41,19 @@ export const usePinCommentMutation = () => {
       http.put(apiConfig.comment.pin, {
         body
       })
+  });
+};
+
+export const useCommentListQuery = (
+  params?: CommentSearchType,
+  enabled: boolean = false
+) => {
+  return useQuery({
+    queryKey: [`${queryKeys.COMMENT}-list`],
+    queryFn: () =>
+      http.get<ApiResponseList<CommentResType>>(apiConfig.comment.getList, {
+        params
+      }),
+    enabled
   });
 };

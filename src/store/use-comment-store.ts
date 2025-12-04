@@ -4,11 +4,13 @@ import { create } from 'zustand';
 const useCommentStore = create<CommentStoreType>((set) => ({
   replyingCommentId: null,
   editingComment: null,
+  parentId: '',
 
   openReply: (id) => set({ replyingCommentId: id }),
   closeReply: () => set({ replyingCommentId: null }),
 
-  setEditingComment: (editingComment) => set({ editingComment })
+  setEditingComment: (editingComment) => set({ editingComment }),
+  setParentId: (parentId) => set({ parentId })
 }));
 
 export default useCommentStore;

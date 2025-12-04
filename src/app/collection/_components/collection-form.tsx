@@ -5,7 +5,6 @@ import {
   BooleanField,
   Button,
   Col,
-  ColorPickerField,
   FieldSet,
   InputField,
   MultiSelectField,
@@ -36,6 +35,8 @@ import { renderListPageUrl } from '@/utils';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { PlusIcon, X } from 'lucide-react';
+import { logger } from '@/logger';
 
 export default function CollectionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +74,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
   });
 
   const defaultValues: CollectionBodyType = {
-    color: '#000000',
+    colors: ['#000000'],
     filter: {},
     name: '',
     ordering: 0,
@@ -83,8 +84,25 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
   };
 
   const initialValues: CollectionBodyType = useMemo(() => {
+    let parsedColors: string[] = ['#000000', '#000000'];
+
+    if (data?.color) {
+      try {
+        if (typeof data.color === 'string') {
+          parsedColors = JSON.parse(data.color);
+        } else if (Array.isArray(data.color)) {
+          parsedColors = data.color;
+        } else {
+          parsedColors = [data.color];
+        }
+      } catch (error) {
+        parsedColors = [data.color as string];
+        logger.error('Error while parsing color', error);
+      }
+    }
+
     return {
-      color: data?.color ?? '#000000',
+      colors: parsedColors,
       filter: data?.filter ? JSON.parse(data?.filter) : {},
       name: data?.name ?? '',
       ordering: data?.ordering ?? 0,
@@ -104,7 +122,8 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
       const payload = {
         ...values,
         filter: JSON.stringify(values.filter),
-        ordering: collectionListQuery.data?.data.totalElements ?? 0
+        ordering: collectionListQuery.data?.data.totalElements ?? 0,
+        colors: values.colors
       };
       await handleSubmit(payload as any, form, collectionErrorMaps);
     }
@@ -129,6 +148,42 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
         initialValues={initialValues}
       >
         {(form) => {
+          const colors = form.watch('colors') || ['#000000', '#000000'];
+
+          const addColor = () => {
+            const currentColors = form.getValues('colors') || [];
+            form.setValue('colors', [...currentColors, '#000000'], {
+              shouldDirty: true,
+              shouldValidate: true
+            });
+          };
+
+          const removeColor = (index: number) => {
+            const currentColors = form.getValues('colors') || [];
+            if (currentColors.length > 1) {
+              form.setValue(
+                'colors',
+                currentColors.filter((_, i) => i !== index),
+                {
+                  shouldDirty: true,
+                  shouldValidate: true
+                }
+              );
+            }
+          };
+
+          const updateColor = (index: number, color: string) => {
+            const currentColors = form.getValues('colors') || [];
+            const newColors = [...currentColors];
+            newColors[index] = color;
+            form.setValue('colors', newColors, {
+              shouldDirty: true,
+              shouldValidate: true
+            });
+          };
+
+          const type = form.watch('type');
+
           return (
             <>
               <Row>
@@ -153,30 +208,74 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                 </Col>
               </Row>
               <Row>
-                <Col>
-                  <ColorPickerField
-                    control={form.control}
-                    name='color'
-                    label='Màu'
-                    required
-                  />
+                {' '}
+                <Col span={12}>
+                  <div className='space-y-2'>
+                    <label className='text-sm font-medium'>
+                      Màu <span className='text-red-500'>*</span>
+                    </label>
+                    <div className='space-y-2'>
+                      {colors.map((color: string, index: number) => (
+                        <div key={index} className='flex items-center gap-2'>
+                          <div className='flex-1'>
+                            <input
+                              type='color'
+                              value={color}
+                              onChange={(e) =>
+                                updateColor(index, e.target.value)
+                              }
+                              className='h-10 w-full cursor-pointer rounded border border-gray-300'
+                            />
+                          </div>
+                          <input
+                            type='text'
+                            value={color}
+                            onChange={(e) => updateColor(index, e.target.value)}
+                            className='w-28 rounded border border-gray-300 px-3 py-2 text-sm uppercase'
+                            placeholder='#000000'
+                          />
+                          {colors.length > 1 && (
+                            <Button
+                              type='button'
+                              variant='outline'
+                              onClick={() => removeColor(index)}
+                              className='border-red-500 text-red-500 hover:bg-red-50'
+                            >
+                              <X className='size-4' />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={addColor}
+                        className='w-full'
+                      >
+                        <PlusIcon className='size-4' />
+                        Thêm màu
+                      </Button>
+                    </div>
+                  </div>
                 </Col>
-                <Col>
-                  <AutoCompleteField<any, StyleResType>
-                    control={form.control}
-                    name='styleId'
-                    label='Thiết kế'
-                    placeholder='Thiết kế'
-                    required
-                    apiConfig={apiConfig.style.getList}
-                    mappingData={(item) => ({
-                      label: item.name,
-                      value: item.id.toString()
-                    })}
-                    searchParams={['name']}
-                    fetchAll
-                  />
-                </Col>
+                {type === COLLECTION_TYPE_SECTION && (
+                  <Col>
+                    <AutoCompleteField<any, StyleResType>
+                      control={form.control}
+                      name='styleId'
+                      label='Thiết kế'
+                      placeholder='Thiết kế'
+                      required
+                      apiConfig={apiConfig.style.getList}
+                      mappingData={(item) => ({
+                        label: item.name,
+                        value: item.id.toString()
+                      })}
+                      searchParams={['name']}
+                      fetchAll
+                    />
+                  </Col>
+                )}
               </Row>
               <FieldSet title='Bộ lọc'>
                 <Row>

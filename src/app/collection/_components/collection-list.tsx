@@ -10,6 +10,7 @@ import {
   MAX_PAGE_SIZE
 } from '@/constants';
 import { useDragDrop, useListBase, useNavigate } from '@/hooks';
+import { logger } from '@/logger';
 import { route } from '@/routes';
 import { collectionSearchSchema } from '@/schemaValidations';
 import {
@@ -118,16 +119,65 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
       title: 'Màu',
       dataIndex: 'color',
       render: (value) => {
+        let colors: string[] = [];
+
+        try {
+          if (typeof value === 'string') {
+            colors = JSON.parse(value);
+          } else if (Array.isArray(value)) {
+            colors = value;
+          } else {
+            colors = [value];
+          }
+        } catch (error: any) {
+          colors = [value];
+          logger.error('Error while parsing color', error);
+        }
+
+        if (!Array.isArray(colors)) {
+          colors = [colors];
+        }
+
+        colors = colors.filter(Boolean);
+
+        if (colors.length === 0) {
+          return null;
+        }
+
+        if (colors.length === 1) {
+          return (
+            <ToolTip title={colors[0]}>
+              <div
+                className='h-4 w-full rounded'
+                style={{ background: colors[0] }}
+              ></div>
+            </ToolTip>
+          );
+        }
+
+        const gradient = `linear-gradient(to right, ${colors.join(', ')})`;
+
         return (
-          <ToolTip title={value}>
+          <div className='flex flex-col gap-1'>
             <div
               className='h-4 w-full rounded'
-              style={{ background: value }}
+              style={{ background: gradient }}
             ></div>
-          </ToolTip>
+            <div className='flex gap-1'>
+              {colors.map((color, index) => (
+                <ToolTip title={color} key={index}>
+                  <div
+                    className='h-2 w-5 rounded-sm'
+                    style={{ background: color }}
+                    title={color}
+                  ></div>
+                </ToolTip>
+              ))}
+            </div>
+          </div>
         );
       },
-      width: 120,
+      width: 300,
       align: 'center'
     },
     {

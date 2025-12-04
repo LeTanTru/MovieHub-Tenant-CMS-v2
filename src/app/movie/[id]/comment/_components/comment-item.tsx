@@ -1,6 +1,5 @@
 'use client';
-
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { AvatarField, Button } from '@/components/form';
 import {
   Info,
@@ -15,6 +14,7 @@ import { cn } from '@/lib';
 import { convertUTCToLocal, renderImageUrl, timeAgo } from '@/utils';
 import { AuthorInfoType, CommentResType } from '@/types';
 import {
+  DEFAULT_TABLE_PAGE_SIZE,
   GENDER_FEMALE,
   GENDER_MALE,
   queryKeys,
@@ -36,6 +36,7 @@ import {
 import CommentReplyForm from '@/app/movie/[id]/comment/_components/comment-reply-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCommentStore } from '@/store';
+import { useCommentListQuery } from '@/queries/comment.query';
 
 type Props = {
   comment: CommentResType & { children?: CommentResType[] };
@@ -46,7 +47,6 @@ type Props = {
   onPin: (id: string, isPinned: boolean) => void;
   onDelete: (id: string) => void;
   onReplySuccess: () => void;
-  onLoadReplies: (parentId: string) => void;
   renderChildren: (
     list: CommentResType[],
     level: number,
@@ -62,7 +62,6 @@ function CommentItem({
   onVote,
   onPin,
   onDelete,
-  onLoadReplies,
   renderChildren,
   onReplySuccess
 }: Props) {
@@ -71,9 +70,22 @@ function CommentItem({
   const isLiked = voteMap[comment.id] === REACTION_TYPE_LIKE;
   const isDisliked = voteMap[comment.id] === REACTION_TYPE_DISLIKE;
 
+  const { parentId } = useCommentStore();
+
+  const isActiveParent = parentId === comment.id;
+
+  const [pageSize, setPageSize] = useState(DEFAULT_TABLE_PAGE_SIZE);
+  const commentListQuery = useCommentListQuery(
+    { parentId, page: 0, size: pageSize },
+    isActiveParent
+  );
+  const commentList = commentListQuery.data?.data?.content || [];
+  const commentSize = commentList.length;
+
   const {
     replyingCommentId,
     editingComment,
+    setParentId,
     openReply,
     closeReply,
     setEditingComment
@@ -132,8 +144,12 @@ function CommentItem({
     );
   };
 
+  const handleViewReplies = (parentId: string) => {
+    setParentId(parentId);
+  };
+
   return (
-    <div style={{ marginLeft: level * 40 }} className='pt-4'>
+    <div style={{ marginLeft: level * 0 }} className='pt-4'>
       <div className='flex items-start space-x-3 rounded-md border p-3 transition hover:bg-gray-50'>
         <AvatarField
           src={renderImageUrl(author.avatarPath)}
@@ -299,13 +315,22 @@ function CommentItem({
             </AlertDialog>
           </div>
 
-          {comment.totalChildren ? (
+          {isActiveParent && commentList.length > 0 && (
+            <>{renderChildren(commentList, level + 1, rootId)}</>
+          )}
+
+          {!comment?.parent && comment.totalChildren !== commentList.length ? (
             <Button
               variant='ghost'
               className='mt-4 h-5! p-0! font-medium hover:opacity-70'
-              onClick={() => onLoadReplies(rootId)}
+              style={{ marginLeft: level * 40 }}
+              onClick={() => handleViewReplies(comment.id)}
             >
-              Xem tất cả ({comment.totalChildren}) trả lời
+              Xem tất cả (
+              {comment.totalChildren >= commentSize
+                ? comment.totalChildren - commentSize
+                : commentSize}
+              ) trả lời
             </Button>
           ) : null}
 
@@ -333,10 +358,6 @@ function CommentItem({
           </AnimatePresence>
         </div>
       </div>
-
-      {level === 0 && comment.children?.length
-        ? renderChildren(comment.children, level + 1, rootId)
-        : null}
     </div>
   );
 }

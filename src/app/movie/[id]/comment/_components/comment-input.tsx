@@ -111,9 +111,9 @@ export default function CommentInput({
       defaultValues={defaultValues}
       schema={commentSchema}
       onSubmit={onSubmit}
+      ref={formRef}
     >
       {(form) => {
-        formRef.current = form;
         return (
           <>
             <Row className='mb-0'>

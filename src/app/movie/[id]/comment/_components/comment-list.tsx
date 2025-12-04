@@ -1,5 +1,4 @@
 'use client';
-
 import './comment.css';
 import CommentInput from '@/app/movie/[id]/comment/_components/comment-input';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
@@ -17,6 +16,21 @@ import { useParams } from 'next/navigation';
 import { useMemo, useCallback } from 'react';
 import CommentItem from './comment-item';
 import { DotLoading } from '@/components/loading';
+
+const buildCommentTree = (comments: CommentResType[]) => {
+  const map: Record<string, CommentResType & { children?: CommentResType[] }> =
+    {};
+  const roots: (CommentResType & { children?: CommentResType[] })[] = [];
+  for (const c of comments) map[c.id] = { ...c, children: [] };
+  for (const c of comments) {
+    if (c.parent?.id && map[c.parent.id]) {
+      map[c.parent.id].children?.push(map[c.id]);
+    } else {
+      roots.push(map[c.id]);
+    }
+  }
+  return roots;
+};
 
 export default function CommentList({ queryKey }: { queryKey: string }) {
   const { id: movieId } = useParams<{ id: string }>();
@@ -77,15 +91,6 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
     await listQuery.refetch();
   }, [listQuery]);
 
-  const handleLoadReplies = useCallback(
-    (parentId: string) => {
-      handlers.changeQueryFilter({
-        parentId,
-        page: 0
-      });
-    },
-    [handlers.changeQueryFilter]
-  );
   const renderChildren = useCallback(
     (list: CommentResType[], level: number, rootId?: string) =>
       list.map((c) => (
@@ -99,7 +104,6 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
           onPin={handlePinComment}
           onDelete={handleDeleteComment}
           onReplySuccess={handleReplySuccess}
-          onLoadReplies={handleLoadReplies}
           renderChildren={renderChildren}
         />
       )),
@@ -108,8 +112,7 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
       handleVote,
       handlePinComment,
       handleDeleteComment,
-      handleReplySuccess,
-      handleLoadReplies
+      handleReplySuccess
     ]
   );
 
