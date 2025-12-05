@@ -216,6 +216,14 @@ function CommentItem({
     requiredPermissions: [apiConfig.comment.changeStatus.permissionCode]
   });
 
+  const canPin = hasPermission({
+    requiredPermissions: [apiConfig.comment.pin.permissionCode]
+  });
+
+  const canVote = hasPermission({
+    requiredPermissions: [apiConfig.comment.pin.permissionCode]
+  });
+
   return (
     <div style={{ marginLeft: level * 0 }} className='pt-4'>
       <div className='flex items-start space-x-3 rounded-md border p-3 transition hover:bg-gray-50'>
@@ -272,6 +280,7 @@ function CommentItem({
               >
                 {timeAgo(comment.createdDate)}
               </span>
+
               {comment.isPinned && (
                 <span className='text-xs font-medium text-slate-600 italic'>
                   Đã ghim
@@ -292,8 +301,7 @@ function CommentItem({
                 </span>
               )}
             </div>
-
-            {level === 0 && (
+            {level === 0 && canPin && (
               <Button
                 variant='ghost'
                 className={cn('mr-2 size-5! p-0!', {
@@ -312,35 +320,37 @@ function CommentItem({
           </p>
 
           <div className='mt-4 flex items-center gap-x-8 text-sm text-gray-500'>
-            <div className='flex items-center gap-x-6'>
-              <div className='flex items-center gap-x-2'>
-                <Button
-                  variant='ghost'
-                  className={cn('size-5! p-0!', {
-                    'like-pop [&_svg]:fill-blue-400 [&_svg]:stroke-blue-400':
-                      isLiked
-                  })}
-                  onClick={() => onVote(comment.id, REACTION_TYPE_LIKE)}
-                >
-                  <ThumbsUp className='size-5' />
-                </Button>
-                {comment.totalLike}
-              </div>
+            {canVote && (
+              <div className='flex items-center gap-x-6'>
+                <div className='flex items-center gap-x-2'>
+                  <Button
+                    variant='ghost'
+                    className={cn('size-5! p-0!', {
+                      'like-pop [&_svg]:fill-blue-400 [&_svg]:stroke-blue-400':
+                        isLiked
+                    })}
+                    onClick={() => onVote(comment.id, REACTION_TYPE_LIKE)}
+                  >
+                    <ThumbsUp className='size-5' />
+                  </Button>
+                  {comment.totalLike}
+                </div>
 
-              <div className='flex items-center gap-x-2'>
-                <Button
-                  variant='ghost'
-                  className={cn('size-5! p-0!', {
-                    'dislike-pop [&_svg]:fill-red-400 [&_svg]:stroke-red-400':
-                      isDisliked
-                  })}
-                  onClick={() => onVote(comment.id, REACTION_TYPE_DISLIKE)}
-                >
-                  <ThumbsDown className='size-5' />
-                </Button>
-                {comment.totalDislike}
+                <div className='flex items-center gap-x-2'>
+                  <Button
+                    variant='ghost'
+                    className={cn('size-5! p-0!', {
+                      'dislike-pop [&_svg]:fill-red-400 [&_svg]:stroke-red-400':
+                        isDisliked
+                    })}
+                    onClick={() => onVote(comment.id, REACTION_TYPE_DISLIKE)}
+                  >
+                    <ThumbsDown className='size-5' />
+                  </Button>
+                  {comment.totalDislike}
+                </div>
               </div>
-            </div>
+            )}
 
             {canCreate && (
               <Button
