@@ -25,7 +25,7 @@ import {
   STATUS_ACTIVE,
   storageKeys
 } from '@/constants';
-import { useQueryParams, useSaveBase } from '@/hooks';
+import { useIsMounted, useQueryParams, useSaveBase } from '@/hooks';
 import { logger } from '@/logger';
 import {
   useDeleteFileMutation,
@@ -52,6 +52,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 export default function MovieItemForm({ queryKey }: { queryKey: string }) {
+  const isMounted = useIsMounted();
   const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
@@ -70,6 +71,8 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
   const movieItemList = movieItemListQuery.data?.data.content || [];
 
   const updateOrderingMovieItemMutation = useUpdateOrderingMovieItemMutation();
+
+  const parentId = getData(storageKeys.SELECTED_MOVIE_ITEM);
 
   const kindOptions =
     !!type && +type === MOVIE_TYPE_SINGLE
@@ -138,7 +141,7 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
       releaseDate: formatDate(data?.releaseDate, DEFAULT_DATE_FORMAT) ?? '',
       status: STATUS_ACTIVE,
       title: data?.title ?? '',
-      parentId: '',
+      parentId: parentId,
       thumbnailUrl: data?.thumbnailUrl ?? '',
       videoId: data?.video?.id?.toString() ?? ''
     };
@@ -164,7 +167,6 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
 
   const onSubmit = async (values: MovieItemBodyType) => {
     let ordering = 0;
-    const parentId = getData(storageKeys.SELECTED_MOVIE_ITEM);
 
     // parentId is null --> create season
     if (!parentId) ordering = movieItemList.length;
@@ -235,6 +237,8 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
     setThumbnailUrl(url);
     setUploadedImages(url ? [url] : []);
   }, [data?.thumbnailUrl]);
+
+  if (!isMounted) return null;
 
   return (
     <PageWrapper
@@ -358,6 +362,24 @@ export default function MovieItemForm({ queryKey }: { queryKey: string }) {
                       name='videoId'
                       label='Video'
                       placeholder='Video'
+                    />
+                  </Col>
+                  <Col>
+                    <SelectField
+                      control={form.control}
+                      name='parentId'
+                      label='Thêm vào mùa'
+                      placeholder='Thêm vào mùa'
+                      required
+                      options={movieItemList
+                        .filter(
+                          (movieItem) =>
+                            movieItem.kind === MOVIE_ITEM_KIND_SEASON
+                        )
+                        .map((movieItem) => ({
+                          label: movieItem.title,
+                          value: movieItem.id.toString()
+                        }))}
                     />
                   </Col>
                 </Row>
