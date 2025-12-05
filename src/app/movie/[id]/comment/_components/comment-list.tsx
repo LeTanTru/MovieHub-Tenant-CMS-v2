@@ -17,6 +17,7 @@ import { useParams } from 'next/navigation';
 import { useMemo, useCallback } from 'react';
 import CommentItem from './comment-item';
 import { DotLoading } from '@/components/loading';
+import CommentItemSkeleton from '@/app/movie/[id]/comment/_components/comment-item-skeleton';
 
 export default function CommentList({ queryKey }: { queryKey: string }) {
   const { id: movieId } = useParams<{ id: string }>();
@@ -33,7 +34,7 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
 
   const { hasPermission } = useValidatePermission();
 
-  const { data, isFetchingMore, handlers, listQuery } = useListBase<
+  const { data, loading, isFetchingMore, handlers, listQuery } = useListBase<
     CommentResType,
     CommentSearchType
   >({
@@ -122,6 +123,13 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
 
         {data.length === 0 ? (
           <NoData content='Chưa có bình luận nào' />
+        ) : loading || isFetchingMore ? (
+          <div className='px-4'>
+            <h4 className='skeleton mb-2 ml-4 h-5 w-20'></h4>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <CommentItemSkeleton key={index} />
+            ))}
+          </div>
         ) : (
           <div className='mt-4 px-4 pb-4'>
             <h4 className='-mb-2 ml-2 font-semibold text-black'>
