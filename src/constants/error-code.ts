@@ -6,6 +6,7 @@ import {
   EmployeeBodyType,
   ErrorMaps,
   GroupBodyType,
+  MovieItemBodyType,
   PermissionBodyType,
   PersonBodyType,
   ProfileBodyType,
@@ -163,6 +164,18 @@ export const categoryErrorMaps: ErrorMaps<CategoryBodyType> = {
 };
 
 export const personErrorMaps: ErrorMaps<PersonBodyType> = {};
+
+export const movieItemErrorMaps: ErrorMaps<MovieItemBodyType> = {
+  [ErrorCode.MOVIE_ITEM_ERROR_PARENT_REQUIRED]: [
+    [
+      'parentId',
+      {
+        type: 'manual',
+        message: 'Vui lòng chọn mùa để thêm'
+      }
+    ]
+  ]
+};
 
 export const videoLibraryErrorMaps: ErrorMaps<VideoLibraryBodyType> = {
   [ErrorCode.VIDEO_LIBRARY_ERROR_NAME_EXISTED]: [
