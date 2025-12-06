@@ -76,7 +76,10 @@ type HandlerType<T extends { id: string }, S extends BaseSearchType> = {
   }) => Column<T>;
   setQueryParam: (key: keyof S, value: S[keyof S] | null) => void;
   handleEditClick: (id: string) => void;
-  handleDeleteClick: (id: string) => void;
+  handleDeleteClick: (
+    id: string,
+    options?: { onSuccess?: () => void; onError?: (code: string) => void }
+  ) => void;
   invalidateQueries: () => void;
   renderReloadButton: () => React.ReactNode;
   changeQueryFilter: (filter: Partial<S>) => void;
@@ -303,16 +306,24 @@ export default function useListBase<
     navigate(path);
   };
 
-  const handleDeleteClick = async (id: string) => {
+  const handleDeleteClick = async (
+    id: string,
+    options?: { onSuccess?: () => void; onError?: (code: string) => void }
+  ) => {
     await deleteMutation.mutateAsync(id, {
       onSuccess: (res) => {
         if (res.result) {
           if (showNotify) notify.success(`Xoá ${objectName} thành công`);
           queryClient.invalidateQueries({ queryKey: [`${queryKey}-list`] });
-          queryClient.invalidateQueries({ queryKey: [`${queryKey}-infinite`] });
+          queryClient.invalidateQueries({
+            queryKey: [`${queryKey}-infinite`]
+          });
+          options?.onSuccess?.();
         } else {
-          if (res.code) handlers.handleDeleteError(res.code);
-          else notify.error(`Xoá ${objectName} thất bại`);
+          if (res.code) {
+            if (options?.onError) options?.onError(res.code);
+            else handlers.handleDeleteError(res.code);
+          } else notify.error(`Xoá ${objectName} thất bại`);
         }
       },
       onError: (error: Error) => {
@@ -716,7 +727,9 @@ export default function useListBase<
   return {
     data,
     pagination,
-    loading: activeQuery.isLoading || deleteMutation.isPending,
+    loading: useInfiniteScroll
+      ? activeQuery.isLoading
+      : activeQuery.isLoading || deleteMutation.isPending,
     handlers,
     queryFilter,
     listQuery: activeQuery,

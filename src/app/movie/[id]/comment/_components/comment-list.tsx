@@ -19,10 +19,12 @@ import CommentItem from './comment-item';
 import { DotLoading } from '@/components/loading';
 import { Button } from '@/components/form';
 import CommentItemSkeleton from './comment-item-skeleton';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function CommentList({ queryKey }: { queryKey: string }) {
   const { id: movieId } = useParams<{ id: string }>();
   const isMounted = useIsMounted();
+  const queryClient = useQueryClient();
 
   const voteListCommentQuery = useVoteListCommentQuery({ movieId });
   const voteList = useMemo(
@@ -79,10 +81,18 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
   );
 
   const handleDeleteComment = useCallback(
-    async (id: string) => {
-      handlers.handleDeleteClick(id);
+    async (commentToDelete: CommentResType) => {
+      handlers.handleDeleteClick(commentToDelete.id, {
+        onSuccess: () => {
+          if (commentToDelete.parent) {
+            queryClient.invalidateQueries({
+              queryKey: [queryKey, commentToDelete.parent.id]
+            });
+          }
+        }
+      });
     },
-    [handlers]
+    [handlers, queryClient, queryKey]
   );
 
   const handleReplySuccess = useCallback(async () => {
@@ -100,7 +110,7 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
           voteMap={voteMap}
           onVote={handleVote}
           onPin={handlePinComment}
-          onDelete={handleDeleteComment}
+          onDelete={() => handleDeleteComment(c)}
           onReplySuccess={handleReplySuccess}
           renderChildren={renderChildren}
         />

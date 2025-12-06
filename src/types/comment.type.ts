@@ -21,6 +21,7 @@ export type CommentResType = {
   isPinned: boolean;
   parent: {
     id: string;
+    authorInfo: string;
   };
   authorInfo: string;
 };

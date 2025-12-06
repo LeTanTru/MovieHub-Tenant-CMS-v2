@@ -35,7 +35,7 @@ export default function CommentReplyForm({
   );
   const pickerContainerRef = useRef<HTMLDivElement>(null);
   const [showPicker, setShowPicker] = useState(false);
-  const { editingComment, setEditingComment, closeReply } = useCommentStore();
+  const { editingComment, setEditingComment } = useCommentStore();
 
   const { loading, handleSubmit } = useSaveBase<
     CommentResType,
@@ -82,7 +82,6 @@ export default function CommentReplyForm({
     formRef.current.reset();
     setShowPicker(false);
     setEditingComment(null);
-    closeReply();
   };
 
   useEffect(() => {

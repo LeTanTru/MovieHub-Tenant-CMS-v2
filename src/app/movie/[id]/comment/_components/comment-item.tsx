@@ -65,7 +65,7 @@ type Props = {
   rootId: string;
   onVote: (id: string, type: number) => void;
   onPin: (id: string, isPinned: boolean) => void;
-  onDelete: (id: string) => void;
+  onDelete: () => void;
   onReplySuccess: () => void;
   renderChildren: (
     list: CommentResType[],
@@ -85,11 +85,11 @@ function CommentItem({
   renderChildren,
   onReplySuccess
 }: Props) {
-  const author = JSON.parse(comment.authorInfo) as AuthorInfoType;
+  const authorInfo = JSON.parse(comment.authorInfo) as AuthorInfoType;
   const { profile } = useAuth();
-  const isAuthor = author?.id === profile?.id;
-  const { hasPermission } = useValidatePermission();
+  const isAuthor = !comment?.parent && authorInfo?.id === profile?.id;
   const queryClient = useQueryClient();
+  const { hasPermission } = useValidatePermission();
 
   const isLiked = voteMap[comment.id] === REACTION_TYPE_LIKE;
   const isDisliked = voteMap[comment.id] === REACTION_TYPE_DISLIKE;
@@ -150,7 +150,11 @@ function CommentItem({
   const renderContentWithMentions = (content: string) => {
     if (!content) return null;
 
-    const mention = `@${author.fullName}`;
+    let parentInfo = null;
+    if (comment.parent)
+      parentInfo = JSON.parse(comment.parent.authorInfo) as AuthorInfoType;
+
+    const mention = `@${isAuthor ? authorInfo.fullName : parentInfo?.fullName}`;
 
     if (!content.includes(mention)) {
       return content;
@@ -196,9 +200,15 @@ function CommentItem({
           ? COMMENT_STATUS_HIDE
           : COMMENT_STATUS_SHOW
     });
-    queryClient.invalidateQueries({
-      queryKey: [`${queryKeys.COMMENT}-infinite`]
-    });
+    if (id === comment.id && comment.parent) {
+      queryClient.invalidateQueries({
+        queryKey: [`${queryKeys.COMMENT}`, comment.parent.id]
+      });
+    } else {
+      queryClient.invalidateQueries({
+        queryKey: [`${queryKeys.COMMENT}-infinite`]
+      });
+    }
   };
 
   const canCreate = hasPermission({
@@ -229,21 +239,21 @@ function CommentItem({
     <div style={{ marginLeft: level * 0 }} className='pt-4'>
       <div className='flex items-start space-x-3 rounded-md border p-3 transition hover:bg-gray-50'>
         <AvatarField
-          src={renderImageUrl(author.avatarPath)}
+          src={renderImageUrl(authorInfo.avatarPath)}
           previewClassName='rounded-full'
           size={40}
-          alt={author.fullName}
+          alt={authorInfo.fullName}
         />
 
         <div className='flex-1'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-x-2'>
               <h4 className='flex items-center gap-x-2 font-medium text-gray-800'>
-                <span className='font-semibold'>{author.fullName}</span>
+                <span className='font-semibold'>{authorInfo.fullName}</span>
                 <span>
-                  {author.gender === GENDER_MALE ? (
+                  {authorInfo.gender === GENDER_MALE ? (
                     <Mars className='size-4 text-blue-500' />
-                  ) : author.gender === GENDER_FEMALE ? (
+                  ) : authorInfo.gender === GENDER_FEMALE ? (
                     <Venus className='size-4 text-pink-500' />
                   ) : (
                     <svg
@@ -446,7 +456,7 @@ function CommentItem({
                                 </Button>
                               </AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => onDelete(comment.id)}
+                                onClick={onDelete}
                                 className='bg-dodger-blue hover:bg-dodger-blue/80 w-20 cursor-pointer transition-all duration-200 ease-linear'
                               >
                                 Có
@@ -523,7 +533,7 @@ function CommentItem({
                 <CommentReplyForm
                   parentId={rootId.toString()}
                   movieId={comment.movieId.toString()}
-                  defaultMention={`@${author.fullName}`}
+                  defaultMention={`@${authorInfo.fullName}`}
                   queryKey={queryKeys.COMMENT}
                   onSubmitted={handleReplySubmit}
                   onCancel={handleCancelReply}
