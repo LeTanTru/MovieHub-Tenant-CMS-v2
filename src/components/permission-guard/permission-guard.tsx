@@ -74,7 +74,7 @@ export default function PermissionGuard({
 
   // navigate to login if not login
   useEffect(() => {
-    if (isPublicRoute) return;
+    if (isPublicRoute && !isAuthenticated) return;
 
     if (!accessToken && !isAuthenticated && !isLoggedOut) {
       if (pathname !== route.login.path) {
