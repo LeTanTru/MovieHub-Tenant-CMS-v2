@@ -87,7 +87,7 @@ function CommentItem({
 }: Props) {
   const authorInfo = JSON.parse(comment.authorInfo) as AuthorInfoType;
   const { profile } = useAuth();
-  const isAuthor = !comment?.parent && authorInfo?.id === profile?.id;
+  const isAuthor = authorInfo?.id === profile?.id;
   const queryClient = useQueryClient();
   const { hasPermission } = useValidatePermission();
 
