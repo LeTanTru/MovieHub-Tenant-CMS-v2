@@ -2,6 +2,7 @@
 
 import envConfig from '@/config';
 import {
+  ErrorCode,
   KIND_EMPLOYEE,
   KIND_MANAGER,
   socketSendCMDs,
@@ -57,6 +58,13 @@ export default function AppProvider({
       const res = await profileQuery.refetch();
       if (res.data?.result && res.data.data) {
         setProfile(res.data.data);
+      } else {
+        const code = res.data?.code;
+        if (code === ErrorCode.EMPLOYEE_ERROR_NOT_FOUND) {
+          removeData(storageKeys.ACCESS_TOKEN);
+          removeData(storageKeys.REFRESH_TOKEN);
+          removeData(storageKeys.USER_KIND);
+        }
       }
     };
 
