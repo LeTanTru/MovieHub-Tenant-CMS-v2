@@ -220,7 +220,7 @@ export default function ReviewItem({
                             <AlertDialogHeader>
                               <AlertDialogTitle className='content flex flex-nowrap items-center gap-2 text-sm font-normal'>
                                 <Info className='size-8 fill-orange-500 stroke-white' />
-                                Bạn có chắc chắn muốn xóa bình luận này không ?
+                                Bạn có chắc chắn muốn xóa đánh giá này không ?
                               </AlertDialogTitle>
                               <AlertDialogDescription></AlertDialogDescription>
                             </AlertDialogHeader>
