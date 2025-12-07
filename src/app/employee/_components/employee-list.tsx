@@ -122,6 +122,16 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       )
     },
     {
+      title: 'Tên đăng nhập',
+      dataIndex: 'username',
+      width: 220,
+      render: (value) => (
+        <span className='line-clamp-1 block truncate' title={value}>
+          {value ?? '------'}
+        </span>
+      )
+    },
+    {
       title: 'Email',
       dataIndex: 'email',
       width: 220,
