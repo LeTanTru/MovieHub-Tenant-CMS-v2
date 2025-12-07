@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Send } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
 export default function CommentInput({
   queryKey,
@@ -51,9 +52,13 @@ export default function CommentInput({
     parentId: ''
   };
 
-  const onSubmit = async (values: CommentBodyType) => {
+  const onSubmit = async (
+    values: CommentBodyType,
+    form: UseFormReturn<CommentBodyType>
+  ) => {
     await handleSubmit(values);
     queryClient.invalidateQueries({ queryKey: [`${queryKey}-infinite`] });
+    form.reset();
   };
 
   useEffect(() => {

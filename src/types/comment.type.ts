@@ -24,6 +24,7 @@ export type CommentResType = {
     authorInfo: string;
   };
   authorInfo: string;
+  replyToInfo: string;
 };
 
 export type AuthorInfoType = {
@@ -54,11 +55,11 @@ export type CommentVoteResType = {
 };
 
 export type CommentStoreType = {
-  replyingCommentId: string | null;
+  replyingComment: CommentResType | null;
   editingComment: CommentResType | null;
   openParentIds: string[];
 
-  openReply: (id: string) => void;
+  openReply: (replyingComment: CommentResType | null) => void;
   closeReply: () => void;
 
   setEditingComment: (c: CommentResType | null) => void;

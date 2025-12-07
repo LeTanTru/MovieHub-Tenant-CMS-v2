@@ -65,11 +65,12 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
   }, [voteList]);
 
   const handleVote = useCallback(
-    async (id: string, type: number) => {
+    async (id: string, type: number, onSuccess?: () => void) => {
       await voteCommentMutation.mutateAsync({ id, type });
-      await Promise.all([listQuery.refetch(), voteListCommentQuery.refetch()]);
+      await Promise.all([voteListCommentQuery.refetch()]);
+      onSuccess?.();
     },
-    [voteCommentMutation, listQuery, voteListCommentQuery]
+    [voteCommentMutation, voteListCommentQuery]
   );
 
   const handlePinComment = useCallback(
