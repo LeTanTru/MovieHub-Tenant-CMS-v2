@@ -55,7 +55,7 @@ type Props = {
   level: number;
   voteMap: Record<string, number>;
   rootId: string;
-  onVote: (id: string, type: number) => void;
+  onVote: (id: string, type: number, onSuccess?: () => void) => void;
   onPin: (id: string, isPinned: boolean) => void;
   onDelete: () => void;
   onReplySuccess: () => void;
@@ -77,18 +77,12 @@ function CommentItem({
   renderChildren,
   onReplySuccess
 }: Props) {
-  const authorInfo = JSON.parse(comment.authorInfo) as AuthorInfoType;
-  const { profile } = useAuth();
-  const isAuthor = authorInfo?.id === profile?.id;
   const queryClient = useQueryClient();
   const { hasPermission } = useValidatePermission();
 
-  const isLiked = voteMap[comment.id] === REACTION_TYPE_LIKE;
-  const isDisliked = voteMap[comment.id] === REACTION_TYPE_DISLIKE;
-
   const {
     openParentIds,
-    replyingCommentId,
+    replyingComment,
     editingComment,
     setOpenParentIds,
     openReply,
@@ -98,7 +92,7 @@ function CommentItem({
   const isActiveParent = openParentIds.includes(comment.id);
 
   const totalChildren = comment.totalChildren || 0;
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteListQuery<CommentResType, CommentSearchType>({
       apiConfig: apiConfig.comment.getList,
       queryKey: [queryKeys.COMMENT, comment.id],
@@ -108,6 +102,40 @@ function CommentItem({
         size: DEFAULT_TABLE_PAGE_SIZE
       }
     });
+
+  const authorInfo = JSON.parse(comment.authorInfo) as AuthorInfoType;
+  const replyToInfo = comment.replyToInfo
+    ? (JSON.parse(comment.replyToInfo) as AuthorInfoType)
+    : null;
+  const { profile } = useAuth();
+  const isAuthor = authorInfo?.id === profile?.id;
+
+  const isLiked = voteMap[comment.id] === REACTION_TYPE_LIKE;
+  const isDisliked = voteMap[comment.id] === REACTION_TYPE_DISLIKE;
+
+  const canCreate = hasPermission({
+    requiredPermissions: [apiConfig.comment.create.permissionCode]
+  });
+
+  const canUpdate = hasPermission({
+    requiredPermissions: [apiConfig.comment.update.permissionCode]
+  });
+
+  const canDelete = hasPermission({
+    requiredPermissions: [apiConfig.comment.delete.permissionCode]
+  });
+
+  const canChangeStatus = hasPermission({
+    requiredPermissions: [apiConfig.comment.changeStatus.permissionCode]
+  });
+
+  const canPin = hasPermission({
+    requiredPermissions: [apiConfig.comment.pin.permissionCode]
+  });
+
+  const canVote = hasPermission({
+    requiredPermissions: [apiConfig.comment.vote.permissionCode]
+  });
 
   const commentList = data?.data?.content || [];
   const commentListSize = commentList.length;
@@ -127,10 +155,10 @@ function CommentItem({
   };
 
   const handleReplyComment = () => {
-    if (replyingCommentId === comment.id) {
+    if (replyingComment?.id === comment.id) {
       closeReply();
     } else {
-      openReply(comment.id);
+      openReply(comment);
     }
     setEditingComment(null);
   };
@@ -148,11 +176,7 @@ function CommentItem({
   const renderContentWithMentions = (content: string) => {
     if (!content) return null;
 
-    let parentInfo = null;
-    if (comment.parent)
-      parentInfo = JSON.parse(comment.parent.authorInfo) as AuthorInfoType;
-
-    const mention = `@${isAuthor ? authorInfo.fullName : parentInfo?.fullName}`;
+    const mention = `@${replyToInfo?.fullName}`;
 
     if (!content.includes(mention)) {
       return content;
@@ -208,29 +232,18 @@ function CommentItem({
       });
   };
 
-  const canCreate = hasPermission({
-    requiredPermissions: [apiConfig.comment.create.permissionCode]
-  });
-
-  const canUpdate = hasPermission({
-    requiredPermissions: [apiConfig.comment.update.permissionCode]
-  });
-
-  const canDelete = hasPermission({
-    requiredPermissions: [apiConfig.comment.delete.permissionCode]
-  });
-
-  const canChangeStatus = hasPermission({
-    requiredPermissions: [apiConfig.comment.changeStatus.permissionCode]
-  });
-
-  const canPin = hasPermission({
-    requiredPermissions: [apiConfig.comment.pin.permissionCode]
-  });
-
-  const canVote = hasPermission({
-    requiredPermissions: [apiConfig.comment.vote.permissionCode]
-  });
+  const handleVote = (id: string, type: number) => {
+    onVote(id, type, () => {
+      if (comment.parent)
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.COMMENT, comment.parent.id]
+        });
+      else
+        queryClient.invalidateQueries({
+          queryKey: [`${queryKeys.COMMENT}-infinite`]
+        });
+    });
+  };
 
   return (
     <div style={{ marginLeft: level * 0 }} className='pt-4'>
@@ -337,7 +350,7 @@ function CommentItem({
                         'like-pop [&_svg]:fill-blue-400 [&_svg]:stroke-blue-400':
                           isLiked
                       })}
-                      onClick={() => onVote(comment.id, REACTION_TYPE_LIKE)}
+                      onClick={() => handleVote(comment.id, REACTION_TYPE_LIKE)}
                     >
                       <FaArrowAltCircleUp className='size-5' />
                     </Button>
@@ -353,7 +366,9 @@ function CommentItem({
                         'dislike-pop [&_svg]:fill-red-400 [&_svg]:stroke-red-400':
                           isDisliked
                       })}
-                      onClick={() => onVote(comment.id, REACTION_TYPE_DISLIKE)}
+                      onClick={() =>
+                        handleVote(comment.id, REACTION_TYPE_DISLIKE)
+                      }
                     >
                       <FaArrowAltCircleDown className='size-5' />
                     </Button>
@@ -493,6 +508,8 @@ function CommentItem({
                 >
                   Xem tất cả ({totalChildren}) trả lời
                 </Button>
+              ) : isLoading ? (
+                <DotLoading className='mt-4 justify-start bg-transparent' />
               ) : (
                 <div
                   className='mt-4 flex items-center gap-x-4'
@@ -521,7 +538,7 @@ function CommentItem({
           )}
 
           <AnimatePresence initial={false}>
-            {(replyingCommentId === comment.id ||
+            {(replyingComment?.id === comment.id ||
               editingComment?.id === comment.id) && (
               <motion.div
                 key='reply'

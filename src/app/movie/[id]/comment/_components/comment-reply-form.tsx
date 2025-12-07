@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useClickOutside, useSaveBase } from '@/hooks';
 import { commentSchema } from '@/schemaValidations';
 import { apiConfig } from '@/constants';
-import { CommentBodyType, CommentResType } from '@/types';
+import { AuthorInfoType, CommentBodyType, CommentResType } from '@/types';
 import { emojiIcon } from '@/assets';
 import { useCommentStore } from '@/store';
 
@@ -35,7 +35,12 @@ export default function CommentReplyForm({
   );
   const pickerContainerRef = useRef<HTMLDivElement>(null);
   const [showPicker, setShowPicker] = useState(false);
-  const { editingComment, setEditingComment } = useCommentStore();
+  const { editingComment, replyingComment, setEditingComment } =
+    useCommentStore();
+
+  const authorInfo = replyingComment
+    ? (JSON.parse(replyingComment?.authorInfo) as AuthorInfoType)
+    : null;
 
   const { loading, handleSubmit } = useSaveBase<
     CommentResType,
@@ -55,7 +60,9 @@ export default function CommentReplyForm({
     content: '',
     movieId,
     movieItemId: '',
-    parentId: parentId
+    parentId: parentId,
+    replyToId: '',
+    replyToKind: 0
   };
 
   const initialValues: CommentBodyType = useMemo(
@@ -63,9 +70,19 @@ export default function CommentReplyForm({
       content: editingComment?.content || '',
       movieId: editingComment?.movieId?.toString() || movieId,
       movieItemId: editingComment?.movieId?.toString() || '',
-      parentId: editingComment?.parent?.id?.toString() || parentId
+      parentId: editingComment?.parent?.id?.toString() || parentId,
+      replyToId: authorInfo?.id?.toString() || '',
+      replyToKind: authorInfo?.kind || 0
     }),
-    [editingComment]
+    [
+      authorInfo?.id,
+      authorInfo?.kind,
+      editingComment?.content,
+      editingComment?.movieId,
+      editingComment?.parent?.id,
+      movieId,
+      parentId
+    ]
   );
 
   const onSubmit = async (values: CommentBodyType) => {

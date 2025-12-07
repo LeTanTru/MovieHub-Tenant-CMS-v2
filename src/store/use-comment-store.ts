@@ -2,12 +2,12 @@ import { CommentStoreType } from '@/types';
 import { create } from 'zustand';
 
 const useCommentStore = create<CommentStoreType>((set) => ({
-  replyingCommentId: null,
+  replyingComment: null,
   editingComment: null,
   openParentIds: [],
 
-  openReply: (id) => set({ replyingCommentId: id }),
-  closeReply: () => set({ replyingCommentId: null }),
+  openReply: (replyingComment) => set({ replyingComment }),
+  closeReply: () => set({ replyingComment: null }),
 
   setEditingComment: (editingComment) => set({ editingComment }),
   setOpenParentIds: (openParentIds) =>
