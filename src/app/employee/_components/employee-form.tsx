@@ -81,8 +81,7 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
     confirmPassword: '',
     phone: '',
     confirmNewPassword: '',
-    newPassword: '',
-    oldPassword: ''
+    newPassword: ''
   };
 
   const initialValues: EmployeeBodyType = useMemo(() => {
@@ -289,23 +288,12 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
                   <Col>
                     <PasswordField
                       control={form.control}
-                      name='oldPassword'
-                      label='Mật khẩu cũ'
-                      placeholder='Mật khẩu cũ'
-                      required={!isEditing}
-                    />
-                  </Col>
-                  <Col>
-                    <PasswordField
-                      control={form.control}
                       name='newPassword'
                       label='Mật khẩu mới'
                       placeholder='Mật khẩu mới'
                       required={!isEditing}
                     />
                   </Col>
-                </Row>
-                <Row>
                   <Col>
                     <PasswordField
                       control={form.control}
@@ -315,6 +303,8 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
                       required={!isEditing}
                     />
                   </Col>
+                </Row>
+                <Row>
                   <Col>
                     <SelectField
                       options={groupOptions || []}
@@ -325,8 +315,6 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
                       required
                     />
                   </Col>
-                </Row>
-                <Row>
                   <Col>
                     <SelectField
                       options={employeeStatusOptions || []}
