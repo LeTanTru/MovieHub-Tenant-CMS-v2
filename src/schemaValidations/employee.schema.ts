@@ -27,8 +27,6 @@ export const employeeSchema = (isEditing: boolean) =>
 
       confirmPassword: z.string().optional().nullable(),
 
-      oldPassword: z.string().optional().nullable(),
-
       newPassword: z.string().optional().nullable(),
 
       confirmNewPassword: z.string().optional().nullable()
@@ -100,15 +98,7 @@ export const employeeSchema = (isEditing: boolean) =>
       }
 
       if (isEditing) {
-        if (data.newPassword || data.confirmNewPassword || data.oldPassword) {
-          if (!data.oldPassword) {
-            ctx.addIssue({
-              code: 'custom',
-              path: ['oldPassword'],
-              message: 'Vui lòng nhập mật khẩu cũ'
-            });
-          }
-
+        if (data.newPassword || data.confirmNewPassword) {
           if (!data.newPassword) {
             ctx.addIssue({
               code: 'custom',
