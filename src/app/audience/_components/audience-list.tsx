@@ -155,7 +155,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
     },
     handlers.renderStatusColumn(),
     handlers.renderActionColumn({
-      actions: { changeStatus: true, delete: true }
+      actions: { changeStatus: true, delete: false }
     })
   ];
 
