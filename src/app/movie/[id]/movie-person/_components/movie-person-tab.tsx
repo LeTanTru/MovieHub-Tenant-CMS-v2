@@ -63,7 +63,10 @@ export default function PersonTab() {
           label: 'Phim',
           href: route.movie.getList.path
         },
-        { label: activeTab === 'actor-tab' ? 'Diễn viên' : 'Đạo diễn' }
+        {
+          label:
+            activeTab === TAB_MOVIE_PERSON_KIND_ACTOR ? 'Diễn viên' : 'Đạo diễn'
+        }
       ]}
     >
       <div className='rounded-lg bg-white'>

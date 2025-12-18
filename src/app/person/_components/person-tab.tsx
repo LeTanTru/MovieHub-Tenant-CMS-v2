@@ -52,7 +52,9 @@ export default function PersonTab() {
   return (
     <PageWrapper
       breadcrumbs={[
-        { label: activeTab === 'actor-tab' ? 'Diễn viên' : 'Đạo diễn' }
+        {
+          label: activeTab === TAB_PERSON_KIND_ACTOR ? 'Diễn viên' : 'Đạo diễn'
+        }
       ]}
     >
       <div className='rounded-lg bg-white'>
