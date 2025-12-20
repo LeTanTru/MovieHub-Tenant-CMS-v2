@@ -27,30 +27,30 @@ export default function AppVersionList({ queryKey }: { queryKey: string }) {
       objectName: 'phiên bản ứng dụng'
     },
     override: (handlers) => {
-      handlers.additionalColumns = () => ({
-        download: (
-          record: AppVersionResType,
-          buttonProps: Record<string, any>
-        ) => {
-          if (!record.filePath) return null;
-          return (
-            <ToolTip title={'Tải tệp xuống'} sideOffset={0}>
-              <span>
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDownloadFile(renderFileUrl(record.filePath));
-                  }}
-                  className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
-                  {...buttonProps}
-                >
-                  <AiOutlineDownload className='text-dodger-blue size-4' />
-                </Button>
-              </span>
-            </ToolTip>
-          );
-        }
-      });
+      // handlers.additionalColumns = () => ({
+      //   download: (
+      //     record: AppVersionResType,
+      //     buttonProps: Record<string, any>
+      //   ) => {
+      //     if (!record.filePath) return null;
+      //     return (
+      //       <ToolTip title={'Tải tệp xuống'} sideOffset={0}>
+      //         <span>
+      //           <Button
+      //             onClick={(e) => {
+      //               e.stopPropagation();
+      //               handleDownloadFile(renderFileUrl(record.filePath));
+      //             }}
+      //             className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
+      //             {...buttonProps}
+      //           >
+      //             <AiOutlineDownload className='text-dodger-blue size-4' />
+      //           </Button>
+      //         </span>
+      //       </ToolTip>
+      //     );
+      //   }
+      // });
       handlers.handleDeleteError = (code) => {
         if (code === ErrorCode.APP_VERSION_ERROR_NOT_HAVE_LATEST_VERSION) {
           notify.error('Không thể xóa phiên bản mới nhất');
