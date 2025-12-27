@@ -127,9 +127,10 @@ export default function ImageField({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => {
+            onClick={(e) => {
               setScale(1);
               setIsOpen(false);
+              e.stopPropagation();
             }}
           >
             <motion.div
