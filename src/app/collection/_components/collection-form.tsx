@@ -8,6 +8,7 @@ import {
   FieldSet,
   InputField,
   MultiSelectField,
+  NumberField,
   Row,
   SelectField
 } from '@/components/form';
@@ -329,7 +330,17 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                       options={categories}
                     />
                   </Col>
-                  <Col className='mt-6 justify-end'>
+                  <Col>
+                    <NumberField
+                      control={form.control}
+                      name='filter.limit'
+                      label='Giới hạn'
+                      placeholder='Giới hạn'
+                    />
+                  </Col>
+                </Row>
+                <Row className='mb-0'>
+                  <Col className='justify-end'>
                     <BooleanField
                       name='filter.isFeatured'
                       control={form.control}
