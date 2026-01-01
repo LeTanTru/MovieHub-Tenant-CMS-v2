@@ -17,7 +17,8 @@ export const collectionSchema = z.object({
   name: z.string().nonempty('Bắt buộc'),
   randomData: z.boolean(),
   styleId: z.string(),
-  type: z.number()
+  type: z.number(),
+  fillData: z.boolean({ error: 'Bắt buộc' })
 });
 
 export const collectionSearchSchema = z.object({

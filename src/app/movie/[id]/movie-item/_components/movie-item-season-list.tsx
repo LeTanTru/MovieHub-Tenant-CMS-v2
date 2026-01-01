@@ -1,6 +1,8 @@
 'use client';
 
-import { ImageField } from '@/components/form';
+import MovieItemModal from './movie-item-modal';
+import { Button, ImageField, ToolTip } from '@/components/form';
+import { HasPermission } from '@/components/has-permission';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
 import { DragDropTable } from '@/components/table';
 import {
@@ -10,7 +12,13 @@ import {
   MOVIE_ITEM_KIND_SEASON,
   movieItemKindOptions
 } from '@/constants';
-import { useDragDrop, useListBase, useNavigate, useQueryParams } from '@/hooks';
+import {
+  useDisclosure,
+  useDragDrop,
+  useListBase,
+  useNavigate,
+  useQueryParams
+} from '@/hooks';
 import { cn } from '@/lib';
 import { route } from '@/routes';
 import { movieItemSearchSchema } from '@/schemaValidations';
@@ -26,7 +34,10 @@ import {
   renderImageUrl,
   renderListPageUrl
 } from '@/utils';
+import { PlusIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
+import { AiOutlineEdit } from 'react-icons/ai';
 
 export default function MovieItemSeasonList({
   queryKey
@@ -39,6 +50,9 @@ export default function MovieItemSeasonList({
     type: string;
     movieTitle: string;
   }>();
+
+  const movieItemModal = useDisclosure(false);
+  const [movieItem, setMovieItem] = useState<MovieItemResType | null>();
 
   const { data, loading, handlers } = useListBase<
     MovieItemResType,
@@ -59,8 +73,57 @@ export default function MovieItemSeasonList({
       handlers.additionalParams = () => ({
         size: MAX_PAGE_SIZE
       });
+      handlers.renderAddButton = () => {
+        return (
+          <HasPermission
+            requiredPermissions={[apiConfig.movieItem.create.permissionCode]}
+          >
+            <Button variant={'primary'} onClick={handleAddMovieItem}>
+              <PlusIcon />
+              Thêm mới
+            </Button>
+          </HasPermission>
+        );
+      };
+      handlers.additionalColumns = () => ({
+        edit: (record: MovieItemResType, buttonProps?: Record<string, any>) => {
+          if (
+            !handlers.hasPermission({
+              requiredPermissions: [apiConfig.movieItem.update.permissionCode]
+            })
+          )
+            return null;
+
+          return (
+            <ToolTip title={`Cập nhật tập, trailer`} sideOffset={0}>
+              <span>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditMovieItem(record);
+                  }}
+                  className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
+                  {...buttonProps}
+                >
+                  <AiOutlineEdit className='text-dodger-blue size-4' />
+                </Button>
+              </span>
+            </ToolTip>
+          );
+        }
+      });
     }
   });
+
+  const handleAddMovieItem = () => {
+    setMovieItem(null);
+    movieItemModal.open();
+  };
+
+  const handleEditMovieItem = (record: MovieItemResType) => {
+    setMovieItem(record);
+    movieItemModal.open();
+  };
 
   const {
     sortColumn,
@@ -182,6 +245,11 @@ export default function MovieItemSeasonList({
           rowClassName={() => 'cursor-pointer'}
         />
       </ListPageWrapper>
+      <MovieItemModal
+        open={movieItemModal.opened}
+        close={movieItemModal.close}
+        movieItem={movieItem}
+      />
     </PageWrapper>
   );
 }
