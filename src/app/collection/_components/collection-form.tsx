@@ -81,7 +81,8 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
     name: '',
     randomData: false,
     styleId: '',
-    type: COLLECTION_TYPE_TOPIC
+    type: COLLECTION_TYPE_TOPIC,
+    fillData: false
   };
 
   const initialValues: CollectionBodyType = useMemo(() => {
@@ -125,7 +126,8 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
       name: data?.name ?? '',
       randomData: false,
       styleId: data?.style?.id?.toString() ?? '',
-      type: data?.type ?? COLLECTION_TYPE_TOPIC
+      type: data?.type ?? COLLECTION_TYPE_SECTION,
+      fillData: data?.fillData ?? false
     };
   }, [data]);
 
@@ -300,6 +302,17 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                     />
                   </Col>
                 )}
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <BooleanField
+                    control={form.control}
+                    name='fillData'
+                    label='Tự động điền dữ liệu'
+                    className='items-center'
+                    required
+                  />
+                </Col>
               </Row>
               <FieldSet title='Bộ lọc'>
                 <Row>

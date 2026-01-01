@@ -80,7 +80,7 @@ export default function MovieItemSeasonDetailList({
     apiConfig: apiConfig.movieItem,
     options: {
       queryKey,
-      objectName: 'tập, trailer',
+      objectName: getMovieTypeLabel(type),
       excludeFromQueryFilter: ['type', 'season', 'movieTitle'],
       defaultFilters: {
         movieId,
@@ -119,7 +119,10 @@ export default function MovieItemSeasonDetailList({
             return null;
 
           return (
-            <ToolTip title={`Cập nhật tập, trailer`} sideOffset={0}>
+            <ToolTip
+              title={`Cập nhật ${getMovieTypeLabel(type)}`}
+              sideOffset={0}
+            >
               <span>
                 <Button
                   onClick={(e) => {
@@ -176,7 +179,7 @@ export default function MovieItemSeasonDetailList({
     onDragEnd
   } = useDragDrop<MovieItemResType>({
     key: `${queryKey}-list`,
-    objectName: 'tập, trailer',
+    objectName: getMovieTypeLabel(type),
     data,
     apiConfig: apiConfig.movieItem.updateOrdering,
     sortField: 'ordering',
@@ -200,7 +203,7 @@ export default function MovieItemSeasonDetailList({
       )
     },
     {
-      title: 'Tiêu đề tập, trailer',
+      title: `Tiêu đề ${getMovieTypeLabel(type)}`,
       dataIndex: 'title',
       render: (value, record) => (
         <span
@@ -260,7 +263,7 @@ export default function MovieItemSeasonDetailList({
   ];
 
   const searchFields: SearchFormProps<MovieItemSearchType>['searchFields'] = [
-    { key: 'title', placeholder: 'Tiêu đề tập, trailer' },
+    { key: 'title', placeholder: `Tiêu đề ${getMovieTypeLabel(type)}` },
     {
       key: 'kind',
       placeholder: 'Loại',
@@ -321,3 +324,14 @@ export default function MovieItemSeasonDetailList({
     </PageWrapper>
   );
 }
+
+const getMovieTypeLabel = (type?: number | string) => {
+  switch (Number(type)) {
+    case MOVIE_TYPE_SINGLE:
+      return 'trailer';
+    case MOVIE_TYPE_SERIES:
+      return 'tập, trailer';
+    default:
+      return 'mục phim';
+  }
+};

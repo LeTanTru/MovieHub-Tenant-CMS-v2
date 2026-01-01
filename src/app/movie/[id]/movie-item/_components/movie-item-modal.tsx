@@ -166,7 +166,7 @@ export default function MovieItemModal({
       open={open}
       onClose={close}
       width={800}
-      title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${movieItem ? (movieItem.kind === MOVIE_ITEM_KIND_EPISODE ? 'tập' : 'trailer') : 'tập/trailer'}`}
+      title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${movieItem ? (movieItem.kind === MOVIE_ITEM_KIND_EPISODE ? 'tập' : 'trailer') : 'tập, trailer'}`}
     >
       <BaseForm
         onSubmit={onSubmit}
@@ -208,7 +208,9 @@ export default function MovieItemModal({
                     label='Loại'
                     placeholder='Loại'
                     required
-                    disabled={isEditing || !movieItemId}
+                    disabled={
+                      isEditing || !movieItemId || kindOptions.length === 1
+                    }
                   />
                 </Col>
                 <Col>

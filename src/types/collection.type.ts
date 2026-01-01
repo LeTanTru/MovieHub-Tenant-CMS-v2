@@ -20,6 +20,7 @@ export type CollectionResType = {
   style: StyleResType;
   styleType: number;
   type: number;
+  fillData: boolean;
 };
 
 export type CollectionBodyType = z.infer<typeof collectionSchema>;
