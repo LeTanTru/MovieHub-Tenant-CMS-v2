@@ -44,24 +44,9 @@ import {
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import {
-  DefaultVideoLayout,
-  defaultLayoutIcons
-} from '@vidstack/react/player/layouts/default';
-import {
-  CaptionButton,
-  FullscreenToggleButton,
-  PiPToggleButton,
-  PlayToggleButton,
-  SeekBackwardButton,
-  SeekForwardButton,
-  SettingMenu,
-  VideoPlayer,
-  VolumeToggleButton
-} from '@/components/video-player';
+import { VideoPlayer } from '@/components/video-player';
 import { AxiosProgressEvent } from 'axios';
 import { logger } from '@/logger';
-import { MediaPlayer, MediaProvider } from '@vidstack/react';
 
 export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
@@ -211,6 +196,10 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
           const sourceType = form.watch('sourceType');
           const content = form.watch('content');
           const vttUrl = form.watch('vttUrl');
+          const duration = form.watch('duration');
+          const introStart = form.watch('introStart');
+          const introEnd = form.watch('introEnd');
+          const outroStart = form.watch('outroStart');
 
           return (
             <>
@@ -266,6 +255,17 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     name='introStart'
                     label='Thời gian bắt đầu intro'
                     placeholder='Thời gian bắt đầu intro'
+                    onChange={(value) => {
+                      const introStartSec = timeToSeconds(
+                        (value as string) || '00:00:00'
+                      );
+                      const introEndSec = timeToSeconds(
+                        (introEnd as string) || '00:00:00'
+                      );
+                      if (introStartSec < introEndSec) {
+                        form.clearErrors('introEnd');
+                      }
+                    }}
                   />
                 </Col>
                 <Col>
@@ -274,6 +274,17 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     name='introEnd'
                     label='Thời gian kết thúc intro'
                     placeholder='Thời gian kết thúc intro'
+                    onChange={(value) => {
+                      const introStartSec = timeToSeconds(
+                        (introStart as string) || '00:00:00'
+                      );
+                      const introEndSec = timeToSeconds(
+                        (value as string) || '00:00:00'
+                      );
+                      if (introStartSec < introEndSec) {
+                        form.clearErrors('introStart');
+                      }
+                    }}
                   />
                 </Col>
               </Row>
@@ -284,6 +295,17 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     name='outroStart'
                     label='Thời gian bắt đầu outro'
                     placeholder='Thời gian bắt đầu outro'
+                    onChange={(value) => {
+                      const introEndSec = timeToSeconds(
+                        (introEnd as string) || '00:00:00'
+                      );
+                      const outStartSec = timeToSeconds(
+                        (value as string) || '00:00:00'
+                      );
+                      if (outStartSec > introEndSec) {
+                        form.clearErrors('introEnd');
+                      }
+                    }}
                   />
                 </Col>
                 {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL && (
@@ -345,46 +367,24 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                   {(videoManager.currentUrl || content) && (
                     <Row>
                       <Col span={24} className='px-0!'>
-                        <MediaPlayer
-                          autoPlay
-                          crossOrigin
-                          fullscreenOrientation={'none'}
-                          logLevel='silent'
-                          onProviderChange={undefined}
-                          playsInline
-                          preferNativeHLS={false}
-                          src={videoManager.currentUrl || content}
-                          streamType='on-demand'
-                          viewType='video'
-                          volume={0.5}
-                          className='rounded! border-none!'
-                        >
-                          <MediaProvider />
-                          <DefaultVideoLayout
-                            thumbnails={vttUrl || undefined}
-                            icons={defaultLayoutIcons}
-                            slots={{
-                              playButton: <PlayToggleButton />,
-                              muteButton: <VolumeToggleButton />,
-                              fullscreenButton: <FullscreenToggleButton />,
-                              pipButton: <PiPToggleButton />,
-                              settingsMenu: (
-                                <SettingMenu
-                                  placement='top end'
-                                  tooltipPlacement='top'
-                                />
-                              ),
-                              captionButton: <CaptionButton />,
-                              beforeSettingsMenu: (
-                                <>
-                                  <SeekBackwardButton />
-                                  <SeekForwardButton />
-                                </>
-                              ),
-                              googleCastButton: null
-                            }}
-                          />
-                        </MediaPlayer>
+                        <VideoPlayer
+                          auth={false}
+                          duration={timeToSeconds(
+                            (duration as string) || '00:00:00'
+                          )}
+                          introEnd={timeToSeconds(
+                            (introEnd as string) || '00:00:00'
+                          )}
+                          introStart={timeToSeconds(
+                            (introStart as string) || '00:00:00'
+                          )}
+                          outroStart={timeToSeconds(
+                            (outroStart as string) || '00:00:00'
+                          )}
+                          source={videoManager.currentUrl || content}
+                          thumbnailUrl={imageManager.currentUrl}
+                          vttUrl={vttUrl || ''}
+                        />
                       </Col>
                     </Row>
                   )}
@@ -400,9 +400,18 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                       <VideoPlayer
                         auth={true}
                         duration={data.duration}
-                        introEnd={data.introEnd}
-                        introStart={data.introStart}
-                        outroStart={data.outroStart}
+                        introEnd={
+                          timeToSeconds((introEnd as string) || '00:00:00') ||
+                          data.introEnd
+                        }
+                        introStart={
+                          timeToSeconds((introStart as string) || '00:00:00') ||
+                          data.introStart
+                        }
+                        outroStart={
+                          timeToSeconds((outroStart as string) || '00:00:00') ||
+                          data.outroStart
+                        }
                         source={renderVideoUrl(data.content)}
                         thumbnailUrl={renderImageUrl(data.thumbnailUrl)}
                         vttUrl={renderVttUrl(data.vttUrl)}

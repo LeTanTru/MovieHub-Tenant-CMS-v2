@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib';
 import { TimeSlider as BaseTimeSlider } from '@vidstack/react';
+import { useMemo } from 'react';
 
 export default function TimeSlider({
   introStart,
@@ -21,16 +22,22 @@ export default function TimeSlider({
       <BaseTimeSlider.Track className='relative z-0 h-[5px] w-full overflow-hidden rounded-sm bg-white/30 ring-sky-400 group-data-focus:ring-[3px]'>
         <BaseTimeSlider.TrackFill className='absolute h-full w-(--slider-fill) rounded-sm bg-[#f5f5f5] will-change-[width]' />
         <BaseTimeSlider.Progress className='absolute z-10 h-full w-(--slider-progress) rounded-sm bg-[#ffffff80] will-change-[width]' />
-        <IntroRangeHighlight
-          start={introStart || 0}
-          end={introEnd}
-          duration={duration}
-        />
-        <IntroRangeHighlight
-          start={outroStart}
-          end={duration}
-          duration={duration}
-        />
+
+        {duration > 0 && introEnd > introStart && (
+          <IntroRangeHighlight
+            start={introStart || 0}
+            end={introEnd}
+            duration={duration}
+          />
+        )}
+
+        {duration > 0 && outroStart > 0 && outroStart < duration && (
+          <IntroRangeHighlight
+            start={outroStart}
+            end={duration}
+            duration={duration}
+          />
+        )}
       </BaseTimeSlider.Track>
 
       <BaseTimeSlider.Preview
@@ -58,25 +65,29 @@ function IntroRangeHighlight({
 }: {
   start: number;
   end: number;
-  duration?: number;
+  duration: number;
 }) {
-  if (!duration || duration === 0) return null;
+  const styles = useMemo(() => {
+    const left = (start / duration) * 100;
+    const width = ((end - start) / duration) * 100;
 
-  const left = (start / duration) * 100;
-  const width = ((end - start) / duration) * 100;
+    return {
+      left: `${left}%`,
+      width: `${width}%`
+    };
+  }, [start, end, duration]);
+
+  const isAtStart = useMemo(() => start === 0, [start]);
 
   return (
     <div
       className={cn(
-        'pointer-events-none absolute top-0 h-full bg-gray-100/50',
+        'pointer-events-none absolute top-0 h-full bg-gray-200/50 transition-all duration-200',
         {
-          'rounded-tl rounded-bl': start === 0
+          'rounded-tl rounded-bl': isAtStart
         }
       )}
-      style={{
-        left: `${left}%`,
-        width: `${width}%`
-      }}
-    ></div>
+      style={styles}
+    />
   );
 }

@@ -22,6 +22,7 @@ type Props = {
   className?: string;
   labelClassName?: string;
   disabled?: boolean;
+  onChange?: (value: string) => void;
 };
 
 export default function TimePickerField({
@@ -33,7 +34,8 @@ export default function TimePickerField({
   placeholder,
   className,
   labelClassName,
-  disabled = false
+  disabled = false,
+  onChange
 }: Props) {
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const minutes = Array.from({ length: 60 }, (_, i) => i);
@@ -88,6 +90,7 @@ export default function TimePickerField({
           else if (timeFormat === 'HH:mm') result = `${pad(hh)}:${pad(mm)}`;
           else if (timeFormat === 'mm:ss') result = `${pad(mm)}:${pad(ss)}`;
           field.onChange(result);
+          onChange?.(result);
           // field.onChange(hh * 3600 + mm * 60 + ss);
         };
 
