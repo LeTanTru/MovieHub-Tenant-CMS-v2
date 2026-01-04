@@ -139,7 +139,7 @@ export default function UploadVideoField<T extends FieldValues>({
         <input {...getInputProps()} className='hidden' />
 
         <VideoIcon
-          className={cn('text-gray-300', {
+          className={cn('stroke-1 text-gray-300', {
             'text-destructive': !!error && !uploading
           })}
         />

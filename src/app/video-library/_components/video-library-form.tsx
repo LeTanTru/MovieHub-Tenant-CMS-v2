@@ -401,7 +401,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
               {/* Show video player/upload for INTERNAL source type */}
               {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL && (
                 <Row>
-                  <Col span={24} className='px-0!'>
+                  <Col span={24}>
                     {/* Play preview video */}
                     {isEditing && data ? (
                       <MediaPlayer
