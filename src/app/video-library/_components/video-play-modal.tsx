@@ -7,8 +7,10 @@ import { Modal } from '@/components/modal';
 import {
   CaptionButton,
   FullscreenToggleButton,
+  NextButton,
   PiPToggleButton,
   PlayToggleButton,
+  PreviousButton,
   SeekBackwardButton,
   SeekForwardButton,
   SettingMenu,
@@ -22,11 +24,9 @@ import {
   MediaPlayerInstance,
   MediaProvider,
   MediaProviderAdapter,
-  MediaTimeUpdateEvent,
   MediaTimeUpdateEventDetail,
   Poster,
-  TimeSlider,
-  Tooltip
+  TimeSlider
 } from '@vidstack/react';
 import {
   DefaultVideoLayout,
@@ -36,7 +36,6 @@ import { getData, renderImageUrl, renderVideoUrl, renderVttUrl } from '@/utils';
 import { storageKeys, VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL } from '@/constants';
 import { useRef, useState } from 'react';
 import { cn } from '@/lib';
-import { NextIcon } from '@vidstack/react/icons';
 
 export default function VideoPlayModal({
   open,
@@ -74,10 +73,7 @@ export default function VideoPlayModal({
   //   }
   // ];
 
-  const handleTimeChange = (
-    detail: MediaTimeUpdateEventDetail,
-    nativeEvent: MediaTimeUpdateEvent
-  ) => {
+  const handleTimeChange = (detail: MediaTimeUpdateEventDetail) => {
     if (!video) return;
 
     const { currentTime } = detail;
@@ -142,19 +138,8 @@ export default function VideoPlayModal({
               captionButton: <CaptionButton />,
               beforeSettingsMenu: (
                 <>
-                  <Tooltip.Root>
-                    <Tooltip.Trigger asChild>
-                      <button className='vds-button' aria-label='Next video'>
-                        <NextIcon size={32} />
-                      </button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content
-                      className='vds-tooltip-content'
-                      placement='top'
-                    >
-                      Tập tiếp theo
-                    </Tooltip.Content>
-                  </Tooltip.Root>
+                  <PreviousButton />
+                  <NextButton />
                   <SeekBackwardButton />
                   <SeekForwardButton />
                 </>
@@ -183,13 +168,13 @@ export default function VideoPlayModal({
                         duration={video.duration}
                       />
                     )}
-                    {/* {video && (
+                    {video && (
                       <IntroRangeHighlight
                         start={video.outroStart}
                         end={video.duration}
                         duration={video.duration}
                       />
-                    )} */}
+                    )}
                   </TimeSlider.Track>
 
                   <TimeSlider.Preview

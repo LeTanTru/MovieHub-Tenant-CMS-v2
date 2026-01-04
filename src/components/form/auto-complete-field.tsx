@@ -253,9 +253,9 @@ export default function AutoCompleteField<
                     {
                       'disabled:cursor-not-allowed disabled:opacity-100 disabled:hover:bg-transparent disabled:[&>div>span]:opacity-80':
                         disabled,
-                      'border-dodger-blue ring-dodger-blue ring-1': open,
+                      'ring-dodger-blue border-transparent ring-2': open,
                       '[&>div>span]:text-gray-300': fieldState.invalid,
-                      'border-red-500 ring-red-500': fieldState.invalid
+                      'border-red-500 ring-red-500': !!fieldState.error
                     }
                   )}
                 >

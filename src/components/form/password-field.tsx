@@ -103,7 +103,7 @@ export default function PasswordField<T extends FieldValues>({
                   style={{ paddingTop: 0 }}
                   className={cn(
                     className,
-                    'pb-0 leading-9 shadow-none placeholder:text-gray-300 focus-visible:ring-2',
+                    'pb-0 leading-normal shadow-none placeholder:text-gray-300 focus-visible:ring-2',
                     {
                       'cursor-not-allowed': disabled
                     },
