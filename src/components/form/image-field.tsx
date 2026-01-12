@@ -6,7 +6,16 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { AiOutlineFileImage } from 'react-icons/ai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ComponentType,
+  HTMLAttributes,
+  MouseEvent,
+  SVGProps,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 
 type ImageFieldProps = {
   src?: string;
@@ -21,10 +30,10 @@ type ImageFieldProps = {
   imageClassName?: string;
   previewClassName?: string;
   imagePreviewClassName?: string;
-  hoverIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  hoverIcon?: ComponentType<SVGProps<SVGSVGElement>>;
   showHoverIcon?: boolean;
   zoomOnScroll?: boolean;
-} & React.HTMLAttributes<HTMLDivElement>;
+} & HTMLAttributes<HTMLDivElement>;
 
 export default function ImageField({
   src,
@@ -49,7 +58,7 @@ export default function ImageField({
 
   const previewRef = useRef<HTMLDivElement | null>(null);
 
-  const openPreview = (e: React.MouseEvent) => {
+  const openPreview = (e: MouseEvent) => {
     if (disablePreview || !src) return;
     e.preventDefault();
     e.stopPropagation();

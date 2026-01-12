@@ -26,7 +26,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { DATE_TIME_FORMAT } from '@/constants';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { CalendarIcon } from 'lucide-react';
 import { format, isValid, Locale, parse } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -313,7 +313,7 @@ function CustomSelectDropdown(props: DropdownProps) {
         target: {
           value: newValue
         }
-      } as React.ChangeEvent<HTMLSelectElement>;
+      } as ChangeEvent<HTMLSelectElement>;
       onChange(syntheticEvent);
     }
   };

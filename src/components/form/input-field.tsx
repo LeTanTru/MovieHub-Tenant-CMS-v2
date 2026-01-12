@@ -13,6 +13,7 @@ import { Control, FieldPath, FieldValues } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import {
   ComponentPropsWithoutRef,
+  ForwardedRef,
   ReactNode,
   forwardRef,
   useEffect,
@@ -60,7 +61,7 @@ function InputFieldInner<T extends FieldValues>(
     onOptionSelect,
     ...inputProps
   }: InputFieldProps<T>,
-  ref: React.ForwardedRef<HTMLInputElement>
+  ref: ForwardedRef<HTMLInputElement>
 ) {
   const [showOptions, setShowOptions] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
@@ -237,7 +238,7 @@ function InputFieldInner<T extends FieldValues>(
 }
 
 const InputField = forwardRef(InputFieldInner) as <T extends FieldValues>(
-  props: InputFieldProps<T> & { ref?: React.ForwardedRef<HTMLInputElement> }
+  props: InputFieldProps<T> & { ref?: ForwardedRef<HTMLInputElement> }
 ) => ReturnType<typeof InputFieldInner>;
 
 export default InputField;

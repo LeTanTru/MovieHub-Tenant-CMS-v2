@@ -1,12 +1,13 @@
 'use client';
 
 import { useIsMounted, useValidatePermission } from '@/hooks';
+import { ReactNode } from 'react';
 
 export default function HasPermission({
   children,
   requiredPermissions
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   requiredPermissions: string[];
 }) {
   const isMounted = useIsMounted();

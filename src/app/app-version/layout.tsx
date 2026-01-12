@@ -1,9 +1,10 @@
 import { SidebarLayout } from '@/components/layout';
+import { ReactNode } from 'react';
 
 export default function AppVersionLayout({
   children
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return <SidebarLayout>{children}</SidebarLayout>;
 }

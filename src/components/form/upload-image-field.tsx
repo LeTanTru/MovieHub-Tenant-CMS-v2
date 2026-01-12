@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import {
   ArrowLeftIcon,
   UploadIcon,
@@ -86,7 +93,7 @@ async function getCroppedImg(
 type UploadImageFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
-  label?: React.ReactNode;
+  label?: ReactNode;
   value?: string;
   required?: boolean;
   labelClassName?: string;
@@ -181,7 +188,7 @@ export default function UploadImageField<T extends FieldValues>({
     }
   };
 
-  const handleRemove = async (e: React.MouseEvent) => {
+  const handleRemove = async (e: MouseEvent) => {
     e.stopPropagation();
     try {
       if (deleteImageFn && fieldValue) {

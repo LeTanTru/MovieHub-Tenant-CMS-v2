@@ -11,11 +11,12 @@ import {
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { ReactNode } from 'react';
 
 type CheckboxFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
-  label: string | React.ReactNode;
+  label: string | ReactNode;
   description?: string;
   className?: string;
   disabled?: boolean;

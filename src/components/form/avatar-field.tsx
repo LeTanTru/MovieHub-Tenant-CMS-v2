@@ -6,11 +6,19 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { AiOutlineUser } from 'react-icons/ai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  HTMLAttributes,
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 
 type AvatarFieldProps = {
   size?: number;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   src?: string;
   className?: string;
   previewClassName?: string;
@@ -24,7 +32,7 @@ type AvatarFieldProps = {
   alt?: string;
   zoomOnScroll?: boolean;
   showHoverIcon?: boolean;
-} & React.HTMLAttributes<HTMLElement>;
+} & HTMLAttributes<HTMLElement>;
 
 export default function AvatarField({
   size = 48,
@@ -49,7 +57,7 @@ export default function AvatarField({
 
   const previewRef = useRef<HTMLDivElement | null>(null);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     if (disablePreview || !src) return;
     e.preventDefault();
     e.stopPropagation();

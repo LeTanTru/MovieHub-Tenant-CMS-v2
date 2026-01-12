@@ -7,7 +7,10 @@ import {
   useRef,
   useState,
   ForwardedRef,
-  useImperativeHandle
+  useImperativeHandle,
+  ReactNode,
+  TextareaHTMLAttributes,
+  ReactElement
 } from 'react';
 import {
   FormControl,
@@ -23,7 +26,7 @@ import { cn } from '@/lib/utils';
 type TextAreaFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
-  label?: string | React.ReactNode;
+  label?: string | ReactNode;
   placeholder?: string;
   className?: string;
   labelClassName?: string;
@@ -34,7 +37,7 @@ type TextAreaFieldProps<T extends FieldValues> = {
   maxLength?: number;
   rows?: number;
   maxRows?: number;
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const TextAreaField = <T extends FieldValues>(
   {
@@ -149,6 +152,6 @@ const TextAreaField = <T extends FieldValues>(
 
 export default forwardRef(TextAreaField) as <T extends FieldValues>(
   props: TextAreaFieldProps<T> & {
-    ref?: React.ForwardedRef<HTMLTextAreaElement>;
+    ref?: ForwardedRef<HTMLTextAreaElement>;
   }
-) => React.ReactElement;
+) => ReactElement;

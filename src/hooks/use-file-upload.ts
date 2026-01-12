@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Ref,
   useCallback,
   useRef,
   useState,
@@ -53,7 +54,7 @@ export type FileUploadActions = {
   getInputProps: (
     props?: InputHTMLAttributes<HTMLInputElement>
   ) => InputHTMLAttributes<HTMLInputElement> & {
-    ref: React.Ref<HTMLInputElement>;
+    ref: Ref<HTMLInputElement>;
   };
 };
 

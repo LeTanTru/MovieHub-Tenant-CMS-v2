@@ -16,14 +16,10 @@ import {
 } from '@/queries';
 import { useAuthStore, useSocketStore } from '@/store';
 import { getData, isTokenExpiringSoon, removeData, setData } from '@/utils';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-export default function AppProvider({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppProvider({ children }: { children: ReactNode }) {
   const accessToken = getData(storageKeys.ACCESS_TOKEN);
   const refreshToken = getData(storageKeys.REFRESH_TOKEN);
   const kind = getData(storageKeys.USER_KIND);
