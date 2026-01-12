@@ -2,15 +2,13 @@ import apiConfig from '@/constants/api-config';
 import { COLLECTION_TYPE_TOPIC } from '@/constants/constant';
 import { route } from '@/routes';
 import { MenuItem } from '@/types';
-import { LucideLayoutGrid, Settings } from 'lucide-react';
-import { AiOutlineUser } from 'react-icons/ai';
-import { RiMovie2Fill } from 'react-icons/ri';
+import { Film, LucideLayoutGrid, Settings, UserRound } from 'lucide-react';
 
 const menuConfig: MenuItem[] = [
   {
     key: 'user-management',
     label: 'Quản lý người dùng',
-    icon: AiOutlineUser,
+    icon: UserRound,
     permissionCode: [apiConfig.employee.getList.permissionCode],
     children: [
       {
@@ -30,7 +28,7 @@ const menuConfig: MenuItem[] = [
   {
     key: 'movie-management',
     label: 'Quản lý phim',
-    icon: RiMovie2Fill,
+    icon: Film,
     permissionCode: [
       apiConfig.category.getList.permissionCode,
       apiConfig.videoLibrary.getList.permissionCode,

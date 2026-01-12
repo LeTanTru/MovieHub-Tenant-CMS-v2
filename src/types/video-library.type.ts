@@ -3,7 +3,7 @@ import {
   videoLibrarySearchSchema
 } from '@/schemaValidations';
 import { BaseSearchType } from '@/types/search.type';
-import z from 'zod';
+import { z } from 'zod';
 
 export type VideoLibraryResType = {
   content: string;

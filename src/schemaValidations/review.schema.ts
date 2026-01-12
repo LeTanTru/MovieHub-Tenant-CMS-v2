@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const reviewSearchSchema = z.object({
   authorId: z.string().optional().nullable(),

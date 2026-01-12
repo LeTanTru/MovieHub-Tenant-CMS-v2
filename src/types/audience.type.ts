@@ -1,6 +1,6 @@
 import { audienceSearchSchema } from '@/schemaValidations';
 import { BaseSearchType } from '@/types/search.type';
-import z from 'zod';
+import { z } from 'zod';
 
 export type AudienceResType = {
   avatarPath: string;

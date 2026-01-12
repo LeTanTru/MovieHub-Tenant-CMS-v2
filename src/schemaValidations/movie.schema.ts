@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const movieSchema = z.object({
   ageRating: z.number({ error: 'Bắt buộc' }).min(1, 'Bắt buộc'),

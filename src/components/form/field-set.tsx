@@ -2,12 +2,12 @@
 
 import { cn } from '@/lib';
 
-interface FieldSetProps {
+type FieldSetProps = {
   title?: string;
   description?: string;
   children?: React.ReactNode;
   className?: string;
-}
+};
 
 export default function FieldSet({
   title,

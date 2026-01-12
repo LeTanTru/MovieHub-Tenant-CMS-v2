@@ -1,7 +1,5 @@
 'use client';
 
-import { CalendarIcon } from '@radix-ui/react-icons';
-import { format, isValid, Locale, parse } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
@@ -18,7 +16,6 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/form';
-import { vi } from 'date-fns/locale';
 import { DropdownProps } from 'react-day-picker';
 import {
   Select,
@@ -30,6 +27,9 @@ import {
 } from '@/components/ui/select';
 import { DATE_TIME_FORMAT } from '@/constants';
 import { useState } from 'react';
+import { CalendarIcon } from 'lucide-react';
+import { format, isValid, Locale, parse } from 'date-fns';
+import { vi } from 'date-fns/locale';
 
 type DateTimePickerFieldProps<T extends FieldValues> = {
   control: Control<T>;

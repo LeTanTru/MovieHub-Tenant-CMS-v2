@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const appVersionSchema = z.object({
   changeLog: z.string().nonempty('Bắt buộc'),

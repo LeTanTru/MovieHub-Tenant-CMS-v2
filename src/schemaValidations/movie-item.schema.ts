@@ -1,5 +1,5 @@
 import { MOVIE_ITEM_KIND_SEASON } from '@/constants';
-import z from 'zod';
+import { z } from 'zod';
 
 export const movieItemSchema = z
   .object({

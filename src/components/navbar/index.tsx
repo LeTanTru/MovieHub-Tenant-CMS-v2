@@ -3,7 +3,6 @@
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import DropdownAvatar from '@/components/navbar/dropdown-avatar';
 import { useSidebarStore } from '@/store';
-import { DarkModeToggle } from '@/components/dark-mode';
 import { ToolTip } from '@/components/form';
 import { useShallow } from 'zustand/react/shallow';
 

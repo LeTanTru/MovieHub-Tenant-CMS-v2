@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const personSchema = z.object({
   avatarPath: z.string().optional().nullable(),

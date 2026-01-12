@@ -1,7 +1,7 @@
 import { movieItemSchema, movieItemSearchSchema } from '@/schemaValidations';
 import { BaseSearchType } from '@/types/search.type';
 import { VideoLibraryResType } from '@/types/video-library.type';
-import z from 'zod';
+import { z } from 'zod';
 
 export type MovieItemResType = {
   id: string;

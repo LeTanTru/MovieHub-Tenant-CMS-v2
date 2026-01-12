@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const collectionItemSchema = z.object({
   collectionId: z.string().nonempty('Bắt buộc'),
