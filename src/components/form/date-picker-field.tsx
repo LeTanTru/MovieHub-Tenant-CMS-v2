@@ -18,7 +18,7 @@ import {
 import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/form';
-import { useState, useRef } from 'react';
+import { useState, useRef, ChangeEvent } from 'react';
 import {
   Select,
   SelectContent,
@@ -206,7 +206,7 @@ function CustomSelectDropdown(props: DropdownProps) {
         target: {
           value: newValue
         }
-      } as React.ChangeEvent<HTMLSelectElement>;
+      } as ChangeEvent<HTMLSelectElement>;
 
       onChange(syntheticEvent);
     }

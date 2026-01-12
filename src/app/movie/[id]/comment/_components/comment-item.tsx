@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo } from 'react';
+import { memo, ReactNode } from 'react';
 import { AvatarField, Button, ToolTip } from '@/components/form';
 import { Ellipsis, Info, Mars, Pin, Reply, Venus } from 'lucide-react';
 import { cn } from '@/lib';
@@ -65,7 +65,7 @@ type CommentItemProps = {
     list: CommentResType[],
     level: number,
     rootId?: string
-  ) => React.ReactNode;
+  ) => ReactNode;
 };
 
 function CommentItem({

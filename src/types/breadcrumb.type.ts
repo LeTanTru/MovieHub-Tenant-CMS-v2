@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export type BreadcrumbType = {
   label: string;
   href?: string;
@@ -5,5 +7,5 @@ export type BreadcrumbType = {
 
 export type ReusableBreadcrumbProps = {
   items: BreadcrumbType[];
-  separator?: React.ReactNode;
+  separator?: ReactNode;
 };

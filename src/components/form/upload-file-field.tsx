@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, ReactNode, MouseEvent } from 'react';
 import { FileIcon, XIcon } from 'lucide-react';
 import {
   Control,
@@ -21,7 +21,7 @@ import { formatBytes } from '@/hooks/use-file-upload';
 type UploadFileFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
-  label?: React.ReactNode;
+  label?: ReactNode;
   required?: boolean;
   className?: string;
   accept: string;
@@ -96,7 +96,7 @@ export default function UploadFileField<T extends FieldValues>({
     }
   };
 
-  const handleRemove = async (e: React.MouseEvent) => {
+  const handleRemove = async (e: MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     try {

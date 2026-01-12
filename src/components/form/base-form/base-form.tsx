@@ -4,7 +4,7 @@ import { Form } from '@/components/ui/form';
 import { cn } from '@/lib';
 import { logger } from '@/logger';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Ref, useEffect } from 'react';
+import { ReactNode, Ref, useEffect } from 'react';
 import {
   DefaultValues,
   useForm,
@@ -18,7 +18,7 @@ type BaseFormProps<T extends Record<string, any>> = {
   schema: any;
   defaultValues: DefaultValues<T> | AsyncDefaultValues<T>;
   onSubmit: (values: T, form: UseFormReturn<T>) => Promise<void> | void;
-  children?: (methods: UseFormReturn<T>) => React.ReactNode;
+  children?: (methods: UseFormReturn<T>) => ReactNode;
   className?: string;
   initialValues?: T;
   mode?: 'onBlur' | 'onChange' | 'onSubmit' | 'onTouched' | 'all';

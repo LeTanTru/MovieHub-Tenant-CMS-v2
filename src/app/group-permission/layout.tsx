@@ -1,5 +1,6 @@
 import { SidebarLayout } from '@/components/layout';
 import { Metadata } from 'next';
+import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Quyền'
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 export default function GroupPermissionLayout({
   children
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return <SidebarLayout>{children}</SidebarLayout>;
 }

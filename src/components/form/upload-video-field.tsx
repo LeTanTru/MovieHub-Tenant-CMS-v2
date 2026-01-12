@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, ReactNode, MouseEvent } from 'react';
 import { VideoIcon, XIcon } from 'lucide-react';
 import {
   Control,
@@ -20,7 +20,7 @@ import { ApiResponse } from '@/types';
 type UploadVideoFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
-  label?: React.ReactNode;
+  label?: ReactNode;
   onChange?: (url: string) => void;
   required?: boolean;
   className?: string;
@@ -92,7 +92,7 @@ export default function UploadVideoField<T extends FieldValues>({
     }
   };
 
-  const handleRemove = async (e: React.MouseEvent) => {
+  const handleRemove = async (e: MouseEvent) => {
     e.stopPropagation();
     try {
       if (deleteImageFn && value) {

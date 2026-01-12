@@ -9,7 +9,7 @@ import {
   setData,
   validatePermission
 } from '@/utils';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Unauthorized } from '@/components/unauthorized';
 import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
@@ -19,11 +19,7 @@ import { storageKeys } from '@/constants';
 import { RouteItem } from '@/routes/route';
 import { useShallow } from 'zustand/react/shallow';
 
-export default function PermissionGuard({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default function PermissionGuard({ children }: { children: ReactNode }) {
   const {
     loading,
     permissionCode: userPermissions,

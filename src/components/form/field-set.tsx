@@ -1,11 +1,12 @@
 'use client';
 
 import { cn } from '@/lib';
+import { ReactNode } from 'react';
 
 type FieldSetProps = {
   title?: string;
   description?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
 };
 
