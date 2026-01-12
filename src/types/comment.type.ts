@@ -6,7 +6,7 @@ import {
   commentVoteSchema
 } from '@/schemaValidations';
 import { BaseSearchType } from '@/types/search.type';
-import z from 'zod';
+import { z } from 'zod';
 
 export type CommentResType = {
   id: string;

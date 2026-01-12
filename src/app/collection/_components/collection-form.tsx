@@ -39,7 +39,6 @@ import { useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { PlusIcon, X } from 'lucide-react';
 import { logger } from '@/logger';
-import { omit } from 'lodash';
 import { Activity } from '@/components/activity';
 
 export default function CollectionForm({ queryKey }: { queryKey: string }) {
@@ -132,6 +131,30 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
     };
   }, [data]);
 
+  // const onSubmit = async (
+  //   values: CollectionBodyType,
+  //   form: UseFormReturn<CollectionBodyType>
+  // ) => {
+  //   if (!values.styleId && values.type === COLLECTION_TYPE_SECTION) {
+  //     form.setError('styleId', { message: 'Bắt buộc' });
+  //   } else {
+  //     const payload = {
+  //       ...values,
+  //       filter: JSON.stringify(
+  //         omit(
+  //           {
+  //             ...values.filter,
+  //             limit: values.filter.noLimit ? null : values.filter.limit
+  //           },
+  //           ['noLimit']
+  //         )
+  //       ),
+  //       colors: values.colors
+  //     };
+  //     await handleSubmit(payload as any, form, collectionErrorMaps);
+  //   }
+  // };
+
   const onSubmit = async (
     values: CollectionBodyType,
     form: UseFormReturn<CollectionBodyType>
@@ -139,17 +162,14 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
     if (!values.styleId && values.type === COLLECTION_TYPE_SECTION) {
       form.setError('styleId', { message: 'Bắt buộc' });
     } else {
+      const { noLimit, ...filterWithoutNoLimit } = values.filter;
+
       const payload = {
         ...values,
-        filter: JSON.stringify(
-          omit(
-            {
-              ...values.filter,
-              limit: values.filter.noLimit ? null : values.filter.limit
-            },
-            ['noLimit']
-          )
-        ),
+        filter: JSON.stringify({
+          ...filterWithoutNoLimit,
+          limit: noLimit ? null : values.filter.limit
+        }),
         colors: values.colors
       };
       await handleSubmit(payload as any, form, collectionErrorMaps);

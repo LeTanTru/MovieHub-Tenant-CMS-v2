@@ -1,5 +1,5 @@
 import { styleSchema, styleSearchSchema } from '@/schemaValidations';
-import z from 'zod';
+import { z } from 'zod';
 
 export type StyleResType = {
   createdDate: string;

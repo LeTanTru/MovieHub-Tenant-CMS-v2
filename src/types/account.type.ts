@@ -1,5 +1,5 @@
 import { profileSchema } from '@/schemaValidations';
-import z from 'zod';
+import { z } from 'zod';
 
 export type ProfileResType = {
   id: string;

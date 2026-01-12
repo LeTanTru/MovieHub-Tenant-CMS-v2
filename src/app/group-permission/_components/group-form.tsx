@@ -27,7 +27,6 @@ import { groupSchema } from '@/schemaValidations';
 import { GroupBodyType, PermissionResType } from '@/types';
 import { applyFormErrors, notify, renderListPageUrl } from '@/utils';
 import { useQueryClient } from '@tanstack/react-query';
-import { omit } from 'lodash';
 import { ArrowLeftFromLine, Save } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
@@ -82,37 +81,71 @@ export default function GroupForm() {
     [group?.description, group?.name, group?.permissions]
   );
 
+  // const onSubmit = async (
+  //   values: GroupBodyType,
+  //   form: UseFormReturn<GroupBodyType>
+  // ) => {
+  //   const mutation = isCreate ? createGroupMutation : updateGroupMutation;
+  //   await mutation.mutateAsync(
+  //     isCreate ? values : { ...omit(values, ['kind']), id },
+  //     {
+  //       onSuccess: (res) => {
+  //         if (res.result) {
+  //           notify.success(
+  //             `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền thành công`
+  //           );
+  //           queryClient.invalidateQueries({ queryKey: ['group', id] });
+  //           navigate(route.group.getList.path);
+  //         } else {
+  //           const errCode = res.code;
+  //           if (errCode) {
+  //             applyFormErrors(form, errCode, groupErrorMaps);
+  //           } else {
+  //             logger.error('Error while creating/updating group:', res);
+  //             notify.error('Có lỗi xảy ra');
+  //           }
+  //         }
+  //       },
+  //       onError: (error) => {
+  //         logger.error('Error while creating/updating group:', error);
+  //         notify.error('Có lỗi xảy ra');
+  //       }
+  //     }
+  //   );
+  // };
+
   const onSubmit = async (
     values: GroupBodyType,
     form: UseFormReturn<GroupBodyType>
   ) => {
     const mutation = isCreate ? createGroupMutation : updateGroupMutation;
-    await mutation.mutateAsync(
-      isCreate ? values : { ...omit(values, ['kind']), id },
-      {
-        onSuccess: (res) => {
-          if (res.result) {
-            notify.success(
-              `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền thành công`
-            );
-            queryClient.invalidateQueries({ queryKey: ['group', id] });
-            navigate(route.group.getList.path);
+
+    const { kind: _, ...valuesWithoutKind } = values;
+    const payload = isCreate ? values : { ...valuesWithoutKind, id };
+
+    await mutation.mutateAsync(payload, {
+      onSuccess: (res) => {
+        if (res.result) {
+          notify.success(
+            `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền thành công`
+          );
+          queryClient.invalidateQueries({ queryKey: ['group', id] });
+          navigate(route.group.getList.path);
+        } else {
+          const errCode = res.code;
+          if (errCode) {
+            applyFormErrors(form, errCode, groupErrorMaps);
           } else {
-            const errCode = res.code;
-            if (errCode) {
-              applyFormErrors(form, errCode, groupErrorMaps);
-            } else {
-              logger.error('Error while creating/updating group:', res);
-              notify.error('Có lỗi xảy ra');
-            }
+            logger.error('Error while creating/updating group:', res);
+            notify.error('Có lỗi xảy ra');
           }
-        },
-        onError: (error) => {
-          logger.error('Error while creating/updating group:', error);
-          notify.error('Có lỗi xảy ra');
         }
+      },
+      onError: (error) => {
+        logger.error('Error while creating/updating group:', error);
+        notify.error('Có lỗi xảy ra');
       }
-    );
+    });
   };
 
   return (

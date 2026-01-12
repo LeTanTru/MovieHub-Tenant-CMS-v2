@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const employeeSearchSchema = z.object({
   fullName: z.string().optional().nullable(),

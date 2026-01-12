@@ -4,7 +4,6 @@ import { logoWithText } from '@/assets';
 import {
   Button,
   Col,
-  ImageField,
   InputField,
   PasswordField,
   Row,
@@ -23,9 +22,9 @@ import { ApiResponse, LoginBodyType, LoginResType } from '@/types';
 import { notify, setData } from '@/utils';
 import envConfig from '@/config';
 import { useLoginEmployeeMutation, useLoginManagerMutation } from '@/queries';
-import { omit } from 'lodash';
 import { useShallow } from 'zustand/react/shallow';
 import { useAuthStore } from '@/store';
+import Image from 'next/image';
 
 export default function LoginForm() {
   const loginManagerMutation = useLoginManagerMutation();
@@ -71,14 +70,18 @@ export default function LoginForm() {
   };
 
   const onSubmit = async (values: LoginBodyType) => {
+    const payload: Omit<LoginBodyType, 'loginType'> = {
+      grant_type: values.grant_type,
+      password: values.password,
+      tenantId: values.tenantId,
+      username: values.username
+    };
+
     if (values.loginType === LOGIN_TYPE_MANAGER) {
-      await loginManagerMutation.mutateAsync(
-        { ...omit(values, ['loginType']) } as any,
-        {
-          onSuccess: handleLoginSuccess,
-          onError: handleLoginError
-        }
-      );
+      await loginManagerMutation.mutateAsync(payload as any, {
+        onSuccess: handleLoginSuccess,
+        onError: handleLoginError
+      });
     } else {
       await loginEmployeeMutation.mutateAsync(values, {
         onSuccess: handleLoginSuccess,
@@ -98,24 +101,14 @@ export default function LoginForm() {
         <>
           <Row className='mb-2 w-full'>
             <Col span={24} className='items-center justify-center px-0'>
-              {/* <div className='bg-sidebar/80 mx-auto flex w-full items-center justify-center rounded py-2'>
+              <div className='bg-sidebar/80 mx-auto flex w-full items-center justify-center rounded py-2'>
                 <Image
                   src={logoWithText.src}
                   width={180}
                   height={50}
                   alt='MovieHub Logo'
                 />
-              </div> */}
-              <ImageField
-                src={logoWithText.src}
-                aspect={0}
-                width={180}
-                height={50}
-                disablePreview
-                showHoverIcon={false}
-                className='bg-sidebar/80 mx-auto flex w-full items-center justify-center rounded py-2'
-                alt='MovieHub Logo'
-              />
+              </div>
             </Col>
           </Row>
           <Row className='w-full flex-col gap-5 *:px-0'>
