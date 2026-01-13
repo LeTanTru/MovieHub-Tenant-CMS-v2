@@ -1,7 +1,7 @@
 'use client';
 
-import { ReactNode, useRef, useState, useEffect } from 'react';
-import { AnimatePresence, motion, HTMLMotionProps } from 'framer-motion';
+import { type ReactNode, useRef, useState, useEffect } from 'react';
+import { AnimatePresence, motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib';
 import { createPortal } from 'react-dom';
 import { useIsMounted } from '@/hooks';
@@ -138,7 +138,6 @@ export default function Modal({
                 {children}
 
                 <AnimatePresence>
-                  {' '}
                   {showScrollArrow && (
                     <motion.button
                       initial={{ opacity: 0, y: 10 }}
@@ -149,10 +148,9 @@ export default function Modal({
                       className='absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce rounded-full bg-white p-2 shadow-[0px_0px_10px_2px] shadow-gray-300 transition hover:bg-gray-50'
                       aria-label='Scroll down'
                     >
-                      {' '}
-                      <ChevronDown className='size-5 text-slate-800' />{' '}
+                      <ChevronDown className='size-5 text-slate-800' />
                     </motion.button>
-                  )}{' '}
+                  )}
                 </AnimatePresence>
               </div>
             </motion.div>
