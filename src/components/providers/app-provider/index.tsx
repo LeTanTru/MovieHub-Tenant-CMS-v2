@@ -25,7 +25,6 @@ export default function AppProvider({ children }: { children: ReactNode }) {
   const [clientToken, setClientToken] = useState<string>('');
   const { setLoading, setProfile } = useAuthStore(
     useShallow((s) => ({
-      isAuthenticated: s.isAuthenticated,
       setLoading: s.setLoading,
       setProfile: s.setProfile
     }))
