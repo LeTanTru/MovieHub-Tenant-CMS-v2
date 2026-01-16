@@ -12,6 +12,7 @@ import {
 import { BaseForm } from '@/components/form/base-form';
 import {
   ErrorCode,
+  KIND_MANAGER,
   LOGIN_TYPE_MANAGER,
   loginOptions,
   storageKeys
@@ -21,18 +22,27 @@ import { loginSchema } from '@/schemaValidations';
 import type { ApiResponse, LoginBodyType, LoginResType } from '@/types';
 import { notify, setData } from '@/utils';
 import envConfig from '@/config';
-import { useLoginEmployeeMutation, useLoginManagerMutation } from '@/queries';
+import {
+  useEmployeeProfileQuery,
+  useLoginEmployeeMutation,
+  useLoginManagerMutation,
+  useManageProfileQuery
+} from '@/queries';
 import { useShallow } from 'zustand/react/shallow';
 import { useAuthStore } from '@/store';
 import Image from 'next/image';
 
 export default function LoginForm() {
+  const managerProfileQuery = useManageProfileQuery();
+  const employeeProfileQuery = useEmployeeProfileQuery();
+
   const loginManagerMutation = useLoginManagerMutation();
   const loginEmployeeMutation = useLoginEmployeeMutation();
-  const { setAuthenticated, setLoading } = useAuthStore(
+
+  const { setLoading, setProfile } = useAuthStore(
     useShallow((s) => ({
-      setAuthenticated: s.setAuthenticated,
-      setLoading: s.setLoading
+      setLoading: s.setLoading,
+      setProfile: s.setProfile
     }))
   );
 
@@ -47,7 +57,7 @@ export default function LoginForm() {
     loginType: LOGIN_TYPE_MANAGER
   };
 
-  const handleLoginSuccess = (res: LoginResType | ApiResponse<any>) => {
+  const handleLoginSuccess = async (res: LoginResType | ApiResponse<any>) => {
     if ((res as ApiResponse<any>).result === false) {
       const code = (res as ApiResponse<any>).code;
       if (code === ErrorCode.ACCOUNT_ERROR_LOCKED) {
@@ -59,8 +69,15 @@ export default function LoginForm() {
       setData(storageKeys.ACCESS_TOKEN, _res?.access_token!);
       setData(storageKeys.REFRESH_TOKEN, _res?.refresh_token!);
       setData(storageKeys.USER_KIND, _res?.user_kind?.toString()!);
-      setAuthenticated(true);
-      setLoading(true);
+      const profileQuery =
+        _res.user_kind && +_res.user_kind === KIND_MANAGER
+          ? managerProfileQuery
+          : employeeProfileQuery;
+      const profile = await profileQuery.refetch();
+      if (profile.data?.data) {
+        setProfile(profile.data?.data);
+        setLoading(true);
+      }
     }
   };
 
