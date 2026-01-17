@@ -1,5 +1,4 @@
 'use client';
-
 import envConfig from '@/config';
 import {
   ErrorCode,
@@ -14,24 +13,17 @@ import {
   useGetClientTokenMutation,
   useManageProfileQuery
 } from '@/queries';
-import { useAuthStore, useSocketStore } from '@/store';
+import { useAppLoading, useAuthStore, useSocketStore } from '@/store';
 import { getData, isTokenExpired, removeData } from '@/utils';
 import { type ReactNode, useEffect, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow';
 
 export default function AppProvider({ children }: { children: ReactNode }) {
   const accessToken = getData(storageKeys.ACCESS_TOKEN);
   const kind = getData(storageKeys.USER_KIND);
   const [clientToken, setClientToken] = useState<string>('');
-  const { setLoading, setProfile } = useAuthStore(
-    useShallow((s) => ({
-      setLoading: s.setLoading,
-      setProfile: s.setProfile
-    }))
-  );
-  const { setSocket } = useSocketStore(
-    useShallow((s) => ({ socket: s.socket, setSocket: s.setSocket }))
-  );
+  const setLoading = useAppLoading((s) => s.setLoading);
+  const setProfile = useAuthStore((s) => s.setProfile);
+  const setSocket = useSocketStore((s) => s.setSocket);
 
   const isValidKind =
     kind && (+kind === KIND_MANAGER || +kind === KIND_EMPLOYEE);
@@ -90,14 +82,12 @@ export default function AppProvider({ children }: { children: ReactNode }) {
 
     if (clientToken) return;
 
-    let isMounted = true;
-
     const handleGetClientToken = async () => {
       try {
         const res = await getClientToken({
           appName: envConfig.NEXT_PUBLIC_APP_NAME
         });
-        if (res.data?.token && isMounted) {
+        if (res.data?.token) {
           setClientToken(res.data.token);
         }
       } catch (error) {
@@ -106,10 +96,6 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     };
 
     handleGetClientToken();
-
-    return () => {
-      isMounted = false;
-    };
   }, [accessToken, clientToken, getClientToken]);
 
   useEffect(() => {
