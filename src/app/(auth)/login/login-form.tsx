@@ -28,8 +28,7 @@ import {
   useLoginManagerMutation,
   useManageProfileQuery
 } from '@/queries';
-import { useShallow } from 'zustand/react/shallow';
-import { useAuthStore } from '@/store';
+import { useAppLoading, useAuthStore } from '@/store';
 import Image from 'next/image';
 
 export default function LoginForm() {
@@ -39,12 +38,8 @@ export default function LoginForm() {
   const loginManagerMutation = useLoginManagerMutation();
   const loginEmployeeMutation = useLoginEmployeeMutation();
 
-  const { setLoading, setProfile } = useAuthStore(
-    useShallow((s) => ({
-      setLoading: s.setLoading,
-      setProfile: s.setProfile
-    }))
-  );
+  const setLoading = useAppLoading((s) => s.setLoading);
+  const setProfile = useAuthStore((s) => s.setProfile);
 
   const loading =
     loginManagerMutation.isPending || loginEmployeeMutation.isPending;
@@ -82,7 +77,7 @@ export default function LoginForm() {
   };
 
   const handleLoginError = (error: Error) => {
-    logger.error('Error while logging in: ', error);
+    logger.error('Error while logging in', error);
     notify.error('Đăng nhập thất bại');
   };
 

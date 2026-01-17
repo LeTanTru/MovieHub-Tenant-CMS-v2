@@ -8,7 +8,7 @@ import { useNavigate, useQueryParams } from '@/hooks';
 import { logger } from '@/logger';
 import { useLogoutMutation } from '@/queries';
 import { route } from '@/routes';
-import { useAuthStore } from '@/store';
+import { useAppLoading, useAuthStore } from '@/store';
 import { getData, notify, removeData, renderImageUrl, setData } from '@/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, CircleUserRound, LogOut, User } from 'lucide-react';
@@ -20,6 +20,7 @@ export default function DropdownAvatar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const setLoading = useAppLoading((s) => s.setLoading);
   const { profile, setProfile, setIsLoggedOut } = useAuthStore(
     useShallow((s) => ({
       profile: s.profile,
@@ -28,10 +29,11 @@ export default function DropdownAvatar() {
     }))
   );
   const { queryString } = useQueryParams();
-  const logoutMutation = useLogoutMutation();
+  const { mutateAsync: logoutMutation, isPending: logoutLoading } =
+    useLogoutMutation();
 
   const handleLogout = async () => {
-    await logoutMutation.mutateAsync(undefined, {
+    await logoutMutation(undefined, {
       onSuccess: (res) => {
         if (res.result) {
           notify.success('Đăng xuất thành công');
@@ -43,7 +45,6 @@ export default function DropdownAvatar() {
           removeData(storageKeys.USER_KIND);
 
           setProfile(null);
-
           setIsLoggedOut(true);
           navigate(route.login.path);
         } else {
@@ -56,6 +57,10 @@ export default function DropdownAvatar() {
       }
     });
   };
+
+  useEffect(() => {
+    setLoading(logoutLoading);
+  }, [logoutLoading, setLoading]);
 
   const handleProfileClick = () => {
     if (getData(storageKeys.PREVIOUS_PATH) === pathname) {
@@ -113,7 +118,7 @@ export default function DropdownAvatar() {
                 className='flex w-full cursor-pointer items-center gap-2 rounded-md bg-transparent px-2 py-2 text-sm font-normal text-black transition-all duration-200 ease-linear hover:bg-gray-100'
                 onClick={handleLogout}
               >
-                {logoutMutation.isPending ? (
+                {logoutLoading ? (
                   <CircleLoading className='size-5 stroke-gray-300' />
                 ) : (
                   <>

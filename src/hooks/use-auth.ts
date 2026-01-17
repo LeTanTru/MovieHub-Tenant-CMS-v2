@@ -2,14 +2,9 @@
 
 import { useAuthStore } from '@/store';
 import { decodeJwt, getAccessTokenFromLocalStorage } from '@/utils';
-import { useShallow } from 'zustand/react/shallow';
 
 const useAuth = () => {
-  const { profile } = useAuthStore(
-    useShallow((s) => ({
-      profile: s.profile
-    }))
-  );
+  const profile = useAuthStore((s) => s.profile);
   const accessToken = getAccessTokenFromLocalStorage();
   let permissionCode: string[] = [];
   if (accessToken) {

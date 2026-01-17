@@ -19,22 +19,15 @@ export type LoginResType = {
 
 type AuthStoreState = {
   profile: ProfileResType | null;
-  loading: boolean;
   isLoggedOut: boolean;
 };
 
 type AuthStoreActions = {
   setProfile: (profile: ProfileResType | null) => void;
-  setLoading: (loading: boolean) => void;
   setIsLoggedOut: (isLogout: boolean) => void;
 };
 
 export type AuthStoreType = AuthStoreState & AuthStoreActions;
-
-export type RefreshTokenBodyType = {
-  refresh_token: string;
-  grant_type: string;
-};
 
 export type RefreshTokenResType = {
   access_token: string;
