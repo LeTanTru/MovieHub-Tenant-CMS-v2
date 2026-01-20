@@ -39,7 +39,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import CommentReplyForm from './comment-reply-form';
-import { motion, AnimatePresence } from 'framer-motion';
+import { LazyMotion, domAnimation, m, AnimatePresence } from 'framer-motion';
 import { useCommentStore } from '@/store';
 import { useAuth, useInfiniteListBase, useValidatePermission } from '@/hooks';
 import { DotLoading } from '@/components/loading';
@@ -544,28 +544,30 @@ function CommentItem({
             )}
           </Activity>
 
-          <AnimatePresence initial={false}>
-            {(replyingComment?.id === comment.id ||
-              editingComment?.id === comment.id) && (
-              <motion.div
-                key='reply'
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.1, ease: 'linear' }}
-                className='mt-2'
-              >
-                <CommentReplyForm
-                  parentId={rootId.toString()}
-                  movieId={comment.movieId.toString()}
-                  defaultMention={`@${authorInfo.fullName}`}
-                  queryKey={queryKeys.COMMENT}
-                  onSubmitted={handleReplySubmit}
-                  onCancel={handleCancelReply}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <LazyMotion features={domAnimation} strict>
+            <AnimatePresence initial={false}>
+              {(replyingComment?.id === comment.id ||
+                editingComment?.id === comment.id) && (
+                <m.div
+                  key='reply'
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.1, ease: 'linear' }}
+                  className='mt-2'
+                >
+                  <CommentReplyForm
+                    parentId={rootId.toString()}
+                    movieId={comment.movieId.toString()}
+                    defaultMention={`@${authorInfo.fullName}`}
+                    queryKey={queryKeys.COMMENT}
+                    onSubmitted={handleReplySubmit}
+                    onCancel={handleCancelReply}
+                  />
+                </m.div>
+              )}
+            </AnimatePresence>
+          </LazyMotion>
         </div>
       </div>
     </div>
