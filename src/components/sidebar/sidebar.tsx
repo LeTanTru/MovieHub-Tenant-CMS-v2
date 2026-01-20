@@ -345,7 +345,7 @@ const AppSidebar = () => {
     return filterMenuByPermission(menuConfig);
   }, [hasPermission]);
 
-  if (!isMounted || !clientMenu || clientMenu.length === 0) {
+  if (!isMounted || !clientMenu) {
     return (
       <Sidebar
         className='**:data-[sidebar="sidebar"]:bg-sidebar group-data-[side=left]:border-none'
