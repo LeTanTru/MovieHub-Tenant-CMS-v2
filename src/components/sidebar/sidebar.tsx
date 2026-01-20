@@ -18,7 +18,7 @@ import {
   useSidebar
 } from '@/components/ui/sidebar';
 import { logo, logoWithText } from '@/assets';
-import { motion, AnimatePresence } from 'framer-motion';
+import { LazyMotion, domAnimation, m, AnimatePresence } from 'framer-motion';
 import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib';
@@ -155,116 +155,120 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
             })}
           />
         </SidebarMenuButton>
-        <AnimatePresence initial={false}>
-          {open && state === 'expanded' && !showFlyout && item.children && (
-            <motion.div
-              key='content'
-              initial={{ height: 0 }}
-              animate={{ height: 'auto' }}
-              exit={{ height: 0 }}
-              transition={{ duration: 0.1, ease: 'linear' }}
-              className='overflow-hidden'
-            >
-              <SidebarMenu className={cn({ 'bg-sidebar-active-menu': open })}>
-                {item.children.map((sub) =>
-                  sub.children ? (
-                    <CollapsibleMenuItem key={sub.key} item={sub} />
-                  ) : (
-                    <SidebarMenuItem key={sub.key}>
-                      <SidebarMenuButton
-                        className='m-1 min-h-10 rounded-none focus-visible:ring-0!'
-                        asChild
-                      >
-                        <Button
-                          variant='ghost'
-                          onClick={() => handleSubItemClick(sub)}
-                          className={cn(
-                            'mx-auto w-[calc(100%-8px)] justify-start rounded-lg pl-12 font-normal text-white transition-all duration-200 ease-linear hover:text-white active:text-white',
-                            {
-                              'bg-sidebar-item-active hover:bg-sidebar-item-active active:bg-sidebar-item-active':
-                                sub.path && pathname.startsWith(sub.path),
-                              'active:bg-sidebar-active-menu hover:bg-sidebar-active-menu opacity-65 hover:opacity-100':
-                                sub.path && !pathname.startsWith(sub.path)
-                            }
-                          )}
+        <LazyMotion features={domAnimation} strict>
+          <AnimatePresence initial={false}>
+            {open && state === 'expanded' && !showFlyout && item.children && (
+              <m.div
+                key='content'
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                exit={{ height: 0 }}
+                transition={{ duration: 0.1, ease: 'linear' }}
+                className='overflow-hidden'
+              >
+                <SidebarMenu className={cn({ 'bg-sidebar-active-menu': open })}>
+                  {item.children.map((sub) =>
+                    sub.children ? (
+                      <CollapsibleMenuItem key={sub.key} item={sub} />
+                    ) : (
+                      <SidebarMenuItem key={sub.key}>
+                        <SidebarMenuButton
+                          className='m-1 min-h-10 rounded-none focus-visible:ring-0!'
+                          asChild
                         >
-                          {sub.icon && <sub.icon />}
-                          <span>{sub.label}</span>
-                        </Button>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                )}
-              </SidebarMenu>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                          <Button
+                            variant='ghost'
+                            onClick={() => handleSubItemClick(sub)}
+                            className={cn(
+                              'mx-auto w-[calc(100%-8px)] justify-start rounded-lg pl-12 font-normal text-white transition-all duration-200 ease-linear hover:text-white active:text-white',
+                              {
+                                'bg-sidebar-item-active hover:bg-sidebar-item-active active:bg-sidebar-item-active':
+                                  sub.path && pathname.startsWith(sub.path),
+                                'active:bg-sidebar-active-menu hover:bg-sidebar-active-menu opacity-65 hover:opacity-100':
+                                  sub.path && !pathname.startsWith(sub.path)
+                              }
+                            )}
+                          >
+                            {sub.icon && <sub.icon />}
+                            <span>{sub.label}</span>
+                          </Button>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  )}
+                </SidebarMenu>
+              </m.div>
+            )}
+          </AnimatePresence>
+        </LazyMotion>
 
         {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
       </SidebarMenuItem>
       {createPortal(
-        <AnimatePresence>
-          {showFlyout && state === 'collapsed' && item.children && (
-            <>
-              <motion.div
-                key='fly-layout'
-                onMouseEnter={handleFlyoutMouseEnter}
-                onMouseLeave={handleFlyoutMouseLeave}
-                initial={{
-                  scale: 0.85,
-                  opacity: 0,
-                  transformOrigin: 'center left'
-                }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.85, opacity: 0 }}
-                transition={{ duration: 0.1, ease: 'linear' }}
-                style={{ top: pos.y, left: pos.x }}
-                className='fixed z-10 w-40 overflow-hidden pl-1'
-              >
-                <div className='bg-sidebar rounded-lg px-1 py-1'>
-                  <SidebarMenu
-                    className={cn({ 'bg-sidebar-active-menu': open })}
-                  >
-                    {item.children.map((sub) =>
-                      sub.children ? (
-                        <CollapsibleMenuItem key={sub.key} item={sub} />
-                      ) : (
-                        <SidebarMenuItem key={sub.key}>
-                          <SidebarMenuButton
-                            className='min-h-10 rounded-none focus-visible:ring-0!'
-                            asChild
-                          >
-                            <Button
-                              variant='ghost'
-                              onClick={() => {
-                                handleSubItemClick(sub);
-                                setHovered(false);
-                                setFlyoutHovered(false);
-                                setSidebarState('collapsed');
-                              }}
-                              className={cn(
-                                'mx-auto w-full justify-start rounded-lg pl-4 font-normal text-white transition-all duration-200 ease-linear hover:text-white active:text-white',
-                                {
-                                  'bg-sidebar-item-active hover:bg-sidebar-item-active active:bg-sidebar-item-active':
-                                    sub.path && pathname.startsWith(sub.path),
-                                  'active:bg-sidebar-active-menu hover:bg-sidebar-active-menu opacity-65 hover:opacity-100':
-                                    sub.path && !pathname.startsWith(sub.path)
-                                }
-                              )}
+        <LazyMotion features={domAnimation} strict>
+          <AnimatePresence>
+            {showFlyout && state === 'collapsed' && item.children && (
+              <>
+                <m.div
+                  key='fly-layout'
+                  onMouseEnter={handleFlyoutMouseEnter}
+                  onMouseLeave={handleFlyoutMouseLeave}
+                  initial={{
+                    scale: 0.85,
+                    opacity: 0,
+                    transformOrigin: 'center left'
+                  }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.85, opacity: 0 }}
+                  transition={{ duration: 0.1, ease: 'linear' }}
+                  style={{ top: pos.y, left: pos.x }}
+                  className='fixed z-10 w-40 overflow-hidden pl-1'
+                >
+                  <div className='bg-sidebar rounded-lg px-1 py-1'>
+                    <SidebarMenu
+                      className={cn({ 'bg-sidebar-active-menu': open })}
+                    >
+                      {item.children.map((sub) =>
+                        sub.children ? (
+                          <CollapsibleMenuItem key={sub.key} item={sub} />
+                        ) : (
+                          <SidebarMenuItem key={sub.key}>
+                            <SidebarMenuButton
+                              className='min-h-10 rounded-none focus-visible:ring-0!'
+                              asChild
                             >
-                              {sub.icon && <sub.icon />}
-                              <span>{sub.label}</span>
-                            </Button>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    )}
-                  </SidebarMenu>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>,
+                              <Button
+                                variant='ghost'
+                                onClick={() => {
+                                  handleSubItemClick(sub);
+                                  setHovered(false);
+                                  setFlyoutHovered(false);
+                                  setSidebarState('collapsed');
+                                }}
+                                className={cn(
+                                  'mx-auto w-full justify-start rounded-lg pl-4 font-normal text-white transition-all duration-200 ease-linear hover:text-white active:text-white',
+                                  {
+                                    'bg-sidebar-item-active hover:bg-sidebar-item-active active:bg-sidebar-item-active':
+                                      sub.path && pathname.startsWith(sub.path),
+                                    'active:bg-sidebar-active-menu hover:bg-sidebar-active-menu opacity-65 hover:opacity-100':
+                                      sub.path && !pathname.startsWith(sub.path)
+                                  }
+                                )}
+                              >
+                                {sub.icon && <sub.icon />}
+                                <span>{sub.label}</span>
+                              </Button>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )
+                      )}
+                    </SidebarMenu>
+                  </div>
+                </m.div>
+              </>
+            )}
+          </AnimatePresence>
+        </LazyMotion>,
         document.body
       )}
     </>
