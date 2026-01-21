@@ -45,8 +45,8 @@ export default function LoginForm() {
   //   loginManagerMutation.isPending || loginEmployeeMutation.isPending;
 
   const defaultValues: LoginBodyType = {
-    username: 'customerdemo',
-    password: 'Abc@12345',
+    username: '',
+    password: '',
     grant_type: envConfig.NEXT_PUBLIC_GRANT_TYPE,
     tenantId: envConfig.NEXT_PUBLIC_TENANT_ID,
     loginType: LOGIN_TYPE_MANAGER
