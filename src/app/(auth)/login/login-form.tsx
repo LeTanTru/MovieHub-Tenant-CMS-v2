@@ -24,8 +24,7 @@ import { notify, setData } from '@/utils';
 import envConfig from '@/config';
 import {
   useEmployeeProfileQuery,
-  useLoginEmployeeMutation,
-  useLoginManagerMutation,
+  useLoginMutation,
   useManageProfileQuery
 } from '@/queries';
 import { useAppLoading, useAuthStore } from '@/store';
@@ -35,19 +34,20 @@ export default function LoginForm() {
   const managerProfileQuery = useManageProfileQuery();
   const employeeProfileQuery = useEmployeeProfileQuery();
 
-  const loginManagerMutation = useLoginManagerMutation();
-  const loginEmployeeMutation = useLoginEmployeeMutation();
+  // const loginManagerMutation = useLoginManagerMutation();
+  // const loginEmployeeMutation = useLoginEmployeeMutation();
+  const { mutateAsync: loginMutation, isPending: loading } = useLoginMutation();
 
   const setLoading = useAppLoading((s) => s.setLoading);
   const setProfile = useAuthStore((s) => s.setProfile);
 
-  const loading =
-    loginManagerMutation.isPending || loginEmployeeMutation.isPending;
+  // const loading =
+  //   loginManagerMutation.isPending || loginEmployeeMutation.isPending;
 
   const defaultValues: LoginBodyType = {
-    username: '',
-    password: '',
-    grant_type: envConfig.NEXT_PUBLIC_GRANT_TYPE as string,
+    username: 'customerdemo',
+    password: 'Abc@12345',
+    grant_type: envConfig.NEXT_PUBLIC_GRANT_TYPE,
     tenantId: envConfig.NEXT_PUBLIC_TENANT_ID,
     loginType: LOGIN_TYPE_MANAGER
   };
@@ -82,24 +82,10 @@ export default function LoginForm() {
   };
 
   const onSubmit = async (values: LoginBodyType) => {
-    const payload: Omit<LoginBodyType, 'loginType'> = {
-      grant_type: values.grant_type,
-      password: values.password,
-      tenantId: values.tenantId,
-      username: values.username
-    };
-
-    if (values.loginType === LOGIN_TYPE_MANAGER) {
-      await loginManagerMutation.mutateAsync(payload as any, {
-        onSuccess: handleLoginSuccess,
-        onError: handleLoginError
-      });
-    } else {
-      await loginEmployeeMutation.mutateAsync(values, {
-        onSuccess: handleLoginSuccess,
-        onError: handleLoginError
-      });
-    }
+    await loginMutation(values, {
+      onSuccess: handleLoginSuccess,
+      onError: handleLoginError
+    });
   };
 
   return (

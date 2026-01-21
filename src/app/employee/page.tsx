@@ -6,6 +6,6 @@ export const metadata: Metadata = {
   title: 'Nhân viên'
 };
 
-export default function EmployeeListPage() {
+export default async function EmployeeListPage() {
   return <EmployeeList queryKey={queryKeys.EMPLOYEE} />;
 }
