@@ -29,23 +29,9 @@ export const useLoginEmployeeMutation = () => {
   });
 };
 
-export const useLoginMutation = () => {
-  return useMutation({
-    mutationKey: [queryKeys.LOGIN],
-    mutationFn: (body: LoginBodyType) =>
-      http.post<LoginResType | ApiResponse<any>>(
-        apiConfig.auth.loginToNextServer,
-        {
-          body
-        }
-      )
-  });
-};
-
 export const useLogoutMutation = () => {
   return useMutation({
     mutationKey: [queryKeys.LOGOUT],
-    mutationFn: () =>
-      http.post<ApiResponse<any>>(apiConfig.auth.logoutToNextServer)
+    mutationFn: () => http.post<ApiResponse<any>>(apiConfig.auth.logout)
   });
 };

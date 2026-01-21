@@ -24,7 +24,8 @@ import { notify, setData } from '@/utils';
 import envConfig from '@/config';
 import {
   useEmployeeProfileQuery,
-  useLoginMutation,
+  useLoginEmployeeMutation,
+  useLoginManagerMutation,
   useManageProfileQuery
 } from '@/queries';
 import { useAppLoading, useAuthStore } from '@/store';
@@ -34,15 +35,14 @@ export default function LoginForm() {
   const managerProfileQuery = useManageProfileQuery();
   const employeeProfileQuery = useEmployeeProfileQuery();
 
-  // const loginManagerMutation = useLoginManagerMutation();
-  // const loginEmployeeMutation = useLoginEmployeeMutation();
-  const { mutateAsync: loginMutation, isPending: loading } = useLoginMutation();
+  const loginManagerMutation = useLoginManagerMutation();
+  const loginEmployeeMutation = useLoginEmployeeMutation();
 
   const setLoading = useAppLoading((s) => s.setLoading);
   const setProfile = useAuthStore((s) => s.setProfile);
 
-  // const loading =
-  //   loginManagerMutation.isPending || loginEmployeeMutation.isPending;
+  const loading =
+    loginManagerMutation.isPending || loginEmployeeMutation.isPending;
 
   const defaultValues: LoginBodyType = {
     username: '',
@@ -82,10 +82,24 @@ export default function LoginForm() {
   };
 
   const onSubmit = async (values: LoginBodyType) => {
-    await loginMutation(values, {
-      onSuccess: handleLoginSuccess,
-      onError: handleLoginError
-    });
+    const payload: Omit<LoginBodyType, 'loginType'> = {
+      grant_type: values.grant_type,
+      password: values.password,
+      tenantId: values.tenantId,
+      username: values.username
+    };
+
+    if (values.loginType === LOGIN_TYPE_MANAGER) {
+      await loginManagerMutation.mutateAsync(payload as any, {
+        onSuccess: handleLoginSuccess,
+        onError: handleLoginError
+      });
+    } else {
+      await loginEmployeeMutation.mutateAsync(values, {
+        onSuccess: handleLoginSuccess,
+        onError: handleLoginError
+      });
+    }
   };
 
   return (
