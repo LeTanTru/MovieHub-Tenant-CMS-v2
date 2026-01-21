@@ -73,7 +73,7 @@ const useSaveBase = <R extends FieldValues, T extends FieldValues>({
     staleTime: 5 * 60 * 1000
   });
 
-  const data: R = itemQuery.data;
+  const data: R = itemQuery.data?.data;
 
   const createMutation = useMutation({
     mutationKey: [`create-${queryKey}`],
