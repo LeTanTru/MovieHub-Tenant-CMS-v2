@@ -31,6 +31,18 @@ const apiConfig = defineApiConfig({
       method: 'POST',
       headers: baseHeader,
       isRequiredTenantId: true
+    },
+    loginToNextServer: {
+      baseUrl: `/api/auth/login`,
+      method: 'POST',
+      headers: baseHeader,
+      isRequiredTenantId: true
+    },
+    logoutToNextServer: {
+      baseUrl: `/api/auth/logout`,
+      method: 'POST',
+      headers: baseHeader,
+      isRequiredTenantId: true
     }
   },
   customer: {

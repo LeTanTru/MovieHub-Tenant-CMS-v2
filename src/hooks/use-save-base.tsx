@@ -69,10 +69,11 @@ const useSaveBase = <R extends FieldValues, T extends FieldValues>({
             pathParams
           })
         : Promise.resolve({ data: undefined } as any),
-    enabled: !isCreate
+    enabled: !isCreate,
+    staleTime: 5 * 60 * 1000
   });
 
-  const data: R = itemQuery.data?.data;
+  const data: R = itemQuery.data;
 
   const createMutation = useMutation({
     mutationKey: [`create-${queryKey}`],
