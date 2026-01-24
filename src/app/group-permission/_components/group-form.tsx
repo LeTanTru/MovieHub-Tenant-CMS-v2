@@ -42,12 +42,12 @@ export default function GroupForm() {
   const { queryString } = useQueryParams();
 
   const {
-    data: group,
+    data: groupData,
     isLoading: groupLoading,
     isFetching: groupFetching
   } = useGroupQuery(id);
   const {
-    data: permissionList,
+    data: permissionListData,
     isLoading: permissionListLoading,
     isFetching: permissionListFetching
   } = usePermissionListQuery({
@@ -55,12 +55,12 @@ export default function GroupForm() {
     size: MAX_PAGE_SIZE
   });
 
-  const { mutateAsync: createGroupMutation, isPending: createGroupLoading } =
+  const { mutateAsync: createGroupMutate, isPending: createGroupLoading } =
     useCreateGroupMutation();
-  const { mutateAsync: updateGroupMutation, isPending: updateGroupLoading } =
+  const { mutateAsync: updateGroupMutate, isPending: updateGroupLoading } =
     useUpdateGroupMutation();
 
-  const groupedPermissions = [...(permissionList?.data?.content || [])]
+  const groupedPermissions = [...(permissionListData?.data?.content || [])]
     .sort(
       (a, b) =>
         (a.groupPermission?.ordering ?? 0) - (b.groupPermission?.ordering ?? 0)
@@ -82,11 +82,16 @@ export default function GroupForm() {
 
   const initialValues: GroupBodyType = useMemo(
     () => ({
-      description: group?.data?.description ?? '',
-      name: group?.data?.name ?? '',
-      permissions: group?.data?.permissions.map((g) => g.id.toString()) ?? []
+      description: groupData?.data?.description ?? '',
+      name: groupData?.data?.name ?? '',
+      permissions:
+        groupData?.data?.permissions.map((g) => g.id.toString()) ?? []
     }),
-    [group?.data?.description, group?.data?.name, group?.data?.permissions]
+    [
+      groupData?.data?.description,
+      groupData?.data?.name,
+      groupData?.data?.permissions
+    ]
   );
 
   // const onSubmit = async (
@@ -126,7 +131,7 @@ export default function GroupForm() {
     values: GroupBodyType,
     form: UseFormReturn<GroupBodyType>
   ) => {
-    const mutation = isCreate ? createGroupMutation : updateGroupMutation;
+    const mutation = isCreate ? createGroupMutate : updateGroupMutate;
 
     const { kind: _, ...valuesWithoutKind } = values;
     const payload = isCreate ? values : { ...valuesWithoutKind, id };
@@ -165,7 +170,7 @@ export default function GroupForm() {
         },
         { label: `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền` }
       ]}
-      notFound={group?.code === ErrorCode.GROUP_ERROR_NOT_FOUND}
+      notFound={groupData?.code === ErrorCode.GROUP_ERROR_NOT_FOUND}
       notFoundContent='Không tìm thấy nhóm này'
     >
       <BaseForm

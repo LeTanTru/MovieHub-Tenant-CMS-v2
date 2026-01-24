@@ -15,8 +15,8 @@ import { useAuth, useFileUploadManager, useNavigate } from '@/hooks';
 import { logger } from '@/logger';
 import {
   useDeleteFileMutation,
-  useEmployeeUpdateProfileMutation,
-  useManagerUpdateProfileMutation,
+  useUpdateManagerProfileMutation,
+  useUpdateProfileEmployeeMutation,
   useUploadAvatarMutation,
   useUploadLogoMutation
 } from '@/queries';
@@ -40,39 +40,39 @@ export default function ProfileForm() {
   const profile = useAuthStore((s) => s.profile);
   const { kind } = useAuth();
 
-  const { mutateAsync: uploadAvatarMutation, isPending: uploadAvatarLoading } =
+  const { mutateAsync: uploadAvatarMutate, isPending: uploadAvatarLoading } =
     useUploadAvatarMutation();
-  const { mutateAsync: uploadLogoMutation, isPending: uploadLogoLoading } =
+  const { mutateAsync: uploadLogoMutate, isPending: uploadLogoLoading } =
     useUploadLogoMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const {
-    mutateAsync: managerUpdateProfileMutation,
+    mutateAsync: managerUpdateProfileMutate,
     isPending: updateManagerProfileLoading
-  } = useManagerUpdateProfileMutation();
+  } = useUpdateManagerProfileMutation();
   const {
-    mutateAsync: employeeUpdateProfileMutation,
+    mutateAsync: employeeUpdateProfileMutate,
     isPending: updateEmployeeProfileLoading
-  } = useEmployeeUpdateProfileMutation();
+  } = useUpdateProfileEmployeeMutation();
 
   const profileMutation = useMemo(
     () =>
       kind === KIND_MANAGER
-        ? managerUpdateProfileMutation
-        : employeeUpdateProfileMutation,
-    [kind, managerUpdateProfileMutation, employeeUpdateProfileMutation]
+        ? managerUpdateProfileMutate
+        : employeeUpdateProfileMutate,
+    [employeeUpdateProfileMutate, kind, managerUpdateProfileMutate]
   );
 
   const avatarImageManager = useFileUploadManager({
     initialUrl: profile?.avatarPath,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing: true,
     onOpen: true
   });
 
   const logoImageManager = useFileUploadManager({
     initialUrl: profile?.logoPath,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing: true,
     onOpen: true
   });
@@ -173,7 +173,7 @@ export default function ProfileForm() {
                 onChange={avatarImageManager.trackUpload}
                 size={150}
                 uploadImageFn={async (file: Blob) => {
-                  const res = await uploadAvatarMutation({
+                  const res = await uploadAvatarMutate({
                     file
                   });
                   return res.data?.filePath ?? '';
@@ -192,7 +192,7 @@ export default function ProfileForm() {
                   onChange={logoImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadLogoMutation({
+                    const res = await uploadLogoMutate({
                       file
                     });
                     return res.data?.filePath ?? '';

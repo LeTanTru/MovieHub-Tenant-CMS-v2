@@ -169,7 +169,7 @@ function CommentItem({
   const isOpen = isActiveParent;
 
   const {
-    mutateAsync: changeStatusCommentMutation,
+    mutateAsync: changeStatusCommentMutate,
     isPending: changeStatusCommentLoading
   } = useChangeCommenStatusMutation();
 
@@ -228,7 +228,7 @@ function CommentItem({
   };
 
   const handleChangeCommentStatus = async (id: string, status: number) => {
-    await changeStatusCommentMutation({
+    await changeStatusCommentMutate({
       id,
       status:
         status === COMMENT_STATUS_SHOW

@@ -32,9 +32,9 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
     id: string;
   }>();
 
-  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+  const { mutateAsync: uploadImageMutate, isPending: uploadImageLoading } =
     useUploadLogoMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const {
     data,
@@ -59,14 +59,14 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
 
   const webImageManager = useFileUploadManager({
     initialUrl: data?.webThumbnailUrl,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
 
   const mobileImageManager = useFileUploadManager({
     initialUrl: data?.mobileThumbnailUrl,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
@@ -151,7 +151,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     onChange={webImageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadImageMutation({
+                      const res = await uploadImageMutate({
                         file
                       });
                       return res.data?.filePath ?? '';
@@ -171,7 +171,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     onChange={mobileImageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadImageMutation({
+                      const res = await uploadImageMutate({
                         file
                       });
                       return res.data?.filePath ?? '';

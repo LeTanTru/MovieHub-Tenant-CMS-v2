@@ -53,7 +53,7 @@ export default function ReviewItem({
   const hasPermission = useValidatePermission();
   const queryClient = useQueryClient();
   const {
-    mutateAsync: changeReviewStatusMutation,
+    mutateAsync: changeReviewStatusMutate,
     isPending: changeReviewStatusLoading
   } = useChangeReviewStatusMutation();
 
@@ -66,7 +66,7 @@ export default function ReviewItem({
   });
 
   const handleChangeCommentStatus = async (id: string, status: number) => {
-    await changeReviewStatusMutation({
+    await changeReviewStatusMutate({
       id,
       status:
         status === REVIEW_STATUS_SHOW ? REVIEW_STATUS_HIDE : REVIEW_STATUS_SHOW

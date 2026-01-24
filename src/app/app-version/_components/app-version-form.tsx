@@ -28,8 +28,8 @@ import type { UseFormReturn } from 'react-hook-form';
 export default function AppVersionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const { mutateAsync: uploadFileMutation } = useUploadFileMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: uploadFileMutate } = useUploadFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const {
     data,
@@ -54,7 +54,7 @@ export default function AppVersionForm({ queryKey }: { queryKey: string }) {
 
   const imageManager = useFileUploadManager({
     initialUrl: data?.filePath,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
@@ -132,7 +132,7 @@ export default function AppVersionForm({ queryKey }: { queryKey: string }) {
                   control={form.control}
                   name='filePath'
                   uploadFileFn={async (file: Blob, onProgress) => {
-                    const res = await uploadFileMutation({
+                    const res = await uploadFileMutate({
                       file,
                       options: {
                         onUploadProgress: (e: AxiosProgressEvent) => {

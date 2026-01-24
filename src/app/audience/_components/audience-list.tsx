@@ -76,7 +76,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
     }
   });
 
-  const { mutateAsync: changeStatusMutation, isPending: changeStatusLoading } =
+  const { mutateAsync: changeStatusMutate, isPending: changeStatusLoading } =
     useChangeAudienceStatusMutation();
 
   const handleChangeStatus = async (record: AudienceResType) => {
@@ -84,7 +84,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
       record.status === STATUS_ACTIVE
         ? 'Khóa tài khoản thành công'
         : 'Mở khóa tài khoản thành công';
-    await changeStatusMutation(
+    await changeStatusMutate(
       {
         id: record.id,
         status: record.status === STATUS_ACTIVE ? STATUS_LOCK : STATUS_ACTIVE

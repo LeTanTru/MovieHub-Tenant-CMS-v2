@@ -29,11 +29,11 @@ export default function DropdownAvatar() {
     }))
   );
   const { queryString } = useQueryParams();
-  const { mutateAsync: logoutMutation, isPending: logoutLoading } =
+  const { mutateAsync: logoutMutate, isPending: logoutLoading } =
     useLogoutMutation();
 
   const handleLogout = async () => {
-    await logoutMutation(undefined, {
+    await logoutMutate(undefined, {
       onSuccess: (res) => {
         if (res.result) {
           notify.success('Đăng xuất thành công');

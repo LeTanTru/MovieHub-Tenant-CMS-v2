@@ -33,12 +33,12 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
   const queryClient = useQueryClient();
   const { searchParams } = useQueryParams<{ movieTitle: string }>();
 
-  const { data: voteList, refetch: getVoteList } = useVoteListCommentQuery({
+  const { data: voteListData, refetch: getVoteList } = useVoteListCommentQuery({
     movieId
   });
 
-  const { mutateAsync: voteCommentMutation } = useVoteCommentMutation();
-  const { mutateAsync: pinCommentMutation } = usePinCommentMutation();
+  const { mutateAsync: voteCommentMutate } = useVoteCommentMutation();
+  const { mutateAsync: pinCommentMutate } = usePinCommentMutation();
 
   const hasPermission = useValidatePermission();
 
@@ -65,25 +65,25 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
 
   const voteMap = useMemo(() => {
     const map: Record<string, number> = {};
-    voteList?.data?.forEach((v) => (map[v.id] = v.type));
+    voteListData?.data?.forEach((v) => (map[v.id] = v.type));
     return map;
-  }, [voteList]);
+  }, [voteListData]);
 
   const handleVote = useCallback(
     async (id: string, type: number, onSuccess?: () => void) => {
-      await voteCommentMutation({ id, type });
+      await voteCommentMutate({ id, type });
       await Promise.all([getVoteList()]);
       onSuccess?.();
     },
-    [getVoteList, voteCommentMutation]
+    [getVoteList, voteCommentMutate]
   );
 
   const handlePinComment = useCallback(
     async (id: string, isPinned: boolean) => {
-      await pinCommentMutation({ id, isPinned });
+      await pinCommentMutate({ id, isPinned });
       await listQuery.refetch();
     },
-    [pinCommentMutation, listQuery]
+    [pinCommentMutate, listQuery]
   );
 
   const handleDeleteComment = useCallback(

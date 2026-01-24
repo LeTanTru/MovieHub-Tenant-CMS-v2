@@ -24,7 +24,7 @@ import { notify, renderImageUrl } from '@/utils';
 import { AiOutlineCheck, AiOutlineLock } from 'react-icons/ai';
 
 export default function EmployeeList({ queryKey }: { queryKey: string }) {
-  const { data: groupList } = useGroupListQuery({ size: MAX_PAGE_SIZE });
+  const { data: groupListData } = useGroupListQuery({ size: MAX_PAGE_SIZE });
 
   const { data, pagination, loading, handlers, listQuery } = useListBase<
     EmployeeResType,
@@ -78,7 +78,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
     }
   });
 
-  const { mutateAsync: changeStatusMutation, isPending: changeStatusLoading } =
+  const { mutateAsync: changeStatusMutate, isPending: changeStatusLoading } =
     useChangeEmployeeStatusMutation();
 
   const handleChangeStatus = async (record: EmployeeResType) => {
@@ -86,7 +86,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       record.status === STATUS_ACTIVE
         ? 'Khóa tài khoản thành công'
         : 'Mở khóa tài khoản thành công';
-    await changeStatusMutation(
+    await changeStatusMutate(
       {
         id: record.id,
         status: record.status === STATUS_ACTIVE ? STATUS_LOCK : STATUS_ACTIVE
@@ -184,7 +184,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       key: 'kind',
       placeholder: 'Vai trò',
       type: FieldTypes.SELECT,
-      options: groupList?.data?.content.map((group) => ({
+      options: groupListData?.data?.content.map((group) => ({
         label: group.name,
         value: group.kind
       }))

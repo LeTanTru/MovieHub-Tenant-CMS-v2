@@ -47,9 +47,9 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
   const kind = getData(storageKeys.ACTIVE_TAB_PERSON_KIND);
 
-  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+  const { mutateAsync: uploadImageMutate, isPending: uploadImageLoading } =
     useUploadAvatarMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const {
     data,
@@ -74,7 +74,7 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
 
   const imageManager = useFileUploadManager({
     initialUrl: data?.avatarPath,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
@@ -170,7 +170,7 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
                   onChange={imageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation({ file });
+                    const res = await uploadImageMutate({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}

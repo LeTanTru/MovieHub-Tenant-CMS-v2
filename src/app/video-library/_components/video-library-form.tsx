@@ -51,8 +51,8 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
 
   const { mutateAsync: uploadLogoMutation, isPending: uploadLogoLoading } =
     useUploadLogoMutation();
-  const { mutateAsync: uploadVideoMutation } = useUploadVideoMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: uploadVideoMutate } = useUploadVideoMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
   const {
     data,
     loading,
@@ -76,14 +76,14 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
 
   const imageManager = useFileUploadManager({
     initialUrl: data?.thumbnailUrl,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
 
   const videoManager = useFileUploadManager({
     initialUrl: data?.content,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
@@ -441,7 +441,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         required
                         onChange={videoManager.trackUpload}
                         uploadVideoFn={async (file: Blob, onProgress) => {
-                          const res = await uploadVideoMutation({
+                          const res = await uploadVideoMutate({
                             file,
                             options: {
                               onUploadProgress: (e: AxiosProgressEvent) => {

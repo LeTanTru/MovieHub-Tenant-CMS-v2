@@ -11,7 +11,7 @@ import { logger } from '@/logger';
 import {
   useEmployeeProfileQuery,
   useGetClientTokenMutation,
-  useManageProfileQuery
+  useManagerProfileQuery
 } from '@/queries';
 import { useAppLoadingStore, useAuthStore, useSocketStore } from '@/store';
 import { getData, isTokenExpired, removeData } from '@/utils';
@@ -34,7 +34,7 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     isLoading: managerProfileLoading,
     isFetching: managerProfileFetching,
     error: manageProfileError
-  } = useManageProfileQuery(shouldFetchProfile && +kind === KIND_MANAGER);
+  } = useManagerProfileQuery(shouldFetchProfile && +kind === KIND_MANAGER);
   const {
     data: employeeProfile,
     isLoading: employeeProfileLoading,

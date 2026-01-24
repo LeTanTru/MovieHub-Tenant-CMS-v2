@@ -37,16 +37,16 @@ import type { UseFormReturn } from 'react-hook-form';
 export default function EmployeeForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const { data: groupList } = useGroupListQuery({ size: MAX_PAGE_SIZE });
+  const { data: groupListData } = useGroupListQuery({ size: MAX_PAGE_SIZE });
 
-  const groupOptions = groupList?.data?.content.map((item) => ({
+  const groupOptions = groupListData?.data?.content.map((item) => ({
     label: item.name,
     value: item.id.toString()
   }));
 
-  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+  const { mutateAsync: uploadImageMutate, isPending: uploadImageLoading } =
     useUploadAvatarMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const {
     data,
@@ -71,7 +71,7 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
 
   const imageManager = useFileUploadManager({
     initialUrl: data?.avatarPath,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
@@ -165,7 +165,7 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
                   onChange={imageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation({ file });
+                    const res = await uploadImageMutate({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}

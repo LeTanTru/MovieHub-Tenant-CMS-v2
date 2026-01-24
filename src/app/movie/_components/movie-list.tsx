@@ -37,10 +37,10 @@ import { AiOutlineUser } from 'react-icons/ai';
 
 export default function MovieList({ queryKey }: { queryKey: string }) {
   const navigate = useNavigate(false);
-  const { data: categoryList } = useCategoryListQuery();
+  const { data: categoryListData } = useCategoryListQuery();
 
-  const categories =
-    categoryList?.data?.content
+  const categoryList =
+    categoryListData?.data?.content
       ?.map((category) => ({
         value: category.id.toString(),
         label: category.name
@@ -284,7 +284,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
       key: 'categoryIds',
       placeholder: 'Danh mục',
       type: FieldTypes.MULTI_SELECT,
-      options: categories
+      options: categoryList
     },
     {
       key: 'type',

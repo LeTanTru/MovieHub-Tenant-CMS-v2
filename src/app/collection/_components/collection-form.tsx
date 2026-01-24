@@ -48,10 +48,10 @@ import { Activity } from '@/components/activity';
 export default function CollectionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const { data: categoryList } = useCategoryListQuery();
+  const { data: categoryListData } = useCategoryListQuery();
 
-  const categories =
-    categoryList?.data?.content
+  const categoryList =
+    categoryListData?.data?.content
       ?.map((category) => ({
         value: category.id.toString(),
         label: category.name
@@ -397,7 +397,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                       name='filter.categoryIds'
                       label='Danh mục'
                       placeholder='Danh mục'
-                      options={categories}
+                      options={categoryList}
                     />
                   </Col>
                   <Col span={12}>
