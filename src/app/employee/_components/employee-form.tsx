@@ -37,16 +37,16 @@ import type { UseFormReturn } from 'react-hook-form';
 export default function EmployeeForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const groupListQuery = useGroupListQuery({ size: MAX_PAGE_SIZE });
+  const { data: groupList } = useGroupListQuery({ size: MAX_PAGE_SIZE });
 
-  const groupList = groupListQuery.data?.data.content || [];
-  const groupOptions = groupList.map((item) => ({
+  const groupOptions = groupList?.data?.content.map((item) => ({
     label: item.name,
     value: item.id.toString()
   }));
 
-  const uploadImageMutation = useUploadAvatarMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+    useUploadAvatarMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const {
     data,
@@ -105,7 +105,15 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
       newPassword: '',
       oldPassword: ''
     };
-  }, [data]);
+  }, [
+    data?.avatarPath,
+    data?.email,
+    data?.fullName,
+    data?.group?.id,
+    data?.phone,
+    data?.status,
+    data?.username
+  ]);
 
   const handleCancel = async () => {
     await imageManager.handleCancel();
@@ -151,13 +159,13 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
               <Col span={24}>
                 <UploadImageField
                   value={renderImageUrl(imageManager.currentUrl)}
-                  loading={uploadImageMutation.isPending}
+                  loading={uploadImageLoading}
                   control={form.control}
                   name='avatarPath'
                   onChange={imageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation.mutateAsync({ file });
+                    const res = await uploadImageMutation({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}

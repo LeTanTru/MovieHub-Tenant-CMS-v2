@@ -168,7 +168,10 @@ function CommentItem({
   const commentListSize = commentList.length;
   const isOpen = isActiveParent;
 
-  const changeStatusCommentMutation = useChangeCommenStatusMutation();
+  const {
+    mutateAsync: changeStatusCommentMutation,
+    isPending: changeStatusCommentLoading
+  } = useChangeCommenStatusMutation();
 
   const handleReplySubmit = async () => {
     closeReply();
@@ -225,7 +228,7 @@ function CommentItem({
   };
 
   const handleChangeCommentStatus = async (id: string, status: number) => {
-    await changeStatusCommentMutation.mutateAsync({
+    await changeStatusCommentMutation({
       id,
       status:
         status === COMMENT_STATUS_SHOW
@@ -233,23 +236,23 @@ function CommentItem({
           : COMMENT_STATUS_SHOW
     });
     if (comment.parent)
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: [`${queryKeys.COMMENT}-${comment.parent.id}-infinite`]
       });
     else
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: [`${queryKeys.COMMENT}-infinite`]
       });
   };
 
   const handleVote = (id: string, type: number) => {
-    onVote(id, type, () => {
+    onVote(id, type, async () => {
       if (comment.parent)
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: [`${queryKeys.COMMENT}-${comment.parent.id}-infinite`]
         });
       else
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: [`${queryKeys.COMMENT}-infinite`]
         });
     });
@@ -437,7 +440,7 @@ function CommentItem({
                               comment.status
                             )
                           }
-                          loading={changeStatusCommentMutation.isPending}
+                          loading={changeStatusCommentLoading}
                         >
                           {comment.status === COMMENT_STATUS_SHOW ? (
                             <>

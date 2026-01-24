@@ -26,8 +26,9 @@ import type { UseFormReturn } from 'react-hook-form';
 export default function StyleForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const uploadImageMutation = useUploadLogoMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+    useUploadLogoMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const {
     data,
@@ -73,7 +74,13 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
       name: data?.name ?? '',
       type: data?.type ?? 1
     };
-  }, [data]);
+  }, [
+    data?.description,
+    data?.imageUrl,
+    data?.isDefault,
+    data?.name,
+    data?.type
+  ]);
 
   const handleCancel = async () => {
     await imageManager.handleCancel();
@@ -119,13 +126,13 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
               <Col span={24}>
                 <UploadImageField
                   value={renderImageUrl(imageManager.currentUrl)}
-                  loading={uploadImageMutation.isPending}
+                  loading={uploadImageLoading}
                   control={form.control}
                   name='imageUrl'
                   onChange={imageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation.mutateAsync({ file });
+                    const res = await uploadImageMutation({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}

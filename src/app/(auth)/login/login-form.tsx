@@ -28,21 +28,24 @@ import {
   useLoginManagerMutation,
   useManageProfileQuery
 } from '@/queries';
-import { useAppLoading, useAuthStore } from '@/store';
+import { useAppLoadingStore, useAuthStore } from '@/store';
 import Image from 'next/image';
 
 export default function LoginForm() {
-  const managerProfileQuery = useManageProfileQuery();
-  const employeeProfileQuery = useEmployeeProfileQuery();
+  const { refetch: getManagerProfile } = useManageProfileQuery();
+  const { refetch: getEmployeeProfile } = useEmployeeProfileQuery();
 
-  const loginManagerMutation = useLoginManagerMutation();
-  const loginEmployeeMutation = useLoginEmployeeMutation();
+  const { mutateAsync: loginManagerMutation, isPending: loginManagerLoading } =
+    useLoginManagerMutation();
+  const {
+    mutateAsync: loginEmployeeMutation,
+    isPending: loginEmployeeLoading
+  } = useLoginEmployeeMutation();
 
-  const setLoading = useAppLoading((s) => s.setLoading);
+  const setLoading = useAppLoadingStore((s) => s.setLoading);
   const setProfile = useAuthStore((s) => s.setProfile);
 
-  const loading =
-    loginManagerMutation.isPending || loginEmployeeMutation.isPending;
+  const loading = loginManagerLoading || loginEmployeeLoading;
 
   const defaultValues: LoginBodyType = {
     username: '',
@@ -66,9 +69,9 @@ export default function LoginForm() {
       setData(storageKeys.USER_KIND, _res?.user_kind?.toString()!);
       const profileQuery =
         _res.user_kind && +_res.user_kind === KIND_MANAGER
-          ? managerProfileQuery
-          : employeeProfileQuery;
-      const profile = await profileQuery.refetch();
+          ? getManagerProfile
+          : getEmployeeProfile;
+      const profile = await profileQuery();
       if (profile.data?.data) {
         setProfile(profile.data?.data);
         setLoading(true);
@@ -90,12 +93,12 @@ export default function LoginForm() {
     };
 
     if (values.loginType === LOGIN_TYPE_MANAGER) {
-      await loginManagerMutation.mutateAsync(payload as any, {
+      await loginManagerMutation(payload as any, {
         onSuccess: handleLoginSuccess,
         onError: handleLoginError
       });
     } else {
-      await loginEmployeeMutation.mutateAsync(values, {
+      await loginEmployeeMutation(values, {
         onSuccess: handleLoginSuccess,
         onError: handleLoginError
       });

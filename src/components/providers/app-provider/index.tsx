@@ -13,7 +13,7 @@ import {
   useGetClientTokenMutation,
   useManageProfileQuery
 } from '@/queries';
-import { useAppLoading, useAuthStore, useSocketStore } from '@/store';
+import { useAppLoadingStore, useAuthStore, useSocketStore } from '@/store';
 import { getData, isTokenExpired, removeData } from '@/utils';
 import { type ReactNode, useEffect, useState } from 'react';
 
@@ -21,7 +21,7 @@ export default function AppProvider({ children }: { children: ReactNode }) {
   const accessToken = getData(storageKeys.ACCESS_TOKEN);
   const kind = getData(storageKeys.USER_KIND);
   const [clientToken, setClientToken] = useState<string>('');
-  const setLoading = useAppLoading((s) => s.setLoading);
+  const setLoading = useAppLoadingStore((s) => s.setLoading);
   const setProfile = useAuthStore((s) => s.setProfile);
   const setSocket = useSocketStore((s) => s.setSocket);
 
@@ -29,40 +29,56 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     kind && (+kind === KIND_MANAGER || +kind === KIND_EMPLOYEE);
   const shouldFetchProfile = !!accessToken && !!isValidKind;
 
-  const managerProfileQuery = useManageProfileQuery(
-    shouldFetchProfile && +kind === KIND_MANAGER
-  );
-  const employeeProfileQuery = useEmployeeProfileQuery(
-    shouldFetchProfile && +kind === KIND_EMPLOYEE
-  );
+  const {
+    data: managerProfile,
+    isLoading: managerProfileLoading,
+    isFetching: managerProfileFetching,
+    error: manageProfileError
+  } = useManageProfileQuery(shouldFetchProfile && +kind === KIND_MANAGER);
+  const {
+    data: employeeProfile,
+    isLoading: employeeProfileLoading,
+    isFetching: employeeProfileFetching,
+    error: employeeProfileError
+  } = useEmployeeProfileQuery(shouldFetchProfile && +kind === KIND_EMPLOYEE);
   const { mutateAsync: getClientToken } = useGetClientTokenMutation();
 
-  const profileQuery =
-    kind && +kind === KIND_MANAGER ? managerProfileQuery : employeeProfileQuery;
+  useEffect(() => {
+    setLoading(
+      managerProfileLoading ||
+        managerProfileFetching ||
+        employeeProfileLoading ||
+        employeeProfileFetching
+    );
+  }, [
+    employeeProfileFetching,
+    employeeProfileLoading,
+    managerProfileFetching,
+    managerProfileLoading,
+    setLoading
+  ]);
 
   useEffect(() => {
-    setLoading(profileQuery.isLoading || profileQuery.isFetching);
-  }, [profileQuery.isFetching, profileQuery.isLoading, setLoading]);
-
-  useEffect(() => {
-    if (!profileQuery.data) return;
-
-    if (profileQuery.data.result && profileQuery.data.data) {
-      setProfile(profileQuery.data.data);
+    if (!managerProfile && !employeeProfile) return;
+    const result = managerProfile?.result || employeeProfile?.result;
+    const data = managerProfile?.data || employeeProfile?.data;
+    if (result && data) {
+      setProfile(data);
     } else {
-      const code = profileQuery.data.code;
+      const code = managerProfile?.code || employeeProfile?.code;
       if (code === ErrorCode.EMPLOYEE_ERROR_NOT_FOUND) {
         removeData(storageKeys.ACCESS_TOKEN);
         removeData(storageKeys.REFRESH_TOKEN);
         removeData(storageKeys.USER_KIND);
       }
     }
-  }, [profileQuery.data, setProfile]);
+  }, [employeeProfile, managerProfile, setProfile]);
 
   useEffect(() => {
-    if (!profileQuery.error) return;
-    logger.error('Error while fetching profile', profileQuery.error);
-  }, [profileQuery.error]);
+    const error = manageProfileError || employeeProfileError;
+    if (!error) return;
+    logger.error('Error while fetching profile', error);
+  }, [employeeProfileError, manageProfileError]);
 
   useEffect(() => {
     if (!accessToken || !kind) return;

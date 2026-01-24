@@ -42,7 +42,8 @@ export default function MoviePersonList({
 
   const moviePersonModal = useDisclosure(false);
 
-  const updateMoviePersonMutation = useUpdateMoviePersonMutation();
+  const { mutateAsync: updateMoviePersonMutation } =
+    useUpdateMoviePersonMutation();
 
   const { data, loading, handlers, listQuery } = useListBase<
     MoviePersonResType,
@@ -166,7 +167,7 @@ export default function MoviePersonList({
       return;
     }
 
-    await updateMoviePersonMutation.mutateAsync(
+    await updateMoviePersonMutation(
       {
         id: record.id,
         kind: record.kind,

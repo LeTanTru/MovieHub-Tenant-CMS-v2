@@ -48,12 +48,12 @@ export default function CollectionItemModal({
       mode: 'create'
     },
     override: (handlers) => {
-      handlers.handleSubmitSuccess = () => {
+      handlers.handleSubmitSuccess = async () => {
         onClose();
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: [`${queryKeys.COLLECTION_ITEM}-list`]
         });
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: [`${queryKeys.COLLECTION_ITEM}`]
         });
       };

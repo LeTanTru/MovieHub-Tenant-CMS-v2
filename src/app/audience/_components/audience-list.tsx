@@ -76,14 +76,15 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
     }
   });
 
-  const changeStatusMutation = useChangeAudienceStatusMutation();
+  const { mutateAsync: changeStatusMutation, isPending: changeStatusLoading } =
+    useChangeAudienceStatusMutation();
 
   const handleChangeStatus = async (record: AudienceResType) => {
     const message =
       record.status === STATUS_ACTIVE
         ? 'Khóa tài khoản thành công'
         : 'Mở khóa tài khoản thành công';
-    await changeStatusMutation.mutateAsync(
+    await changeStatusMutation(
       {
         id: record.id,
         status: record.status === STATUS_ACTIVE ? STATUS_LOCK : STATUS_ACTIVE
@@ -193,7 +194,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
           columns={columns}
           dataSource={data || []}
           pagination={pagination}
-          loading={loading || changeStatusMutation.isPending}
+          loading={loading || changeStatusLoading}
           changePagination={handlers.changePagination}
         />
       </ListPageWrapper>

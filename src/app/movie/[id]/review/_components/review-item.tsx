@@ -52,7 +52,10 @@ export default function ReviewItem({
 }) {
   const hasPermission = useValidatePermission();
   const queryClient = useQueryClient();
-  const changeReviewStatusMutation = useChangeReviewStatusMutation();
+  const {
+    mutateAsync: changeReviewStatusMutation,
+    isPending: changeReviewStatusLoading
+  } = useChangeReviewStatusMutation();
 
   const canDelete = hasPermission({
     requiredPermissions: [apiConfig.review.delete.permissionCode]
@@ -63,12 +66,12 @@ export default function ReviewItem({
   });
 
   const handleChangeCommentStatus = async (id: string, status: number) => {
-    await changeReviewStatusMutation.mutateAsync({
+    await changeReviewStatusMutation({
       id,
       status:
         status === REVIEW_STATUS_SHOW ? REVIEW_STATUS_HIDE : REVIEW_STATUS_SHOW
     });
-    queryClient.invalidateQueries({
+    await queryClient.invalidateQueries({
       queryKey: [`${queryKeys.REVIEW}-infinite`]
     });
   };
@@ -190,7 +193,7 @@ export default function ReviewItem({
                           onClick={() =>
                             handleChangeCommentStatus(review.id, review.status)
                           }
-                          loading={changeReviewStatusMutation.isPending}
+                          loading={changeReviewStatusLoading}
                         >
                           {review.status === REVIEW_STATUS_SHOW ? (
                             <>

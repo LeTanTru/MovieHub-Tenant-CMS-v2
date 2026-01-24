@@ -36,7 +36,8 @@ export default function MoviePersonModal({
   listQuery: UseQueryResult<ApiResponseList<MoviePersonResType>, Error>;
   close: () => void;
 }) {
-  const createMoviePersonMutation = useCreateMoviePersonMutation();
+  const { mutateAsync: createMoviePersonMutation } =
+    useCreateMoviePersonMutation();
 
   const defaultValues: MoviePersonBodyType = {
     kind: kind,
@@ -49,7 +50,7 @@ export default function MoviePersonModal({
     values: MoviePersonBodyType,
     form: UseFormReturn<MoviePersonBodyType>
   ) => {
-    await createMoviePersonMutation.mutateAsync(values, {
+    await createMoviePersonMutation(values, {
       onSuccess: (res) => {
         if (res.result) {
           notify.success(

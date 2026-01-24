@@ -37,10 +37,10 @@ import { AiOutlineUser } from 'react-icons/ai';
 
 export default function MovieList({ queryKey }: { queryKey: string }) {
   const navigate = useNavigate(false);
-  const categoryListQuery = useCategoryListQuery();
+  const { data: categoryList } = useCategoryListQuery();
 
   const categories =
-    categoryListQuery?.data?.data?.content
+    categoryList?.data?.content
       ?.map((category) => ({
         value: category.id.toString(),
         label: category.name

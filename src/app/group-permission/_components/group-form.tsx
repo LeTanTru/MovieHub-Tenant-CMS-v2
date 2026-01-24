@@ -1,6 +1,7 @@
 'use client';
 
 import { emptyData } from '@/assets';
+import { Activity } from '@/components/activity';
 import { Button, Col, InputField, Row, TextAreaField } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import { PageWrapper } from '@/components/layout';
@@ -17,9 +18,9 @@ import { useNavigate, useQueryParams } from '@/hooks';
 import { cn } from '@/lib';
 import { logger } from '@/logger';
 import {
-  useCreateGroupMutation,
   useGroupQuery,
   usePermissionListQuery,
+  useCreateGroupMutation,
   useUpdateGroupMutation
 } from '@/queries';
 import { route } from '@/routes';
@@ -40,19 +41,26 @@ export default function GroupForm() {
   const queryClient = useQueryClient();
   const { queryString } = useQueryParams();
 
-  const groupQuery = useGroupQuery(id);
-  const permissionListQuery = usePermissionListQuery({
+  const {
+    data: group,
+    isLoading: groupLoading,
+    isFetching: groupFetching
+  } = useGroupQuery(id);
+  const {
+    data: permissionList,
+    isLoading: permissionListLoading,
+    isFetching: permissionListFetching
+  } = usePermissionListQuery({
     page: DEFAULT_TABLE_PAGE_START,
     size: MAX_PAGE_SIZE
   });
 
-  const group = groupQuery.data?.data;
-  const permissions = permissionListQuery.data?.data.content;
+  const { mutateAsync: createGroupMutation, isPending: createGroupLoading } =
+    useCreateGroupMutation();
+  const { mutateAsync: updateGroupMutation, isPending: updateGroupLoading } =
+    useUpdateGroupMutation();
 
-  const createGroupMutation = useCreateGroupMutation();
-  const updateGroupMutation = useUpdateGroupMutation();
-
-  const groupedPermissions = [...(permissions || [])]
+  const groupedPermissions = [...(permissionList?.data?.content || [])]
     .sort(
       (a, b) =>
         (a.groupPermission?.ordering ?? 0) - (b.groupPermission?.ordering ?? 0)
@@ -74,11 +82,11 @@ export default function GroupForm() {
 
   const initialValues: GroupBodyType = useMemo(
     () => ({
-      description: group?.description ?? '',
-      name: group?.name ?? '',
-      permissions: group?.permissions.map((g) => g.id.toString()) ?? []
+      description: group?.data?.description ?? '',
+      name: group?.data?.name ?? '',
+      permissions: group?.data?.permissions.map((g) => g.id.toString()) ?? []
     }),
-    [group?.description, group?.name, group?.permissions]
+    [group?.data?.description, group?.data?.name, group?.data?.permissions]
   );
 
   // const onSubmit = async (
@@ -123,13 +131,13 @@ export default function GroupForm() {
     const { kind: _, ...valuesWithoutKind } = values;
     const payload = isCreate ? values : { ...valuesWithoutKind, id };
 
-    await mutation.mutateAsync(payload, {
-      onSuccess: (res) => {
+    await mutation(payload, {
+      onSuccess: async (res) => {
         if (res.result) {
           notify.success(
             `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền thành công`
           );
-          queryClient.invalidateQueries({ queryKey: ['group', id] });
+          await queryClient.invalidateQueries({ queryKey: ['group', id] });
           navigate(route.group.getList.path);
         } else {
           const errCode = res.code;
@@ -157,7 +165,7 @@ export default function GroupForm() {
         },
         { label: `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền` }
       ]}
-      notFound={groupQuery?.data?.code === ErrorCode.GROUP_ERROR_NOT_FOUND}
+      notFound={group?.code === ErrorCode.GROUP_ERROR_NOT_FOUND}
       notFoundContent='Không tìm thấy nhóm này'
     >
       <BaseForm
@@ -345,24 +353,29 @@ export default function GroupForm() {
                 <Button
                   disabled={
                     !form.formState.isDirty ||
-                    createGroupMutation.isPending ||
-                    updateGroupMutation.isPending
+                    createGroupLoading ||
+                    updateGroupLoading
                   }
                   type='submit'
                   variant={'primary'}
                 >
-                  {createGroupMutation.isPending ||
-                  updateGroupMutation.isPending ? (
-                    <CircleLoading />
-                  ) : (
-                    <>
-                      <Save />
-                      {isCreate ? 'Thêm' : 'Cập nhật'}
-                    </>
-                  )}
+                  <Save />
+                  {isCreate ? 'Thêm' : 'Cập nhật'}
                 </Button>
               </Col>
             </Row>
+            <Activity
+              visible={
+                groupLoading ||
+                groupFetching ||
+                permissionListLoading ||
+                permissionListFetching
+              }
+            >
+              <div className='absolute inset-0 bg-white/80'>
+                <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
+              </div>
+            </Activity>
           </>
         )}
       </BaseForm>

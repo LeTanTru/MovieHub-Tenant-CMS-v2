@@ -42,18 +42,20 @@ import { useMemo } from 'react';
 export default function MovieForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const categoryListQuery = useCategoryListQuery();
+  const { data: categoryList, isLoading: categoryLoading } =
+    useCategoryListQuery();
 
   const categories =
-    categoryListQuery?.data?.data?.content
+    categoryList?.data?.content
       ?.map((category) => ({
         value: category.id.toString(),
         label: category.name
       }))
       .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-  const uploadImageMutation = useUploadLogoMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+    useUploadLogoMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const {
     data,
@@ -125,16 +127,33 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
       title: data?.title ?? '',
       type: data?.type ?? 0
     };
-  }, [data]);
+  }, [
+    data?.ageRating,
+    data?.categories,
+    data?.country,
+    data?.description,
+    data?.isFeatured,
+    data?.language,
+    data?.originalTitle,
+    data?.posterUrl,
+    data?.releaseDate,
+    data?.thumbnailUrl,
+    data?.title,
+    data?.type
+  ]);
 
   const handleCancel = async () => {
-    await posterImageManager.handleCancel();
-    await thumbnailImageManager.handleCancel();
+    await Promise.all([
+      posterImageManager.handleCancel(),
+      thumbnailImageManager.handleCancel()
+    ]);
   };
 
   const onSubmit = async (values: MovieBodyType) => {
-    await posterImageManager.handleSubmit();
-    await thumbnailImageManager.handleSubmit();
+    await Promise.all([
+      posterImageManager.handleSubmit(),
+      thumbnailImageManager.handleSubmit()
+    ]);
 
     await handleSubmit({
       ...values,
@@ -174,13 +193,13 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
               <Col span={12}>
                 <UploadImageField
                   value={renderImageUrl(posterImageManager.currentUrl)}
-                  loading={uploadImageMutation.isPending}
+                  loading={uploadImageLoading}
                   control={form.control}
                   name='posterUrl'
                   onChange={posterImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation.mutateAsync({
+                    const res = await uploadImageMutation({
                       file
                     });
                     return res.data?.filePath ?? '';
@@ -195,13 +214,13 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
               <Col span={12}>
                 <UploadImageField
                   value={renderImageUrl(thumbnailImageManager.currentUrl)}
-                  loading={uploadImageMutation.isPending}
+                  loading={uploadImageLoading}
                   control={form.control}
                   name='thumbnailUrl'
                   onChange={thumbnailImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation.mutateAsync({ file });
+                    const res = await uploadImageMutation({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={thumbnailImageManager.handleDeleteOnClick}
@@ -323,7 +342,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                 onCancel: handleCancel
               })}
             </>
-            <Activity visible={loading || categoryListQuery.isLoading}>
+            <Activity visible={loading || categoryLoading}>
               <div className='absolute inset-0 bg-white/80'>
                 <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
               </div>

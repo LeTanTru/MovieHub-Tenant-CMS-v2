@@ -48,10 +48,10 @@ import { Activity } from '@/components/activity';
 export default function CollectionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const categoryListQuery = useCategoryListQuery();
+  const { data: categoryList } = useCategoryListQuery();
 
   const categories =
-    categoryListQuery?.data?.data?.content
+    categoryList?.data?.content
       ?.map((category) => ({
         value: category.id.toString(),
         label: category.name
@@ -133,7 +133,14 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
       type: data?.type ?? COLLECTION_TYPE_SECTION,
       fillData: data?.fillData ?? false
     };
-  }, [data]);
+  }, [
+    data.color,
+    data?.fillData,
+    data.filter,
+    data?.name,
+    data?.style?.id,
+    data?.type
+  ]);
 
   // const onSubmit = async (
   //   values: CollectionBodyType,

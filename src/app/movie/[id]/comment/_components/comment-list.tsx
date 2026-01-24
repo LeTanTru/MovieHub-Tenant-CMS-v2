@@ -33,14 +33,12 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
   const queryClient = useQueryClient();
   const { searchParams } = useQueryParams<{ movieTitle: string }>();
 
-  const voteListCommentQuery = useVoteListCommentQuery({ movieId });
-  const voteList = useMemo(
-    () => voteListCommentQuery.data?.data ?? [],
-    [voteListCommentQuery.data?.data]
-  );
+  const { data: voteList, refetch: getVoteList } = useVoteListCommentQuery({
+    movieId
+  });
 
-  const voteCommentMutation = useVoteCommentMutation();
-  const pinCommentMutation = usePinCommentMutation();
+  const { mutateAsync: voteCommentMutation } = useVoteCommentMutation();
+  const { mutateAsync: pinCommentMutation } = usePinCommentMutation();
 
   const hasPermission = useValidatePermission();
 
@@ -67,22 +65,22 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
 
   const voteMap = useMemo(() => {
     const map: Record<string, number> = {};
-    voteList.forEach((v) => (map[v.id] = v.type));
+    voteList?.data?.forEach((v) => (map[v.id] = v.type));
     return map;
   }, [voteList]);
 
   const handleVote = useCallback(
     async (id: string, type: number, onSuccess?: () => void) => {
-      await voteCommentMutation.mutateAsync({ id, type });
-      await Promise.all([voteListCommentQuery.refetch()]);
+      await voteCommentMutation({ id, type });
+      await Promise.all([getVoteList()]);
       onSuccess?.();
     },
-    [voteCommentMutation, voteListCommentQuery]
+    [getVoteList, voteCommentMutation]
   );
 
   const handlePinComment = useCallback(
     async (id: string, isPinned: boolean) => {
-      await pinCommentMutation.mutateAsync({ id, isPinned });
+      await pinCommentMutation({ id, isPinned });
       await listQuery.refetch();
     },
     [pinCommentMutation, listQuery]
@@ -91,9 +89,9 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
   const handleDeleteComment = useCallback(
     async (commentToDelete: CommentResType) => {
       handlers.handleDeleteClick(commentToDelete.id, {
-        onSuccess: () => {
+        onSuccess: async () => {
           if (commentToDelete.parent) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: [queryKey, commentToDelete.parent.id]
             });
           }

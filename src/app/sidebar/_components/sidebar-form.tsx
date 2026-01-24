@@ -32,8 +32,9 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
     id: string;
   }>();
 
-  const uploadImageMutation = useUploadLogoMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+    useUploadLogoMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const {
     data,
@@ -88,16 +89,27 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
       movieId: data?.movie?.id?.toString() ?? '',
       webThumbnailUrl: data?.webThumbnailUrl || ''
     };
-  }, [data]);
+  }, [
+    data?.active,
+    data?.description,
+    data?.mainColor,
+    data?.mobileThumbnailUrl,
+    data?.movie?.id,
+    data?.webThumbnailUrl
+  ]);
 
   const handleCancel = async () => {
-    await webImageManager.handleCancel();
-    await mobileImageManager.handleCancel();
+    await Promise.all([
+      webImageManager.handleCancel(),
+      mobileImageManager.handleCancel()
+    ]);
   };
 
   const onSubmit = async (values: MovieSidebarBodyType) => {
-    await webImageManager.handleSubmit();
-    await mobileImageManager.handleSubmit();
+    await Promise.all([
+      webImageManager.handleSubmit(),
+      mobileImageManager.handleSubmit()
+    ]);
 
     await handleSubmit({
       ...values,
@@ -133,13 +145,13 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                 <Col span={12}>
                   <UploadImageField
                     value={renderImageUrl(webImageManager.currentUrl)}
-                    loading={uploadImageMutation.isPending}
+                    loading={uploadImageLoading}
                     control={form.control}
                     name='webThumbnailUrl'
                     onChange={webImageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadImageMutation.mutateAsync({
+                      const res = await uploadImageMutation({
                         file
                       });
                       return res.data?.filePath ?? '';
@@ -153,13 +165,13 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                 <Col span={12}>
                   <UploadImageField
                     value={renderImageUrl(mobileImageManager.currentUrl)}
-                    loading={uploadImageMutation.isPending}
+                    loading={uploadImageLoading}
                     control={form.control}
                     name='mobileThumbnailUrl'
                     onChange={mobileImageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadImageMutation.mutateAsync({
+                      const res = await uploadImageMutation({
                         file
                       });
                       return res.data?.filePath ?? '';

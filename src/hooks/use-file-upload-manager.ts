@@ -2,10 +2,19 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { logger } from '@/logger';
+import { UseMutateAsyncFunction } from '@tanstack/react-query';
+import { ApiResponse } from '@/types';
 
 type UseFileUploadManagerProps = {
   initialUrl?: string;
-  deleteFileMutation: any;
+  deleteFileMutation: UseMutateAsyncFunction<
+    ApiResponse<any>,
+    Error,
+    {
+      filePath: string;
+    },
+    unknown
+  >;
   isEditing: boolean;
   onOpen?: boolean;
 };
@@ -57,7 +66,7 @@ const useFileUploadManager = ({
 
       if (canDeleteImmediately && url) {
         try {
-          const result = await deleteFileMutation.mutateAsync({
+          const result = await deleteFileMutation({
             filePath: url
           });
           setUploadedFiles((prev) => prev.filter((img) => img !== url));
@@ -83,7 +92,7 @@ const useFileUploadManager = ({
 
       await Promise.all(
         validFiles.map((filePath) =>
-          deleteFileMutation.mutateAsync({ filePath }).catch((err: Error) => {
+          deleteFileMutation({ filePath }).catch((err: Error) => {
             logger.error('Failed to delete file:', filePath, err);
           })
         )
