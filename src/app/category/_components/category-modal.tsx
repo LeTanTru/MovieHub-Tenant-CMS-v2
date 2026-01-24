@@ -40,9 +40,9 @@ export default function CategoryModal({
         mode: !category ? 'create' : 'edit'
       },
       override: (handlers) => {
-        handlers.handleSubmitSuccess = () => {
+        handlers.handleSubmitSuccess = async () => {
           onClose();
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: [`${queryKeys.CATEGORY}-list`]
           });
           itemQuery.refetch();
@@ -60,7 +60,7 @@ export default function CategoryModal({
       name: data?.name ?? '',
       status: STATUS_ACTIVE
     };
-  }, [data]);
+  }, [data?.name]);
 
   const onSubmit = async (
     values: CategoryBodyType,

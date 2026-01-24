@@ -40,12 +40,20 @@ export default function ProfileForm() {
   const profile = useAuthStore((s) => s.profile);
   const { kind } = useAuth();
 
-  const uploadAvatarMutation = useUploadAvatarMutation();
-  const uploadLogoMutation = useUploadLogoMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadAvatarMutation, isPending: uploadAvatarLoading } =
+    useUploadAvatarMutation();
+  const { mutateAsync: uploadLogoMutation, isPending: uploadLogoLoading } =
+    useUploadLogoMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
-  const managerUpdateProfileMutation = useManagerUpdateProfileMutation();
-  const employeeUpdateProfileMutation = useEmployeeUpdateProfileMutation();
+  const {
+    mutateAsync: managerUpdateProfileMutation,
+    isPending: updateManagerProfileLoading
+  } = useManagerUpdateProfileMutation();
+  const {
+    mutateAsync: employeeUpdateProfileMutation,
+    isPending: updateEmployeeProfileLoading
+  } = useEmployeeUpdateProfileMutation();
 
   const profileMutation = useMemo(
     () =>
@@ -109,7 +117,7 @@ export default function ProfileForm() {
       logoImageManager.handleSubmit()
     ]);
 
-    await profileMutation.mutateAsync(
+    await profileMutation(
       {
         ...values,
         avatarPath: avatarImageManager.currentUrl,
@@ -159,13 +167,13 @@ export default function ProfileForm() {
             <Col span={kind === KIND_MANAGER ? 12 : 24}>
               <UploadImageField
                 value={renderImageUrl(avatarImageManager.currentUrl)}
-                loading={uploadAvatarMutation.isPending}
+                loading={uploadAvatarLoading}
                 name='avatarPath'
                 control={form.control}
                 onChange={avatarImageManager.trackUpload}
                 size={150}
                 uploadImageFn={async (file: Blob) => {
-                  const res = await uploadAvatarMutation.mutateAsync({
+                  const res = await uploadAvatarMutation({
                     file
                   });
                   return res.data?.filePath ?? '';
@@ -178,13 +186,13 @@ export default function ProfileForm() {
               <Col span={12}>
                 <UploadImageField
                   value={renderImageUrl(logoImageManager.currentUrl)}
-                  loading={uploadLogoMutation.isPending}
+                  loading={uploadLogoLoading}
                   name='logoPath'
                   control={form.control}
                   onChange={logoImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadLogoMutation.mutateAsync({
+                    const res = await uploadLogoMutation({
                       file
                     });
                     return res.data?.filePath ?? '';
@@ -273,9 +281,15 @@ export default function ProfileForm() {
             </Col>
             <Col className='w-40!'>
               <Button
-                disabled={!form.formState.isDirty || profileMutation.isPending}
+                disabled={
+                  !form.formState.isDirty ||
+                  updateManagerProfileLoading ||
+                  updateEmployeeProfileLoading
+                }
                 variant={'primary'}
-                loading={profileMutation.isPending}
+                loading={
+                  updateManagerProfileLoading || updateEmployeeProfileLoading
+                }
               >
                 <Save />
                 Cập nhật

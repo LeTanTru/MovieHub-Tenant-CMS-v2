@@ -59,8 +59,9 @@ export default function MovieItemModal({
     movieItemId: string;
   }>();
 
-  const uploadImageMutation = useUploadLogoMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadImageMutation, isPending: updateImageLoading } =
+    useUploadLogoMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const kindOptions =
     !!type && +type === MOVIE_TYPE_SINGLE
@@ -94,12 +95,14 @@ export default function MovieItemModal({
           notify.error('Vui lòng chọn mùa để thêm');
         }
       };
-      handlers.handleSubmitSuccess = () => {
+      handlers.handleSubmitSuccess = async () => {
         close();
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: [`${queryKeys.MOVIE_ITEM}-list`]
         });
-        queryClient.invalidateQueries({ queryKey: [queryKeys.MOVIE_ITEM] });
+        await queryClient.invalidateQueries({
+          queryKey: [queryKeys.MOVIE_ITEM]
+        });
       };
     }
   });
@@ -139,7 +142,18 @@ export default function MovieItemModal({
       thumbnailUrl: data?.thumbnailUrl ?? '',
       videoId: data?.video?.id?.toString() ?? ''
     };
-  }, [data]);
+  }, [
+    data?.description,
+    data?.kind,
+    data?.label,
+    data?.releaseDate,
+    data?.thumbnailUrl,
+    data?.title,
+    data?.video?.id,
+    kindOptions,
+    movieId,
+    parentId
+  ]);
 
   const handleCancel = async () => {
     await imageManager.handleCancel();
@@ -184,13 +198,13 @@ export default function MovieItemModal({
                 <Col span={24}>
                   <UploadImageField
                     value={renderImageUrl(imageManager.currentUrl)}
-                    loading={uploadImageMutation.isPending}
+                    loading={updateImageLoading}
                     control={form.control}
                     name='thumbnailUrl'
                     onChange={imageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadImageMutation.mutateAsync({
+                      const res = await uploadImageMutation({
                         file
                       });
                       return res.data?.filePath ?? '';
@@ -245,8 +259,12 @@ export default function MovieItemModal({
                   />
                 </Col>
               </Row>
-              {kind !== MOVIE_ITEM_KIND_SEASON ||
-              (!!type && +type === MOVIE_TYPE_SINGLE) ? (
+              <Activity
+                visible={
+                  kind !== MOVIE_ITEM_KIND_SEASON ||
+                  (!!type && +type === MOVIE_TYPE_SINGLE)
+                }
+              >
                 <Row>
                   <Col>
                     <AutoCompleteField
@@ -263,7 +281,7 @@ export default function MovieItemModal({
                     />
                   </Col>
                 </Row>
-              ) : null}
+              </Activity>
               <Row>
                 <Col span={24}>
                   <RichTextField

@@ -24,8 +24,7 @@ import { notify, renderImageUrl } from '@/utils';
 import { AiOutlineCheck, AiOutlineLock } from 'react-icons/ai';
 
 export default function EmployeeList({ queryKey }: { queryKey: string }) {
-  const groupListQuery = useGroupListQuery({ size: MAX_PAGE_SIZE });
-  const groupList = groupListQuery.data?.data.content || [];
+  const { data: groupList } = useGroupListQuery({ size: MAX_PAGE_SIZE });
 
   const { data, pagination, loading, handlers, listQuery } = useListBase<
     EmployeeResType,
@@ -79,14 +78,15 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
     }
   });
 
-  const changeStatusMutation = useChangeEmployeeStatusMutation();
+  const { mutateAsync: changeStatusMutation, isPending: changeStatusLoading } =
+    useChangeEmployeeStatusMutation();
 
   const handleChangeStatus = async (record: EmployeeResType) => {
     const message =
       record.status === STATUS_ACTIVE
         ? 'Khóa tài khoản thành công'
         : 'Mở khóa tài khoản thành công';
-    await changeStatusMutation.mutateAsync(
+    await changeStatusMutation(
       {
         id: record.id,
         status: record.status === STATUS_ACTIVE ? STATUS_LOCK : STATUS_ACTIVE
@@ -184,7 +184,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
       key: 'kind',
       placeholder: 'Vai trò',
       type: FieldTypes.SELECT,
-      options: groupList.map((group) => ({
+      options: groupList?.data?.content.map((group) => ({
         label: group.name,
         value: group.kind
       }))
@@ -211,7 +211,7 @@ export default function EmployeeList({ queryKey }: { queryKey: string }) {
           columns={columns}
           dataSource={data || []}
           pagination={pagination}
-          loading={loading || changeStatusMutation.isPending}
+          loading={loading || changeStatusLoading}
           changePagination={handlers.changePagination}
         />
       </ListPageWrapper>

@@ -35,7 +35,7 @@ type UploadVideoFieldProps<T extends FieldValues> = {
     file: File,
     onProgress: (progress: number) => void
   ) => Promise<string>;
-  deleteImageFn?: (url: string) => Promise<ApiResponse<any>>;
+  deleteImageFn?: (url: string) => Promise<ApiResponse<any> | undefined>;
 };
 
 export default function UploadVideoField<T extends FieldValues>({

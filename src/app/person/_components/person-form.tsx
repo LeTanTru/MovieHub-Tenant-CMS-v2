@@ -47,8 +47,9 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
   const kind = getData(storageKeys.ACTIVE_TAB_PERSON_KIND);
 
-  const uploadImageMutation = useUploadAvatarMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+    useUploadAvatarMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const {
     data,
@@ -107,7 +108,17 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
       name: data?.name ?? '',
       otherName: data?.otherName ?? ''
     };
-  }, [data, getKinds]);
+  }, [
+    data?.avatarPath,
+    data?.bio,
+    data?.country,
+    data?.dateOfBirth,
+    data?.gender,
+    data?.kinds,
+    data?.name,
+    data?.otherName,
+    getKinds
+  ]);
 
   const handleCancel = async () => {
     await imageManager.handleCancel();
@@ -153,13 +164,13 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
               <Col span={24}>
                 <UploadImageField
                   value={renderImageUrl(imageManager.currentUrl)}
-                  loading={uploadImageMutation.isPending}
+                  loading={uploadImageLoading}
                   control={form.control}
                   name='avatarPath'
                   onChange={imageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation.mutateAsync({ file });
+                    const res = await uploadImageMutation({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}

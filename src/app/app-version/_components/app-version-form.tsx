@@ -28,8 +28,8 @@ import type { UseFormReturn } from 'react-hook-form';
 export default function AppVersionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const uploadFileMutation = useUploadFileMutation();
-  const deleteFileMutation = useDeleteFileMutation();
+  const { mutateAsync: uploadFileMutation } = useUploadFileMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
 
   const {
     data,
@@ -77,7 +77,14 @@ export default function AppVersionForm({ queryKey }: { queryKey: string }) {
       forceUpdate: data?.forceUpdate ?? false,
       isLatest: data?.isLatest ?? false
     };
-  }, [data]);
+  }, [
+    data?.changeLog,
+    data?.code,
+    data?.filePath,
+    data?.forceUpdate,
+    data?.isLatest,
+    data?.name
+  ]);
 
   const handleCancel = async () => {
     await imageManager.handleCancel();
@@ -125,7 +132,7 @@ export default function AppVersionForm({ queryKey }: { queryKey: string }) {
                   control={form.control}
                   name='filePath'
                   uploadFileFn={async (file: Blob, onProgress) => {
-                    const res = await uploadFileMutation.mutateAsync({
+                    const res = await uploadFileMutation({
                       file,
                       options: {
                         onUploadProgress: (e: AxiosProgressEvent) => {

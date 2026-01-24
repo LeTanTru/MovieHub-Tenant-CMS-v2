@@ -57,7 +57,7 @@ export default function CommentInput({
     form: UseFormReturn<CommentBodyType>
   ) => {
     await handleSubmit(values);
-    queryClient.invalidateQueries({ queryKey: [`${queryKey}-infinite`] });
+    await queryClient.invalidateQueries({ queryKey: [`${queryKey}-infinite`] });
     form.reset();
   };
 

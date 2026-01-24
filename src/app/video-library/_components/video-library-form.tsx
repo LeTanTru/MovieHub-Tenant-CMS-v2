@@ -49,11 +49,10 @@ import { Activity } from '@/components/activity';
 export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const uploadLogoMutation = useUploadLogoMutation();
-  const uploadVideoMutation = useUploadVideoMutation();
-
-  const deleteFileMutation = useDeleteFileMutation();
-
+  const { mutateAsync: uploadLogoMutation, isPending: uploadLogoLoading } =
+    useUploadLogoMutation();
+  const { mutateAsync: uploadVideoMutation } = useUploadVideoMutation();
+  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
   const {
     data,
     loading,
@@ -117,11 +116,24 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       sourceType: data?.sourceType ?? VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL,
       vttUrl: data?.vttUrl ?? ''
     };
-  }, [data]);
+  }, [
+    data?.content,
+    data?.description,
+    data?.duration,
+    data?.introEnd,
+    data?.introStart,
+    data?.name,
+    data?.outroStart,
+    data?.sourceType,
+    data?.thumbnailUrl,
+    data?.vttUrl
+  ]);
 
   const handleCancel = async () => {
-    await imageManager.handleCancel();
-    await videoManager.handleCancel();
+    await Promise.all([
+      imageManager.handleCancel(),
+      videoManager.handleCancel()
+    ]);
   };
 
   const onSubmit = async (
@@ -145,8 +157,10 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       }
     }
 
-    await imageManager.handleSubmit();
-    await videoManager.handleSubmit();
+    await Promise.all([
+      imageManager.handleSubmit(),
+      videoManager.handleSubmit()
+    ]);
 
     await handleSubmit(
       {
@@ -205,13 +219,13 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                 <Col span={24}>
                   <UploadImageField
                     value={renderImageUrl(imageManager.currentUrl)}
-                    loading={uploadLogoMutation.isPending}
+                    loading={uploadLogoLoading}
                     control={form.control}
                     name='thumbnailUrl'
                     onChange={imageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadLogoMutation.mutateAsync({
+                      const res = await uploadLogoMutation({
                         file
                       });
                       return res.data?.filePath ?? '';
@@ -427,7 +441,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         required
                         onChange={videoManager.trackUpload}
                         uploadVideoFn={async (file: Blob, onProgress) => {
-                          const res = await uploadVideoMutation.mutateAsync({
+                          const res = await uploadVideoMutation({
                             file,
                             options: {
                               onUploadProgress: (e: AxiosProgressEvent) => {
