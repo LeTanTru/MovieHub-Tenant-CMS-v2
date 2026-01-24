@@ -42,20 +42,20 @@ import { useMemo } from 'react';
 export default function MovieForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
 
-  const { data: categoryList, isLoading: categoryLoading } =
+  const { data: categoryListData, isLoading: categoryLoading } =
     useCategoryListQuery();
 
-  const categories =
-    categoryList?.data?.content
+  const categoryList =
+    categoryListData?.data?.content
       ?.map((category) => ({
         value: category.id.toString(),
         label: category.name
       }))
       .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-  const { mutateAsync: uploadImageMutation, isPending: uploadImageLoading } =
+  const { mutateAsync: uploadImageMutate, isPending: uploadImageLoading } =
     useUploadLogoMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const {
     data,
@@ -80,14 +80,14 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
 
   const posterImageManager = useFileUploadManager({
     initialUrl: data?.posterUrl,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
 
   const thumbnailImageManager = useFileUploadManager({
     initialUrl: data?.thumbnailUrl,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
   });
@@ -199,7 +199,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   onChange={posterImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation({
+                    const res = await uploadImageMutate({
                       file
                     });
                     return res.data?.filePath ?? '';
@@ -220,7 +220,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   onChange={thumbnailImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutation({ file });
+                    const res = await uploadImageMutate({ file });
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={thumbnailImageManager.handleDeleteOnClick}
@@ -312,7 +312,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   label='Danh mục'
                   placeholder='Danh mục'
                   required
-                  options={categories}
+                  options={categoryList}
                 />
               </Col>
             </Row>

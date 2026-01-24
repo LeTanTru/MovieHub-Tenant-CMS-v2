@@ -4,7 +4,7 @@ import type { ApiResponse, ProfileBodyType, ProfileResType } from '@/types';
 import { http } from '@/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-export const useManageProfileQuery = (enabled: boolean = false) => {
+export const useManagerProfileQuery = (enabled: boolean = false) => {
   return useQuery({
     queryKey: [`manage-${queryKeys.PROFILE}`],
     queryFn: () =>
@@ -13,7 +13,7 @@ export const useManageProfileQuery = (enabled: boolean = false) => {
   });
 };
 
-export const useManagerUpdateProfileMutation = () => {
+export const useUpdateManagerProfileMutation = () => {
   return useMutation({
     mutationKey: [`update-${queryKeys.PROFILE}-manager`],
     mutationFn: (body: ProfileBodyType) =>
@@ -40,7 +40,7 @@ export const useEmployeeProfileQuery = (enabled: boolean = false) => {
   });
 };
 
-export const useEmployeeUpdateProfileMutation = () => {
+export const useUpdateProfileEmployeeMutation = () => {
   return useMutation({
     mutationKey: [`update-${queryKeys.PROFILE}-manager`],
     mutationFn: (body: ProfileBodyType) =>

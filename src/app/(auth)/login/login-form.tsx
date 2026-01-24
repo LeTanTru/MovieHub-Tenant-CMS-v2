@@ -26,21 +26,19 @@ import {
   useEmployeeProfileQuery,
   useLoginEmployeeMutation,
   useLoginManagerMutation,
-  useManageProfileQuery
+  useManagerProfileQuery
 } from '@/queries';
 import { useAppLoadingStore, useAuthStore } from '@/store';
 import Image from 'next/image';
 
 export default function LoginForm() {
-  const { refetch: getManagerProfile } = useManageProfileQuery();
+  const { refetch: getManagerProfile } = useManagerProfileQuery();
   const { refetch: getEmployeeProfile } = useEmployeeProfileQuery();
 
-  const { mutateAsync: loginManagerMutation, isPending: loginManagerLoading } =
+  const { mutateAsync: loginManagerMutate, isPending: loginManagerLoading } =
     useLoginManagerMutation();
-  const {
-    mutateAsync: loginEmployeeMutation,
-    isPending: loginEmployeeLoading
-  } = useLoginEmployeeMutation();
+  const { mutateAsync: loginEmployeeMutate, isPending: loginEmployeeLoading } =
+    useLoginEmployeeMutation();
 
   const setLoading = useAppLoadingStore((s) => s.setLoading);
   const setProfile = useAuthStore((s) => s.setProfile);
@@ -93,12 +91,12 @@ export default function LoginForm() {
     };
 
     if (values.loginType === LOGIN_TYPE_MANAGER) {
-      await loginManagerMutation(payload as any, {
+      await loginManagerMutate(payload as any, {
         onSuccess: handleLoginSuccess,
         onError: handleLoginError
       });
     } else {
-      await loginEmployeeMutation(values, {
+      await loginEmployeeMutate(values, {
         onSuccess: handleLoginSuccess,
         onError: handleLoginError
       });

@@ -59,9 +59,9 @@ export default function MovieItemModal({
     movieItemId: string;
   }>();
 
-  const { mutateAsync: uploadImageMutation, isPending: updateImageLoading } =
+  const { mutateAsync: uploadImageMutate, isPending: updateImageLoading } =
     useUploadLogoMutation();
-  const { mutateAsync: deleteFileMutation } = useDeleteFileMutation();
+  const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
 
   const kindOptions =
     !!type && +type === MOVIE_TYPE_SINGLE
@@ -109,7 +109,7 @@ export default function MovieItemModal({
 
   const imageManager = useFileUploadManager({
     initialUrl: data?.thumbnailUrl,
-    deleteFileMutation: deleteFileMutation,
+    deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: open
   });
@@ -204,7 +204,7 @@ export default function MovieItemModal({
                     onChange={imageManager.trackUpload}
                     size={150}
                     uploadImageFn={async (file: Blob) => {
-                      const res = await uploadImageMutation({
+                      const res = await uploadImageMutate({
                         file
                       });
                       return res.data?.filePath ?? '';

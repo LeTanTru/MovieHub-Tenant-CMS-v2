@@ -7,7 +7,7 @@ import { ApiResponse } from '@/types';
 
 type UseFileUploadManagerProps = {
   initialUrl?: string;
-  deleteFileMutation: UseMutateAsyncFunction<
+  deleteFileMutate: UseMutateAsyncFunction<
     ApiResponse<any>,
     Error,
     {
@@ -21,7 +21,7 @@ type UseFileUploadManagerProps = {
 
 const useFileUploadManager = ({
   initialUrl = '',
-  deleteFileMutation,
+  deleteFileMutate,
   isEditing,
   onOpen = false
 }: UseFileUploadManagerProps) => {
@@ -66,7 +66,7 @@ const useFileUploadManager = ({
 
       if (canDeleteImmediately && url) {
         try {
-          const result = await deleteFileMutation({
+          const result = await deleteFileMutate({
             filePath: url
           });
           setUploadedFiles((prev) => prev.filter((img) => img !== url));
@@ -81,7 +81,7 @@ const useFileUploadManager = ({
         setCurrentUrl('');
       }
     },
-    [originalUrl, isEditing, deleteFileMutation]
+    [originalUrl, isEditing, deleteFileMutate]
   );
 
   // Delete multiple files helper
@@ -92,13 +92,13 @@ const useFileUploadManager = ({
 
       await Promise.all(
         validFiles.map((filePath) =>
-          deleteFileMutation({ filePath }).catch((err: Error) => {
+          deleteFileMutate({ filePath }).catch((err: Error) => {
             logger.error('Failed to delete file:', filePath, err);
           })
         )
       );
     },
-    [deleteFileMutation]
+    [deleteFileMutate]
   );
 
   // Get files to delete when canceling
