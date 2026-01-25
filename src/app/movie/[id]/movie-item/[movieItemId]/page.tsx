@@ -1,6 +1,6 @@
 import { MovieItemSeasonDetailList } from '@/app/movie/[id]/movie-item/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Tập, trailer'

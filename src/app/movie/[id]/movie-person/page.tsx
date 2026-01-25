@@ -1,5 +1,5 @@
 import { MoviePersonTab } from '@/app/movie/[id]/movie-person/_components';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Diễn viên & đạo diễn'

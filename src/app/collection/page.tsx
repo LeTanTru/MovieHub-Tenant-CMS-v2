@@ -1,6 +1,6 @@
 import { CollectionList } from '@/app/collection/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Bộ sưu tập'
