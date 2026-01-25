@@ -1,6 +1,6 @@
 import { AppVersionList } from '@/app/app-version/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Phiên bản ứng dụng'

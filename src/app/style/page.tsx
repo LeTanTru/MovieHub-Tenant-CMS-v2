@@ -1,6 +1,6 @@
 import { StyleList } from '@/app/style/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Thiết kế'

@@ -1,6 +1,6 @@
 import { PersonForm } from '@/app/person/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Đạo diễn & diễn viên'

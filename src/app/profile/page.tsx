@@ -1,6 +1,6 @@
 import { ProfileForm } from '@/app/profile/_components';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Hồ sơ'

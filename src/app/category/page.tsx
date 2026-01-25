@@ -1,6 +1,6 @@
 import { CategoryList } from '@/app/category/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Danh mục'

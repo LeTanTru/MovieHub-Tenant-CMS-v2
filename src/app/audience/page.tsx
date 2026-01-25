@@ -1,6 +1,6 @@
 import { AudienceList } from '@/app/audience/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Khán giả'

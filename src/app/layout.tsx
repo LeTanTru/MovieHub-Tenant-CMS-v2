@@ -8,7 +8,7 @@ import {
   QueryProvider,
   ThemeProvider
 } from '@/components/providers';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { PermissionGuard } from '@/components/permission-guard';
 
 const inter = Inter({

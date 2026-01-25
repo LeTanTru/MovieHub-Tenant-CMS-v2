@@ -1,6 +1,6 @@
 import { VideoLibraryList } from '@/app/video-library/_components';
 import { queryKeys } from '@/constants';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Thư viện video'
