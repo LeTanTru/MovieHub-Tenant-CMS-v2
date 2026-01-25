@@ -91,10 +91,10 @@ export const ErrorCode = {
 
 export const groupErrorMaps: ErrorMaps<GroupBodyType> = {
   [ErrorCode.GROUP_ERROR_NAME_EXIST]: [
-    ['name', { type: 'manual', message: 'Tên nhóm đã tồn tại' }]
+    ['name', { type: 'manual', message: 'Tên quyền đã tồn tại' }]
   ],
   [ErrorCode.GROUP_ERROR_NOT_FOUND]: [
-    ['name', { type: 'manual', message: 'Tên nhóm không tồn tại' }]
+    ['name', { type: 'manual', message: 'Tên quyền không tồn tại' }]
   ]
 };
 

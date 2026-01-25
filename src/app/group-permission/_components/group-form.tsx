@@ -171,7 +171,7 @@ export default function GroupForm() {
         { label: `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền` }
       ]}
       notFound={groupData?.code === ErrorCode.GROUP_ERROR_NOT_FOUND}
-      notFoundContent='Không tìm thấy nhóm này'
+      notFoundContent='Không tìm thấy quyền này'
     >
       <BaseForm
         defaultValues={defaultValues}
@@ -186,8 +186,8 @@ export default function GroupForm() {
                 <InputField
                   control={form.control}
                   name='name'
-                  label='Tên nhóm'
-                  placeholder='Nhập tên nhóm'
+                  label='Tên quyền'
+                  placeholder='Nhập tên quyền'
                   required
                 />
               </Col>
