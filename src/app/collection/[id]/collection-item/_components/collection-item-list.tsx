@@ -117,7 +117,7 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
         <>
           <span
             className={cn(
-              'text-dodger-blue line-clamp-1 block flex items-center gap-x-1 truncate',
+              'text-main-color line-clamp-1 block flex items-center gap-x-1 truncate',
               {
                 'highlight-animated': record.movie.isFeatured
               }

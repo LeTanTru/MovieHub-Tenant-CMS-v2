@@ -67,7 +67,7 @@ export default function PersonTab() {
                 onClick={() =>
                   setData(storageKeys.ACTIVE_TAB_PERSON_KIND, tab.value)
                 }
-                className='data-[state=active]:text-dodger-blue cursor-pointer overflow-hidden rounded-b-none border-x border-t bg-zinc-50 py-2 font-normal text-black focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=active]:z-10 data-[state=active]:shadow-none'
+                className='data-[state=active]:text-main-color cursor-pointer overflow-hidden rounded-b-none border-x border-t bg-zinc-50 py-2 font-normal text-black focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=active]:z-10 data-[state=active]:shadow-none'
               >
                 {tab.label}
               </TabsTrigger>

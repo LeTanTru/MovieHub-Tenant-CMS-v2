@@ -266,7 +266,7 @@ export default function AutoCompleteField<
                     {
                       'disabled:cursor-not-allowed disabled:opacity-100 disabled:hover:bg-transparent disabled:[&>div>span]:opacity-80':
                         disabled,
-                      'ring-dodger-blue border-transparent ring-2': open,
+                      'ring-main-color border-transparent ring-2': open,
                       '[&>div>span]:text-gray-300': fieldState.invalid,
                       'border-red-500 ring-red-500': !!fieldState.error
                     }
@@ -368,7 +368,7 @@ export default function AutoCompleteField<
                       }}
                     >
                       {loading ? (
-                        <CircleLoading className='stroke-dodger-blue my-2 size-7' />
+                        <CircleLoading className='stroke-main-color my-2 size-7' />
                       ) : (
                         combinedOptions.map((opt, idx) => (
                           <CommandItem

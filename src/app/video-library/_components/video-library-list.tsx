@@ -60,7 +60,7 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                 {...buttonProps}
               >
-                <PlayCircle className='text-dodger-blue size-4' />
+                <PlayCircle className='text-main-color size-4' />
               </Button>
             </span>
           </ToolTip>

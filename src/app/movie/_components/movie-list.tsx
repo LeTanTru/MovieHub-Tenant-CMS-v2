@@ -82,7 +82,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
                   className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                   {...buttonProps}
                 >
-                  <AiOutlineUser className='text-dodger-blue size-4' />
+                  <AiOutlineUser className='text-main-color size-4' />
                 </Button>
               </span>
             </ToolTip>
@@ -106,7 +106,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
                   className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                   {...buttonProps}
                 >
-                  <MessageSquareMore className='text-dodger-blue size-4' />
+                  <MessageSquareMore className='text-main-color size-4' />
                 </Button>
               </span>
             </ToolTip>
@@ -130,7 +130,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
                   className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                   {...buttonProps}
                 >
-                  <Star className='text-dodger-blue size-4' />
+                  <Star className='text-main-color size-4' />
                 </Button>
               </span>
             </ToolTip>
@@ -161,7 +161,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
               id: record.id
             })}?${serializeParams({ type: record.type, movieTitle: record.title })}`}
             className={cn(
-              'text-dodger-blue line-clamp-1 block flex items-center gap-x-1 truncate',
+              'text-main-color line-clamp-1 block flex items-center gap-x-1 truncate',
               {
                 'highlight-animated': record.isFeatured
               }

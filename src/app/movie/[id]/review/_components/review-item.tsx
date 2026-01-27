@@ -240,7 +240,7 @@ export default function ReviewItem({
                               </AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={onDelete}
-                                className='bg-dodger-blue hover:bg-dodger-blue/80 w-20 cursor-pointer transition-all duration-200 ease-linear'
+                                className='bg-main-color hover:bg-main-color/80 w-20 cursor-pointer transition-all duration-200 ease-linear'
                               >
                                 Có
                               </AlertDialogAction>
