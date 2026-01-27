@@ -187,7 +187,7 @@ export default function CommentReplyForm({
                   type='button'
                   onClick={() => setShowPicker((prev) => !prev)}
                   variant='ghost'
-                  className='flex items-center justify-center'
+                  className='flex items-center justify-center hover:bg-transparent'
                   disabled={loading}
                 >
                   <Image

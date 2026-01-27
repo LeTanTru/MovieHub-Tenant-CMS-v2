@@ -134,9 +134,9 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
       fillData: data?.fillData ?? false
     };
   }, [
-    data.color,
+    data?.color,
     data?.fillData,
-    data.filter,
+    data?.filter,
     data?.name,
     data?.style?.id,
     data?.type
@@ -417,7 +417,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                           control={form.control}
                           name='filter.noLimit'
                           label='Không giới hạn'
-                          checkboxClassName='data-[state=checked]:bg-dodger-blue data-[state=checked]:border-dodger-blue cursor-pointer transition-all duration-100 ease-linear data-[state=unchecked]:text-white'
+                          checkboxClassName='data-[state=checked]:bg-main-color data-[state=checked]:border-main-color cursor-pointer transition-all duration-100 ease-linear data-[state=unchecked]:text-white'
                         />
                       </Col>
                     </Row>
@@ -466,7 +466,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
               <>{renderActions(form)}</>
               <Activity visible={loading}>
                 <div className='absolute inset-0 bg-white/80'>
-                  <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
+                  <CircleLoading className='stroke-main-color mt-20 size-8' />
                 </div>
               </Activity>
             </>

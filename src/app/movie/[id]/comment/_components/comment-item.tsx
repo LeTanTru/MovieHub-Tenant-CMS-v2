@@ -405,7 +405,7 @@ function CommentItem({
             <Activity visible={isAuthor && canUpdate}>
               <Button
                 variant='ghost'
-                className='text-dodger-blue hover:text-dodger-blue/50 h-5! p-0!'
+                className='text-main-color hover:text-main-color/50 h-5! p-0!'
                 onClick={() => handleEditComment(comment)}
               >
                 <AiOutlineEdit className='size-5' />
@@ -432,7 +432,7 @@ function CommentItem({
                     <DropdownMenuItem className='cursor-pointer' asChild>
                       <Activity visible={canChangeStatus}>
                         <Button
-                          className='h-fit w-full justify-start p-2! transition-all duration-200 ease-linear [&_svg]:size-5!'
+                          className='hover:bg-accent/80 h-fit w-full justify-start p-2! transition-all duration-200 ease-linear [&_svg]:size-5!'
                           variant={'ghost'}
                           onClick={() =>
                             handleChangeCommentStatus(
@@ -461,7 +461,10 @@ function CommentItem({
                         <AlertDialog>
                           <AlertDialogTrigger className='w-full' asChild>
                             <span onClick={(e) => e.stopPropagation()}>
-                              <Button className='text-destructive hover:text-destructive/50 h-fit w-full justify-start border-none bg-transparent p-2! shadow-none hover:bg-transparent'>
+                              <Button
+                                variant={'ghost'}
+                                className='text-destructive hover:text-destructive/50 h-fit w-full justify-start border-none bg-transparent p-2! shadow-none hover:bg-transparent'
+                              >
                                 <AiOutlineDelete className='size-5' />
                                 Xóa
                               </Button>
@@ -487,7 +490,7 @@ function CommentItem({
                               </AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={onDelete}
-                                className='bg-dodger-blue hover:bg-dodger-blue/80 w-20 cursor-pointer transition-all duration-200 ease-linear'
+                                className='bg-main-color hover:bg-main-color/80 w-20 cursor-pointer transition-all duration-200 ease-linear'
                               >
                                 Có
                               </AlertDialogAction>

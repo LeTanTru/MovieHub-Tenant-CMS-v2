@@ -112,9 +112,9 @@ export default function MoviePersonList({
                   {...buttonProps}
                 >
                   {isEditing ? (
-                    <AiOutlineSave className='text-dodger-blue size-4' />
+                    <AiOutlineSave className='text-main-color size-4' />
                   ) : (
-                    <AiOutlineEdit className='text-dodger-blue size-4' />
+                    <AiOutlineEdit className='text-main-color size-4' />
                   )}
                 </Button>
               </span>
@@ -304,7 +304,7 @@ export default function MoviePersonList({
                             }}
                             disabled={selectedRow !== record.id}
                           >
-                            <AiOutlineClear className='text-dodger-blue' />
+                            <AiOutlineClear className='text-main-color' />
                           </Button>
                         </ToolTip>
                         <Separator

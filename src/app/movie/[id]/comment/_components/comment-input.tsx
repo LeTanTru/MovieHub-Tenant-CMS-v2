@@ -140,7 +140,7 @@ export default function CommentInput({
                     <Button
                       type='button'
                       onClick={() => setShowPicker((prev) => !prev)}
-                      className='flex w-fit items-center justify-center'
+                      className='flex w-fit items-center justify-center hover:bg-transparent'
                       variant={'ghost'}
                       disabled={loading}
                     >

@@ -65,7 +65,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
                   {record.status === STATUS_ACTIVE ? (
                     <AiOutlineLock className='text-destructive size-4' />
                   ) : (
-                    <AiOutlineCheck className='text-dodger-blue size-4' />
+                    <AiOutlineCheck className='text-main-color size-4' />
                   )}
                 </Button>
               </span>

@@ -77,7 +77,7 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
                   className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                   {...buttonProps}
                 >
-                  <TbListDetails className='text-dodger-blue size-4' />
+                  <TbListDetails className='text-main-color size-4' />
                 </Button>
               </span>
             </ToolTip>
