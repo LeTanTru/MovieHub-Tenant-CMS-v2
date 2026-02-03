@@ -14,7 +14,6 @@ import {
 import { useSaveBase } from '@/hooks';
 import { categorySchema } from '@/schemaValidations';
 import type { CategoryBodyType, CategoryResType } from '@/types';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
@@ -27,28 +26,25 @@ export default function CategoryModal({
   category: CategoryResType | null;
   onClose: () => void;
 }) {
-  const queryClient = useQueryClient();
-  const { data, loading, isEditing, itemQuery, handleSubmit, renderActions } =
-    useSaveBase<CategoryResType, CategoryBodyType>({
-      apiConfig: apiConfig.category,
-      options: {
-        queryKey: queryKeys.CATEGORY,
-        objectName: 'danh mục',
-        pathParams: {
-          id: category?.id
-        },
-        mode: !category ? 'create' : 'edit'
+  const { data, loading, isEditing, handleSubmit, renderActions } = useSaveBase<
+    CategoryResType,
+    CategoryBodyType
+  >({
+    apiConfig: apiConfig.category,
+    options: {
+      queryKey: queryKeys.CATEGORY,
+      objectName: 'danh mục',
+      pathParams: {
+        id: category?.id
       },
-      override: (handlers) => {
-        handlers.handleSubmitSuccess = async () => {
-          onClose();
-          await queryClient.invalidateQueries({
-            queryKey: [`${queryKeys.CATEGORY}-list`]
-          });
-          itemQuery.refetch();
-        };
-      }
-    });
+      mode: !category ? 'create' : 'edit'
+    },
+    override: (handlers) => {
+      handlers.handleSubmitSuccess = async () => {
+        onClose();
+      };
+    }
+  });
 
   const defaultValues: CategoryBodyType = {
     name: '',

@@ -19,7 +19,6 @@ import type {
   MovieResType
 } from '@/types';
 import { generatePath, notify } from '@/utils';
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import type { UseFormReturn } from 'react-hook-form';
 
@@ -30,8 +29,6 @@ export default function CollectionItemModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const queryClient = useQueryClient();
-
   const { id: collectionId } = useParams<{
     id: string;
   }>();
@@ -50,12 +47,6 @@ export default function CollectionItemModal({
     override: (handlers) => {
       handlers.handleSubmitSuccess = async () => {
         onClose();
-        await queryClient.invalidateQueries({
-          queryKey: [`${queryKeys.COLLECTION_ITEM}-list`]
-        });
-        await queryClient.invalidateQueries({
-          queryKey: [`${queryKeys.COLLECTION_ITEM}`]
-        });
       };
       handlers.handleSubmitError = (code) => {
         if (code === ErrorCode.COLLECTION_ITEM_ERROR_MAX_ITEM) {

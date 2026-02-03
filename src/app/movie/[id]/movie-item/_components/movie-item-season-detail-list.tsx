@@ -313,7 +313,7 @@ export default function MovieItemSeasonDetailList({
       </ListPageWrapper>
       <MovieItemModal
         open={movieItemModal.opened}
-        close={movieItemModal.close}
+        onClose={movieItemModal.close}
         movieItem={movieItem}
       />
       {selectedVideo && (

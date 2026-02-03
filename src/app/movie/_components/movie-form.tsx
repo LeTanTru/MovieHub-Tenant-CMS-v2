@@ -105,7 +105,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     status: STATUS_ACTIVE,
     thumbnailUrl: '',
     title: '',
-    type: 0
+    type: 0,
+    year: new Date().getFullYear()
   };
 
   const initialValues: MovieBodyType = useMemo(() => {
@@ -125,7 +126,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
       status: STATUS_ACTIVE,
       thumbnailUrl: data?.thumbnailUrl ?? '',
       title: data?.title ?? '',
-      type: data?.type ?? 0
+      type: data?.type ?? 0,
+      year: data?.year || new Date().getFullYear()
     };
   }, [
     data?.ageRating,
@@ -139,7 +141,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     data?.releaseDate,
     data?.thumbnailUrl,
     data?.title,
-    data?.type
+    data?.type,
+    data?.year
   ]);
 
   const handleCancel = async () => {
@@ -166,6 +169,18 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
       posterUrl: posterImageManager.currentUrl
     });
   };
+
+  const years = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const yearOptions = [];
+    for (let year = 1900; year <= currentYear; year++) {
+      yearOptions.push({
+        value: year,
+        label: year.toString()
+      });
+    }
+    return yearOptions.reverse();
+  }, []);
 
   return (
     <PageWrapper
@@ -313,6 +328,18 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   placeholder='Danh mục'
                   required
                   options={categoryList}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <SelectField
+                  options={years}
+                  control={form.control}
+                  name='year'
+                  label='Năm sản xuất'
+                  placeholder='Năm sản xuất'
+                  required
                 />
               </Col>
             </Row>
