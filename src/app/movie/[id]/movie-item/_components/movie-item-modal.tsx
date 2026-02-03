@@ -36,21 +36,18 @@ import type {
   VideoLibraryResType
 } from '@/types';
 import { formatDate, notify, renderImageUrl } from '@/utils';
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 export default function MovieItemModal({
   open,
-  close,
+  onClose,
   movieItem
 }: {
   open: boolean;
-  close: () => void;
+  onClose: () => void;
   movieItem?: MovieItemResType | null;
 }) {
-  const queryClient = useQueryClient();
-
   const {
     searchParams: { type }
   } = useQueryParams<{ type: string }>();
@@ -96,13 +93,7 @@ export default function MovieItemModal({
         }
       };
       handlers.handleSubmitSuccess = async () => {
-        close();
-        await queryClient.invalidateQueries({
-          queryKey: [`${queryKeys.MOVIE_ITEM}-list`]
-        });
-        await queryClient.invalidateQueries({
-          queryKey: [queryKeys.MOVIE_ITEM]
-        });
+        onClose();
       };
     }
   });
@@ -157,7 +148,7 @@ export default function MovieItemModal({
 
   const handleCancel = async () => {
     await imageManager.handleCancel();
-    close();
+    onClose();
   };
 
   const onSubmit = async (values: MovieItemBodyType) => {
@@ -179,7 +170,7 @@ export default function MovieItemModal({
   return (
     <Modal
       open={open}
-      onClose={close}
+      onClose={onClose}
       width={800}
       title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${movieItem ? (movieItem.kind === MOVIE_ITEM_KIND_EPISODE ? 'tập' : 'trailer') : 'tập, trailer'}`}
       aria-labelledby='video-modal-title'

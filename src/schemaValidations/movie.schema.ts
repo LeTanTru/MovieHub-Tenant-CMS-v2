@@ -13,7 +13,8 @@ export const movieSchema = z.object({
   status: z.number({ error: 'Bắt buộc' }),
   thumbnailUrl: z.string().nonempty('Bắt buộc'),
   title: z.string().nonempty('Bắt buộc'),
-  type: z.number({ error: 'Bắt buộc' }).min(1, 'Bắt buộc')
+  type: z.number({ error: 'Bắt buộc' }).min(1, 'Bắt buộc'),
+  year: z.number({ error: 'Bắt buộc' })
 });
 
 export const movieSearchSchema = z.object({

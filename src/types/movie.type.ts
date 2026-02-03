@@ -54,6 +54,7 @@ export type MovieResType = {
   title: string;
   type: number;
   viewCount: number;
+  year: number;
 };
 
 export type MovieBodyType = z.infer<typeof movieSchema>;

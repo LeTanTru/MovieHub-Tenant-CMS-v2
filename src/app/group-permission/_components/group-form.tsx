@@ -12,7 +12,8 @@ import {
   DEFAULT_TABLE_PAGE_START,
   ErrorCode,
   groupErrorMaps,
-  MAX_PAGE_SIZE
+  MAX_PAGE_SIZE,
+  queryKeys
 } from '@/constants';
 import { useNavigate, useQueryParams } from '@/hooks';
 import { cn } from '@/lib';
@@ -85,7 +86,7 @@ export default function GroupForm() {
       description: groupData?.data?.description ?? '',
       name: groupData?.data?.name ?? '',
       permissions:
-        groupData?.data?.permissions.map((g) => g.id.toString()) ?? []
+        groupData?.data?.permissions?.map((g) => g.id.toString()) ?? []
     }),
     [
       groupData?.data?.description,
@@ -107,7 +108,7 @@ export default function GroupForm() {
   //           notify.success(
   //             `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền thành công`
   //           );
-  //           queryClient.invalidateQueries({ queryKey: ['group', id] });
+  //           queryClient.invalidateQueries({ queryKey: [queryKeys.GROUP, id] });
   //           navigate(route.group.getList.path);
   //         } else {
   //           const errCode = res.code;
@@ -142,7 +143,12 @@ export default function GroupForm() {
           notify.success(
             `${isCreate ? 'Thêm mới' : 'Cập nhật'} quyền thành công`
           );
-          await queryClient.invalidateQueries({ queryKey: ['group', id] });
+          await queryClient.invalidateQueries({
+            queryKey: [queryKeys.GROUP, id]
+          });
+          await queryClient.invalidateQueries({
+            queryKey: [`${queryKeys.GROUP}-list`]
+          });
           navigate(route.group.getList.path);
         } else {
           const errCode = res.code;
