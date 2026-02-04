@@ -102,8 +102,8 @@ export default function MovieItemSeasonDetailList({
                   handleOpenPlayModal(record);
                 }}
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
-                {...buttonProps}
                 disabled={!record.video || !record.video.duration}
+                {...buttonProps}
               >
                 <PlayCircle className='text-main-color size-4' />
               </Button>
