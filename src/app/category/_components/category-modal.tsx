@@ -76,9 +76,9 @@ export default function CategoryModal({
       open={open}
       onClose={onClose}
       title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} danh mục`}
-      className='[&_.content]:bottom-[20%] [&_.content]:h-fit'
-      aria-labelledby='video-modal-title'
-      width={700}
+      className='[&_.body-wrapper]:top-1/3 [&_.body-wrapper]:h-auto [&_.body-wrapper]:min-h-0 [&_.body-wrapper]:w-200'
+      aria-labelledby='category-modal-title'
+      closeOnBackdropClick
     >
       <BaseForm
         onSubmit={onSubmit}
