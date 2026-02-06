@@ -1,10 +1,12 @@
 'use client';
 
+import './video-play-modal.css';
 import { Modal } from '@/components/modal';
 import { VideoPlayer } from '@/components/video-player';
 import type { VideoLibraryResType } from '@/types';
 import { renderImageUrl, renderVideoUrl, renderVttUrl } from '@/utils';
 import { VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL } from '@/constants';
+import { useEffect, useRef, useState } from 'react';
 
 export default function VideoPlayModal({
   open,
@@ -15,17 +17,63 @@ export default function VideoPlayModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [bodyHeight, setBodyHeight] = useState<number>(0);
+
+  useEffect(() => {
+    if (!open || !bodyRef.current) return;
+
+    const updateHeight = () => {
+      if (bodyRef.current) {
+        const height = bodyRef.current.clientHeight;
+        setBodyHeight(height);
+      }
+    };
+
+    const timeoutId = setTimeout(updateHeight, 100);
+
+    const resizeObserver = new ResizeObserver(updateHeight);
+    resizeObserver.observe(bodyRef.current);
+
+    return () => {
+      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (open && bodyRef.current) {
+      const timer = setTimeout(() => {
+        const videoPlayer = bodyRef.current?.querySelector('.video-player');
+        if (videoPlayer instanceof HTMLElement) {
+          videoPlayer.focus();
+        }
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
   return (
     <Modal
       title={video.name}
       open={open}
       onClose={onClose}
-      className='[&_.content]:top-0 [&_.content]:h-fit'
-      width={1200}
-      aria-labelledby='video-modal-title'
-      aria-label={`Phát video ${video.name}`}
+      className='video-play-modal overflow-hidden'
+      aria-labelledby='video-play-modal-title'
+      closeOnBackdropClick
+      bodyRef={bodyRef}
     >
-      <div className='p-4'>
+      <div
+        style={
+          {
+            height: '100%',
+            '--player-height': `${bodyHeight}px`,
+            '--media-height': `${bodyHeight}px`
+          } as React.CSSProperties
+        }
+        className='p-4'
+      >
         <VideoPlayer
           auth={video.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL}
           duration={video.duration}

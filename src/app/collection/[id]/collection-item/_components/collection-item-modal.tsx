@@ -73,9 +73,9 @@ export default function CollectionItemModal({
       title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} chi tiết bộ sưu tập`}
       open={open}
       onClose={onClose}
-      className='[&_.content]:bottom-[20%] [&_.content]:h-fit'
-      aria-labelledby='video-modal-title'
-      width={700}
+      className='[&_.body-wrapper]:top-1/3 [&_.body-wrapper]:h-auto [&_.body-wrapper]:min-h-0 [&_.body-wrapper]:w-200'
+      aria-labelledby='collection-item-modal-title'
+      closeOnBackdropClick
     >
       <BaseForm
         onSubmit={onSubmit}

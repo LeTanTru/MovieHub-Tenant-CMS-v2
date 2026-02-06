@@ -171,9 +171,11 @@ export default function MovieItemModal({
     <Modal
       open={open}
       onClose={onClose}
-      width={800}
+      className='[&_.body-wrapper]:max-h-[80vh] [&_.body-wrapper]:w-200'
+      bodyClassName='overflow-y-auto'
       title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${movieItem ? (movieItem.kind === MOVIE_ITEM_KIND_EPISODE ? 'tập' : 'trailer') : 'tập, trailer'}`}
-      aria-labelledby='video-modal-title'
+      aria-labelledby='movie-item-modal-title'
+      scrollable
     >
       <BaseForm
         onSubmit={onSubmit}
