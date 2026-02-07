@@ -114,7 +114,8 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
       status: STATUS_ACTIVE,
       thumbnailUrl: data?.thumbnailUrl ?? '',
       sourceType: data?.sourceType ?? VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL,
-      vttUrl: data?.vttUrl ?? ''
+      vttUrl: data?.vttUrl ?? '',
+      spriteUrl: data?.spriteUrl ?? ''
     };
   }, [
     data?.content,
@@ -125,6 +126,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     data?.name,
     data?.outroStart,
     data?.sourceType,
+    data?.spriteUrl,
     data?.thumbnailUrl,
     data?.vttUrl
   ]);
@@ -386,9 +388,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                 </Row>
 
                 {/* Video preview for external source */}
-                <Activity
-                  visible={!!videoManager.currentUrl || !!validatedContent}
-                >
+                {validatedContent ? (
                   <Row>
                     <Col span={24} className='px-0!'>
                       <VideoPlayer
@@ -405,13 +405,13 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         outroStart={timeToSeconds(
                           (outroStart as string) || '00:00:00'
                         )}
-                        source={videoManager.currentUrl || validatedContent}
+                        source={validatedContent}
                         thumbnailUrl={imageManager.currentUrl}
                         vttUrl={validatedVttUrl || ''}
                       />
                     </Col>
                   </Row>
-                </Activity>
+                ) : null}
               </Activity>
 
               {/* Show video player/upload for INTERNAL source type */}
