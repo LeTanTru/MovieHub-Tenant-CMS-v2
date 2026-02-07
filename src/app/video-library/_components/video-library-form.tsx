@@ -179,7 +179,10 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
           ) ?? null,
         duration: values.duration,
         thumbnailUrl: imageManager.currentUrl,
-        content: videoManager.currentUrl
+        content:
+          values.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL
+            ? values.content
+            : videoManager.currentUrl
       },
       form,
       videoLibraryErrorMaps
@@ -212,6 +215,18 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
           const introStart = form.watch('introStart');
           const introEnd = form.watch('introEnd');
           const outroStart = form.watch('outroStart');
+
+          // URL validation helper
+          const isValidUrl = (url: string | null | undefined): boolean => {
+            if (!url) return false;
+            const urlRegex =
+              /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+            return urlRegex.test(url);
+          };
+
+          // Only pass valid URLs to VideoPlayer
+          const validatedContent = isValidUrl(content) ? content : '';
+          const validatedVttUrl = isValidUrl(vttUrl) ? vttUrl : '';
 
           return (
             <>
@@ -347,14 +362,6 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                       label='Nhập đường dẫn video'
                       placeholder='Nhập đường dẫn video'
                       required
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        videoManager.trackUpload(value);
-                        form.setValue('content', value);
-                        if (value) {
-                          form.clearErrors('content');
-                        }
-                      }}
                     />
                   </Col>
                   <Col>
@@ -379,7 +386,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                 </Row>
 
                 {/* Video preview for external source */}
-                <Activity visible={!!videoManager.currentUrl || !!content}>
+                <Activity
+                  visible={!!videoManager.currentUrl || !!validatedContent}
+                >
                   <Row>
                     <Col span={24} className='px-0!'>
                       <VideoPlayer
@@ -396,9 +405,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                         outroStart={timeToSeconds(
                           (outroStart as string) || '00:00:00'
                         )}
-                        source={videoManager.currentUrl || content}
+                        source={videoManager.currentUrl || validatedContent}
                         thumbnailUrl={imageManager.currentUrl}
-                        vttUrl={vttUrl || ''}
+                        vttUrl={validatedVttUrl || ''}
                       />
                     </Col>
                   </Row>

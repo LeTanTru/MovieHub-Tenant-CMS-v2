@@ -156,10 +156,10 @@ export const genderOptions: OptionType[] = [
 ];
 
 export const queryKeys = {
-  APP_VERSION: 'app_version',
+  APP_VERSION: 'app-version',
   AUDIENCE: 'audience',
   CATEGORY: 'category',
-  COLLECTION_ITEM: 'collection_item',
+  COLLECTION_ITEM: 'collection-item',
   COLLECTION: 'collection',
   COMMENT: 'comment',
   EMPLOYEE: 'employee',
@@ -167,17 +167,17 @@ export const queryKeys = {
   GROUP: 'group',
   LOGIN: 'login',
   LOGOUT: 'logout',
-  MOVIE_ITEM: 'movie_item',
-  MOVIE_PERSON: 'movie_person',
+  MOVIE_ITEM: 'movie-item',
+  MOVIE_PERSON: 'movie-person',
   MOVIE: 'movie',
   PERSON: 'person',
   PROFILE: 'profile',
-  REFRESH_TOKEN: 'refresh_token',
+  REFRESH_TOKEN: 'refresh-token',
   REVIEW: 'review',
   SIDEBAR: 'sidebar',
-  SNS_CONFIG: 'sns_config',
+  SNS_CONFIG: 'sns-config',
   STYLE: 'style',
-  VIDEO_LIBRARY: 'video_library'
+  VIDEO_LIBRARY: 'video-library'
 };
 
 export const loginOptions = [
