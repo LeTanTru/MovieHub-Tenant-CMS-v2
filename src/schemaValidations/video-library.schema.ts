@@ -16,6 +16,46 @@ export const videoLibrarySchema = z
     spriteUrl: z.string().optional().nullable()
   })
   .superRefine((data, ctx) => {
+    // URL validation regex
+    const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+
+    const isValidUrl = (value: string | null | undefined): boolean => {
+      if (!value) return true; // Empty is okay, handled by nonempty()
+      return urlRegex.test(value);
+    };
+
+    // Validate URL fields when sourceType is EXTERNAL (2)
+    const isExternalSource = data.sourceType === 2;
+
+    if (isExternalSource) {
+      // content is required and must be a valid URL
+      if (data.content && !isValidUrl(data.content)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Đường dẫn video không hợp lệ',
+          path: ['content']
+        });
+      }
+    }
+
+    // vttUrl validation (optional but must be valid if provided)
+    if (data.vttUrl && !isValidUrl(data.vttUrl)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Đường dẫn VTT không hợp lệ',
+        path: ['vttUrl']
+      });
+    }
+
+    // spriteUrl validation (optional but must be valid if provided)
+    if (data.spriteUrl && !isValidUrl(data.spriteUrl)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Đường dẫn sprite không hợp lệ',
+        path: ['spriteUrl']
+      });
+    }
+
     // Helper function to convert time to seconds
     const toSeconds = (value: string | number | null | undefined): number => {
       if (value === null || value === undefined) return 0;

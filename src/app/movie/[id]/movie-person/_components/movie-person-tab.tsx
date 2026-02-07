@@ -26,7 +26,10 @@ export default function PersonTab() {
       value: TAB_MOVIE_PERSON_KIND_ACTOR,
       label: 'Diễn viên',
       component: (
-        <MoviePersonList queryKey={queryKeys.PERSON} kind={PERSON_KIND_ACTOR} />
+        <MoviePersonList
+          queryKey={queryKeys.MOVIE_PERSON}
+          kind={PERSON_KIND_ACTOR}
+        />
       )
     },
     {
@@ -34,7 +37,7 @@ export default function PersonTab() {
       label: 'Đạo diễn',
       component: (
         <MoviePersonList
-          queryKey={queryKeys.PERSON}
+          queryKey={queryKeys.MOVIE_PERSON}
           kind={PERSON_KIND_DIRECTOR}
         />
       )

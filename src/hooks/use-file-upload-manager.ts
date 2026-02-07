@@ -54,6 +54,7 @@ const useFileUploadManager = ({
 
   // Add new uploaded file to tracking list
   const trackUpload = useCallback((url: string) => {
+    console.log('🚀 ~ useFileUploadManager ~ url:', url);
     if (url) {
       setCurrentUrl(url);
       setUploadedFiles((prev) => [...prev, url]);
