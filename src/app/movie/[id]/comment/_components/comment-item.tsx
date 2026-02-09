@@ -53,7 +53,6 @@ import {
 import { useChangeCommenStatusMutation } from '@/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import { FaArrowAltCircleDown, FaArrowAltCircleUp } from 'react-icons/fa';
-import { Activity } from '@/components/activity';
 import { useShallow } from 'zustand/react/shallow';
 
 type CommentItemProps = {
@@ -314,28 +313,28 @@ function CommentItem({
                 {timeAgo(comment.createdDate)}
               </span>
 
-              <Activity visible={comment.isPinned}>
+              {comment.isPinned && (
                 <span className='text-xs font-medium text-slate-600 italic'>
                   Đã ghim
                 </span>
-              </Activity>
+              )}
 
-              <Activity visible={comment.status === COMMENT_STATUS_HIDE}>
+              {comment.status === COMMENT_STATUS_HIDE && (
                 <span title='Bình luận đã bị ẩn' className='text-gray-500'>
                   <AiOutlineEyeInvisible className='size-4' />
                 </span>
-              </Activity>
+              )}
 
-              <Activity visible={comment.status === COMMENT_STATUS_SHOW}>
+              {comment.status === COMMENT_STATUS_SHOW && (
                 <span
                   title='Bình luận đang hiển thị'
                   className='text-green-500'
                 >
                   <AiOutlineEye className='size-4' />
                 </span>
-              </Activity>
+              )}
             </div>
-            <Activity visible={level === 0 && canPin}>
+            {level === 0 && canPin && (
               <Button
                 variant='ghost'
                 className={cn('mr-2 size-5! p-0!', {
@@ -346,7 +345,7 @@ function CommentItem({
               >
                 <Pin className='size-5' />
               </Button>
-            </Activity>
+            )}
           </div>
 
           <p className='mt-4 text-gray-700'>
@@ -354,7 +353,7 @@ function CommentItem({
           </p>
 
           <div className='mt-4 flex items-center gap-x-8 text-sm text-gray-500'>
-            <Activity visible={canVote}>
+            {canVote && (
               <div className='flex items-center gap-x-6'>
                 <div className='flex items-center gap-x-2'>
                   <ToolTip title='Thích'>
@@ -390,9 +389,9 @@ function CommentItem({
                   {comment.totalDislike}
                 </div>
               </div>
-            </Activity>
+            )}
 
-            <Activity visible={canCreate}>
+            {canCreate && (
               <Button
                 variant='ghost'
                 className='h-5! p-0!'
@@ -400,9 +399,9 @@ function CommentItem({
               >
                 <Reply className='size-5' /> Trả lời
               </Button>
-            </Activity>
+            )}
 
-            <Activity visible={isAuthor && canUpdate}>
+            {isAuthor && canUpdate && (
               <Button
                 variant='ghost'
                 className='text-main-color hover:text-main-color/50 h-5! p-0!'
@@ -411,9 +410,9 @@ function CommentItem({
                 <AiOutlineEdit className='size-5' />
                 Chỉnh sửa
               </Button>
-            </Activity>
+            )}
 
-            <Activity visible={canChangeStatus || canDelete}>
+            {(canChangeStatus || canDelete) && (
               <DropdownMenu>
                 <DropdownMenuTrigger
                   className='border-none bg-transparent shadow-none'
@@ -430,7 +429,7 @@ function CommentItem({
                 >
                   <DropdownMenuGroup>
                     <DropdownMenuItem className='cursor-pointer' asChild>
-                      <Activity visible={canChangeStatus}>
+                      {canChangeStatus && (
                         <Button
                           className='hover:bg-accent/80 h-fit w-full justify-start p-2! transition-all duration-200 ease-linear [&_svg]:size-5!'
                           variant={'ghost'}
@@ -454,10 +453,10 @@ function CommentItem({
                             </>
                           )}
                         </Button>
-                      </Activity>
+                      )}
                     </DropdownMenuItem>
                     <DropdownMenuItem className='cursor-pointer p-0! transition-all duration-200 ease-linear'>
-                      <Activity visible={canDelete}>
+                      {canDelete && (
                         <AlertDialog>
                           <AlertDialogTrigger className='w-full' asChild>
                             <span onClick={(e) => e.stopPropagation()}>
@@ -497,58 +496,62 @@ function CommentItem({
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
-                      </Activity>
+                      )}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </Activity>
+            )}
           </div>
 
-          <Activity visible={isActiveParent && commentListSize > 0}>
-            {renderChildren(commentList, level + 1, rootId)}
-            <Activity visible={isFetchingNextPage}>
-              <DotLoading className='mt-4 justify-start bg-transparent' />
-            </Activity>
-          </Activity>
+          {isActiveParent && commentListSize > 0 && (
+            <>
+              {renderChildren(commentList, level + 1, rootId)}
+              {isFetchingNextPage && (
+                <DotLoading className='mt-4 justify-start bg-transparent' />
+              )}
+            </>
+          )}
 
-          <Activity visible={totalChildren > 0}>
-            {!isOpen ? (
-              <Button
-                variant='ghost'
-                className='mt-2 h-5! p-0! font-medium hover:opacity-70'
-                style={{ marginLeft: level * 40 }}
-                onClick={() => handleViewReplies(comment.id)}
-              >
-                Xem tất cả ({totalChildren}) trả lời
-              </Button>
-            ) : isLoading ? (
-              <DotLoading className='mt-4 justify-start bg-transparent' />
-            ) : (
-              <div
-                className='mt-4 flex items-center gap-x-4'
-                style={{ marginLeft: level * 40 }}
-              >
-                <Activity visible={hasNextPage}>
-                  <Button
-                    variant='ghost'
-                    className='h-5! p-0! font-medium hover:opacity-70'
-                    onClick={() => handleFetchNextPage()}
-                  >
-                    Xem thêm ({totalChildren - commentListSize})
-                  </Button>
-                </Activity>
-
+          {totalChildren > 0 && (
+            <>
+              {!isOpen ? (
                 <Button
                   variant='ghost'
-                  className='h-5! p-0! font-medium text-red-500 hover:opacity-70'
-                  onClick={() => handleHideReplies(comment.id)}
+                  className='mt-2 h-5! p-0! font-medium hover:opacity-70'
+                  style={{ marginLeft: level * 40 }}
+                  onClick={() => handleViewReplies(comment.id)}
                 >
-                  Ẩn trả lời
+                  Xem tất cả ({totalChildren}) trả lời
                 </Button>
-              </div>
-            )}
-          </Activity>
+              ) : isLoading ? (
+                <DotLoading className='mt-4 justify-start bg-transparent' />
+              ) : (
+                <div
+                  className='mt-4 flex items-center gap-x-4'
+                  style={{ marginLeft: level * 40 }}
+                >
+                  {hasNextPage && (
+                    <Button
+                      variant='ghost'
+                      className='h-5! p-0! font-medium hover:opacity-70'
+                      onClick={() => handleFetchNextPage()}
+                    >
+                      Xem thêm ({totalChildren - commentListSize})
+                    </Button>
+                  )}
+
+                  <Button
+                    variant='ghost'
+                    className='h-5! p-0! font-medium text-red-500 hover:opacity-70'
+                    onClick={() => handleHideReplies(comment.id)}
+                  >
+                    Ẩn trả lời
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
 
           <LazyMotion features={domAnimation} strict>
             <AnimatePresence initial={false}>

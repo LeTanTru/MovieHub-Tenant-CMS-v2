@@ -1,6 +1,5 @@
 'use client';
 
-import { Activity } from '@/components/activity';
 import { ImageField, ToolTip } from '@/components/form';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
 import { BaseTable } from '@/components/table';
@@ -52,11 +51,11 @@ export default function StyleList({ queryKey }: { queryKey: string }) {
           <span className='line-clamp-1 block truncate' title={value}>
             {value ?? '------'}
           </span>
-          <Activity visible={record.isDefault}>
+          {record.isDefault && (
             <ToolTip title='Mặc định'>
               <RiCheckboxCircleFill className='size-5 text-green-500' />
             </ToolTip>
-          </Activity>
+          )}
         </div>
       )
     },

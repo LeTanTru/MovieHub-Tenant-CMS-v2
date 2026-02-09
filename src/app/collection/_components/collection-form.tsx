@@ -43,7 +43,6 @@ import { useMemo } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { PlusIcon, X } from 'lucide-react';
 import { logger } from '@/logger';
-import { Activity } from '@/components/activity';
 
 export default function CollectionForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
@@ -292,7 +291,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                             className='w-28 rounded border border-gray-300 px-3 py-2 text-sm uppercase'
                             placeholder='#000000'
                           />
-                          <Activity visible={colors.length > 1}>
+                          {colors.length > 1 && (
                             <Button
                               type='button'
                               variant='outline'
@@ -301,7 +300,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                             >
                               <X className='size-4' />
                             </Button>
-                          </Activity>
+                          )}
                         </div>
                       ))}
                       <Button
@@ -316,7 +315,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                     </div>
                   </div>
                 </Col>
-                <Activity visible={type === COLLECTION_TYPE_SECTION}>
+                {type === COLLECTION_TYPE_SECTION && (
                   <Col span={12}>
                     <AutoCompleteField
                       control={form.control}
@@ -333,9 +332,9 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                       fetchAll
                     />
                   </Col>
-                </Activity>
+                )}
               </Row>
-              <Activity visible={!isEditing}>
+              {!isEditing && (
                 <Row>
                   <Col span={12}>
                     <BooleanField
@@ -347,7 +346,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                     />
                   </Col>
                 </Row>
-              </Activity>
+              )}
               <FieldSet title='Bộ lọc'>
                 <Row>
                   <Col span={12}>
@@ -464,11 +463,11 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
               </FieldSet>
 
               <>{renderActions(form)}</>
-              <Activity visible={loading}>
+              {loading && (
                 <div className='absolute inset-0 bg-white/80'>
-                  <CircleLoading className='stroke-main-color mt-20 size-8' />
+                  <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
                 </div>
-              </Activity>
+              )}
             </>
           );
         }}

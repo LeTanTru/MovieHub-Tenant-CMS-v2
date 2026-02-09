@@ -1,7 +1,6 @@
 'use client';
 
 import { emptyData } from '@/assets';
-import { Activity } from '@/components/activity';
 import { Button, Col, InputField, Row, TextAreaField } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import { PageWrapper } from '@/components/layout';
@@ -375,18 +374,14 @@ export default function GroupForm() {
                 </Button>
               </Col>
             </Row>
-            <Activity
-              visible={
-                groupLoading ||
-                groupFetching ||
-                permissionListLoading ||
-                permissionListFetching
-              }
-            >
-              <div className='absolute inset-0 bg-white/80'>
-                <CircleLoading className='stroke-main-color mt-20 size-8' />
-              </div>
-            </Activity>
+            {groupLoading ||
+              groupFetching ||
+              permissionListLoading ||
+              (permissionListFetching && (
+                <div className='absolute inset-0 bg-white/80'>
+                  <CircleLoading className='stroke-main-color mt-20 size-8' />
+                </div>
+              ))}
           </>
         )}
       </BaseForm>
