@@ -406,7 +406,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                           (outroStart as string) || '00:00:00'
                         )}
                         source={validatedContent}
-                        thumbnailUrl={imageManager.currentUrl}
+                        thumbnailUrl={renderImageUrl(imageManager.currentUrl)}
                         vttUrl={validatedVttUrl || ''}
                       />
                     </Col>
