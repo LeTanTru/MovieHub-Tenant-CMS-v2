@@ -1,6 +1,5 @@
 'use client';
 
-import { Activity } from '@/components/activity';
 import {
   AutoCompleteField,
   Col,
@@ -252,29 +251,25 @@ export default function MovieItemModal({
                   />
                 </Col>
               </Row>
-              <Activity
-                visible={
-                  kind !== MOVIE_ITEM_KIND_SEASON ||
-                  (!!type && +type === MOVIE_TYPE_SINGLE)
-                }
-              >
-                <Row>
-                  <Col>
-                    <AutoCompleteField
-                      apiConfig={apiConfig.videoLibrary.autoComplete}
-                      mappingData={(item: VideoLibraryResType) => ({
-                        label: item.name,
-                        value: item.id.toString()
-                      })}
-                      searchParams={['name']}
-                      control={form.control}
-                      name='videoId'
-                      label='Video'
-                      placeholder='Video'
-                    />
-                  </Col>
-                </Row>
-              </Activity>
+              {kind !== MOVIE_ITEM_KIND_SEASON ||
+                (!!type && +type === MOVIE_TYPE_SINGLE && (
+                  <Row>
+                    <Col>
+                      <AutoCompleteField
+                        apiConfig={apiConfig.videoLibrary.autoComplete}
+                        mappingData={(item: VideoLibraryResType) => ({
+                          label: item.name,
+                          value: item.id.toString()
+                        })}
+                        searchParams={['name']}
+                        control={form.control}
+                        name='videoId'
+                        label='Video'
+                        placeholder='Video'
+                      />
+                    </Col>
+                  </Row>
+                ))}
               <Row>
                 <Col span={24}>
                   <RichTextField
@@ -292,11 +287,11 @@ export default function MovieItemModal({
                   onCancel: handleCancel
                 })}
               </>
-              <Activity visible={loading}>
+              {loading && (
                 <div className='absolute inset-0 bg-white/80'>
-                  <CircleLoading className='stroke-main-color mt-20 size-8' />
+                  <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
                 </div>
-              </Activity>
+              )}
             </>
           );
         }}

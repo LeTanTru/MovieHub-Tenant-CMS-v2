@@ -44,7 +44,6 @@ import type { UseFormReturn } from 'react-hook-form';
 import { VideoPlayer } from '@/components/video-player';
 import type { AxiosProgressEvent } from 'axios';
 import { logger } from '@/logger';
-import { Activity } from '@/components/activity';
 
 export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
@@ -337,9 +336,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     }}
                   />
                 </Col>
-                <Activity
-                  visible={sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL}
-                >
+                {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL && (
                   <Col>
                     <TimePickerField
                       control={form.control}
@@ -349,75 +346,73 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                       required
                     />
                   </Col>
-                </Activity>
+                )}
               </Row>
 
               {/* Show content, vttUrl, spriteUrl, duration only for EXTERNAL source type */}
-              <Activity
-                visible={sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL}
-              >
-                <Row>
-                  <Col>
-                    <InputField
-                      control={form.control}
-                      name='content'
-                      label='Nhập đường dẫn video'
-                      placeholder='Nhập đường dẫn video'
-                      required
-                    />
-                  </Col>
-                  <Col>
-                    <InputField
-                      control={form.control}
-                      name='vttUrl'
-                      label='Đường dẫn VTT (thumbnail preview)'
-                      placeholder='Nhập URL file .vtt'
-                    />
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col>
-                    <InputField
-                      control={form.control}
-                      name='spriteUrl'
-                      label='Đường dẫn ảnh sprite (sprite url)'
-                      placeholder='Đường dẫn ảnh sprite (sprite url)'
-                    />
-                  </Col>
-                </Row>
-
-                {/* Video preview for external source */}
-                {validatedContent ? (
+              {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL && (
+                <>
                   <Row>
-                    <Col span={24} className='px-0!'>
-                      <VideoPlayer
-                        auth={false}
-                        duration={timeToSeconds(
-                          (duration as string) || '00:00:00'
-                        )}
-                        introEnd={timeToSeconds(
-                          (introEnd as string) || '00:00:00'
-                        )}
-                        introStart={timeToSeconds(
-                          (introStart as string) || '00:00:00'
-                        )}
-                        outroStart={timeToSeconds(
-                          (outroStart as string) || '00:00:00'
-                        )}
-                        source={validatedContent}
-                        thumbnailUrl={renderImageUrl(imageManager.currentUrl)}
-                        vttUrl={validatedVttUrl || ''}
+                    <Col>
+                      <InputField
+                        control={form.control}
+                        name='content'
+                        label='Nhập đường dẫn video'
+                        placeholder='Nhập đường dẫn video'
+                        required
+                      />
+                    </Col>
+                    <Col>
+                      <InputField
+                        control={form.control}
+                        name='vttUrl'
+                        label='Đường dẫn VTT (thumbnail preview)'
+                        placeholder='Nhập URL file .vtt'
                       />
                     </Col>
                   </Row>
-                ) : null}
-              </Activity>
+
+                  <Row>
+                    <Col>
+                      <InputField
+                        control={form.control}
+                        name='spriteUrl'
+                        label='Đường dẫn ảnh sprite (sprite url)'
+                        placeholder='Đường dẫn ảnh sprite (sprite url)'
+                      />
+                    </Col>
+                  </Row>
+
+                  {/* Video preview for external source */}
+                  {validatedContent ? (
+                    <Row>
+                      <Col span={24} className='px-0!'>
+                        <VideoPlayer
+                          auth={false}
+                          duration={timeToSeconds(
+                            (duration as string) || '00:00:00'
+                          )}
+                          introEnd={timeToSeconds(
+                            (introEnd as string) || '00:00:00'
+                          )}
+                          introStart={timeToSeconds(
+                            (introStart as string) || '00:00:00'
+                          )}
+                          outroStart={timeToSeconds(
+                            (outroStart as string) || '00:00:00'
+                          )}
+                          source={validatedContent}
+                          thumbnailUrl={renderImageUrl(imageManager.currentUrl)}
+                          vttUrl={validatedVttUrl || ''}
+                        />
+                      </Col>
+                    </Row>
+                  ) : null}
+                </>
+              )}
 
               {/* Show video player/upload for INTERNAL source type */}
-              <Activity
-                visible={sourceType === VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL}
-              >
+              {sourceType === VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL && (
                 <Row>
                   <Col span={24}>
                     {/* Play preview video */}
@@ -469,7 +464,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     )}
                   </Col>
                 </Row>
-              </Activity>
+              )}
 
               <Row>
                 <Col span={24}>
@@ -488,11 +483,11 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                   onCancel: handleCancel
                 })}
               </>
-              <Activity visible={loading}>
+              {loading && (
                 <div className='absolute inset-0 bg-white/80'>
-                  <CircleLoading className='stroke-main-color mt-20 size-8' />
+                  <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
                 </div>
-              </Activity>
+              )}
             </>
           );
         }}

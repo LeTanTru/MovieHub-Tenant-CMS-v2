@@ -1,5 +1,4 @@
 import './star-rating.css';
-import { Activity } from '@/components/activity';
 
 type StarRatingProps = {
   value: number;
@@ -36,11 +35,11 @@ export default function StarRating({
         />
       </div>
 
-      <Activity visible={showValue}>
+      {showValue && (
         <span className='block h-full text-[13px]'>
           ({value >= 5 ? '5.0' : value.toFixed(1)})
         </span>
-      </Activity>
+      )}
     </div>
   );
 }

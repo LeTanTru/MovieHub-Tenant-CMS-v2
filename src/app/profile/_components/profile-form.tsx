@@ -1,6 +1,5 @@
 'use client';
 
-import { Activity } from '@/components/activity';
 import {
   Button,
   Col,
@@ -182,7 +181,7 @@ export default function ProfileForm() {
                 label='Ảnh đại diện'
               />
             </Col>
-            <Activity visible={kind == KIND_MANAGER}>
+            {kind == KIND_MANAGER && (
               <Col span={12}>
                 <UploadImageField
                   value={renderImageUrl(logoImageManager.currentUrl)}
@@ -202,7 +201,7 @@ export default function ProfileForm() {
                   aspect={16 / 9}
                 />
               </Col>
-            </Activity>
+            )}
           </Row>
           <Row>
             <Col span={24}>

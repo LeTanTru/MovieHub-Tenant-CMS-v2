@@ -25,7 +25,6 @@ import { DotLoading } from '@/components/loading';
 import { Button } from '@/components/form';
 import CommentItemSkeleton from './comment-item-skeleton';
 import { useQueryClient } from '@tanstack/react-query';
-import { Activity } from '@/components/activity';
 
 export default function CommentList({ queryKey }: { queryKey: string }) {
   const { id: movieId } = useParams<{ id: string }>();
@@ -141,13 +140,9 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
       ]}
     >
       <ListPageWrapper>
-        <Activity
-          visible={hasPermission({
-            requiredPermissions: [apiConfig.comment.create.permissionCode]
-          })}
-        >
-          <CommentInput queryKey={queryKey} movieId={movieId} />
-        </Activity>
+        {hasPermission({
+          requiredPermissions: [apiConfig.comment.create.permissionCode]
+        }) && <CommentInput queryKey={queryKey} movieId={movieId} />}
 
         {loading ? (
           <div className='space-y-4 px-4'>
@@ -164,10 +159,8 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
               Bình luận ({totalElements})
             </h4>
             {renderChildren(data, 0)}
-            <Activity visible={isFetchingMore}>
-              <DotLoading className='mt-4' />
-            </Activity>
-            <Activity visible={hasMore}>
+            {isFetchingMore && <DotLoading className='mt-4' />}
+            {hasMore && (
               <Button
                 variant={'ghost'}
                 className='mx-auto block'
@@ -175,7 +168,7 @@ export default function CommentList({ queryKey }: { queryKey: string }) {
               >
                 Xem thêm ({totalLeft}) bình luận
               </Button>
-            </Activity>
+            )}
           </div>
         )}
       </ListPageWrapper>

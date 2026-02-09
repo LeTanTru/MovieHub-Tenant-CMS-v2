@@ -1,6 +1,5 @@
 'use client';
 
-import { Activity } from '@/components/activity';
 import { AutoCompleteField, Col, Row } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import { CircleLoading } from '@/components/loading';
@@ -115,11 +114,11 @@ export default function CollectionItemModal({
                   onCancel: onClose
                 })}
               </>
-              <Activity visible={loading}>
+              {loading && (
                 <div className='absolute inset-0 bg-white/80'>
-                  <CircleLoading className='stroke-main-color mt-20 size-8' />
+                  <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
                 </div>
-              </Activity>
+              )}
             </>
           );
         }}
