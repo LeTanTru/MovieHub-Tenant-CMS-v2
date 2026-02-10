@@ -265,6 +265,7 @@ function CommentItem({
           previewClassName='rounded-full'
           size={40}
           alt={authorInfo.fullName}
+          className='mr-4'
         />
 
         <div className='flex-1'>
