@@ -83,6 +83,7 @@ export default function ReviewItem({
           previewClassName='rounded-full'
           size={40}
           alt={review.author.fullName}
+          className='mr-4'
         />
         <div className='flex-1'>
           <div className='flex items-center justify-between'>
