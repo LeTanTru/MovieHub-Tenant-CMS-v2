@@ -145,7 +145,7 @@ export default function ReviewItem({
           </div>
 
           <div className='mt-2 flex flex-col gap-2'>
-            <p className='text-gray-700'>{review.content}</p>
+            <p className='break-all text-gray-700'>{review.content}</p>
             <StarRating value={review.rate} showValue={false} />
           </div>
 
