@@ -349,7 +349,7 @@ function CommentItem({
             )}
           </div>
 
-          <p className='mt-4 text-gray-700'>
+          <p className='mt-4 break-all text-gray-700'>
             {renderContentWithMentions()}&nbsp;{comment.content}
           </p>
 
