@@ -122,29 +122,28 @@ export default function Modal({
             transition={{ duration: 0.15, ease: 'linear' }}
             onClick={(e) => e.stopPropagation()}
           >
-            {!!title ||
-              (!!showClose && (
-                <div
-                  className={cn(
-                    'flex items-center justify-between border-b border-gray-200 px-4 dark:border-none',
-                    headerClassName
-                  )}
-                >
-                  <div className='text-base font-semibold text-gray-800 dark:text-white'>
-                    {title}
-                  </div>
-
-                  {showClose && onClose !== undefined && (
-                    <Button
-                      className='p-0! text-gray-500 transition hover:bg-transparent hover:text-black dark:hover:bg-transparent'
-                      onClick={onClose}
-                      variant='ghost'
-                    >
-                      <X className='size-5' />
-                    </Button>
-                  )}
+            {(!!title || showClose) && (
+              <div
+                className={cn(
+                  'flex items-center justify-between border-b border-gray-200 px-4 dark:border-none',
+                  headerClassName
+                )}
+              >
+                <div className='text-base font-semibold text-gray-800 dark:text-white'>
+                  {title}
                 </div>
-              ))}
+
+                {showClose && onClose !== undefined && (
+                  <Button
+                    className='p-0! text-gray-500 transition hover:bg-transparent hover:text-black dark:hover:bg-transparent'
+                    onClick={onClose}
+                    variant='ghost'
+                  >
+                    <X className='size-5' />
+                  </Button>
+                )}
+              </div>
+            )}
 
             <div ref={bodyRef} className='body relative h-full'>
               <div
