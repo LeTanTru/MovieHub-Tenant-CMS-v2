@@ -5,6 +5,7 @@ import {
   Col,
   DatePickerField,
   InputField,
+  NumberField,
   RichTextField,
   Row,
   SelectField,
@@ -116,7 +117,8 @@ export default function MovieItemModal({
     title: '',
     parentId: '',
     videoId: '',
-    thumbnailUrl: ''
+    thumbnailUrl: '',
+    totalEpisode: 0
   };
 
   const initialValues: MovieItemBodyType = useMemo(() => {
@@ -130,7 +132,8 @@ export default function MovieItemModal({
       title: data?.title ?? '',
       parentId: parentId,
       thumbnailUrl: data?.thumbnailUrl ?? '',
-      videoId: data?.video?.id?.toString() ?? ''
+      videoId: data?.video?.id?.toString() ?? '',
+      totalEpisode: data?.totalEpisode ?? 0
     };
   }, [
     data?.description,
@@ -139,6 +142,7 @@ export default function MovieItemModal({
     data?.releaseDate,
     data?.thumbnailUrl,
     data?.title,
+    data?.totalEpisode,
     data?.video?.id,
     kindOptions,
     movieId,
@@ -251,25 +255,38 @@ export default function MovieItemModal({
                   />
                 </Col>
               </Row>
-              {kind !== MOVIE_ITEM_KIND_SEASON ||
-                (!!type && +type === MOVIE_TYPE_SINGLE && (
-                  <Row>
-                    <Col>
-                      <AutoCompleteField
-                        apiConfig={apiConfig.videoLibrary.autoComplete}
-                        mappingData={(item: VideoLibraryResType) => ({
-                          label: item.name,
-                          value: item.id.toString()
-                        })}
-                        searchParams={['name']}
-                        control={form.control}
-                        name='videoId'
-                        label='Video'
-                        placeholder='Video'
-                      />
-                    </Col>
-                  </Row>
-                ))}
+              {kind === MOVIE_ITEM_KIND_SEASON && (
+                <Row>
+                  <Col>
+                    <NumberField
+                      control={form.control}
+                      name='totalEpisode'
+                      label='Tổng số tập'
+                      placeholder='Tổng số tập'
+                      required
+                    />
+                  </Col>
+                </Row>
+              )}
+              {(kind !== MOVIE_ITEM_KIND_SEASON ||
+                (!!type && +type === MOVIE_TYPE_SINGLE)) && (
+                <Row>
+                  <Col>
+                    <AutoCompleteField
+                      apiConfig={apiConfig.videoLibrary.autoComplete}
+                      mappingData={(item: VideoLibraryResType) => ({
+                        label: item.name,
+                        value: item.id.toString()
+                      })}
+                      searchParams={['name']}
+                      control={form.control}
+                      name='videoId'
+                      label='Video'
+                      placeholder='Video'
+                    />
+                  </Col>
+                </Row>
+              )}
               <Row>
                 <Col span={24}>
                   <RichTextField
