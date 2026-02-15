@@ -33,6 +33,7 @@ export type MovieItemResType = {
   thumbnailUrl: string;
   video: VideoLibraryResType;
   releaseDate: string;
+  totalEpisode: number;
 };
 
 export type MovieItemBodyType = z.infer<typeof movieItemSchema>;

@@ -12,12 +12,21 @@ export const movieItemSchema = z
     status: z.number({ error: 'Bắt buộc' }),
     thumbnailUrl: z.string().optional().nullable(),
     title: z.string().nonempty('Bắt buộc'),
-    videoId: z.string().optional().nullable()
+    videoId: z.string().optional().nullable(),
+    totalEpisode: z.number().optional().nullable()
   })
   .superRefine((data, ctx) => {
     if (data.kind !== MOVIE_ITEM_KIND_SEASON && !data.parentId) {
       ctx.addIssue({
         path: ['parentId'],
+        code: z.ZodIssueCode.custom,
+        message: 'Bắt buộc'
+      });
+    }
+
+    if (data.kind === MOVIE_ITEM_KIND_SEASON && !data.totalEpisode) {
+      ctx.addIssue({
+        path: ['totalEpisode'],
         code: z.ZodIssueCode.custom,
         message: 'Bắt buộc'
       });
