@@ -255,7 +255,7 @@ export default function MovieItemModal({
                   />
                 </Col>
               </Row>
-              {kind === MOVIE_ITEM_KIND_SEASON && (
+              {kind === MOVIE_ITEM_KIND_EPISODE && (
                 <Row>
                   <Col>
                     <NumberField
