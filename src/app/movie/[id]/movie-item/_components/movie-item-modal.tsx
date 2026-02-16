@@ -21,6 +21,7 @@ import {
   ErrorCode,
   MOVIE_ITEM_KIND_EPISODE,
   MOVIE_ITEM_KIND_SEASON,
+  MOVIE_TYPE_SERIES,
   MOVIE_TYPE_SINGLE,
   movieItemSeriesKindOptions,
   movieItemSingleKindOptions,
@@ -255,19 +256,21 @@ export default function MovieItemModal({
                   />
                 </Col>
               </Row>
-              {kind === MOVIE_ITEM_KIND_EPISODE && (
-                <Row>
-                  <Col>
-                    <NumberField
-                      control={form.control}
-                      name='totalEpisode'
-                      label='Tổng số tập'
-                      placeholder='Tổng số tập'
-                      required
-                    />
-                  </Col>
-                </Row>
-              )}
+              {!!type &&
+                +type === MOVIE_TYPE_SERIES &&
+                kind === MOVIE_ITEM_KIND_SEASON && (
+                  <Row>
+                    <Col>
+                      <NumberField
+                        control={form.control}
+                        name='totalEpisode'
+                        label='Tổng số tập'
+                        placeholder='Tổng số tập'
+                        required
+                      />
+                    </Col>
+                  </Row>
+                )}
               {(kind !== MOVIE_ITEM_KIND_SEASON ||
                 (!!type && +type === MOVIE_TYPE_SINGLE)) && (
                 <Row>
