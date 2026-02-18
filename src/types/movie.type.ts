@@ -12,6 +12,8 @@ export type MovieResType = {
   id: string;
   isFeatured: boolean;
   language: string;
+  latestEpisode: string;
+  latestSeason: string;
   modifiedDate: string;
   originalTitle: string;
   posterUrl: string;
