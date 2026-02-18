@@ -33,6 +33,7 @@ import {
 } from '@/utils';
 import { MessageSquareMore, Star } from 'lucide-react';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 
 export default function MovieList({ queryKey }: { queryKey: string }) {
@@ -278,6 +279,18 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
     })
   ];
 
+  const years = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const yearOptions = [];
+    for (let year = 1900; year <= currentYear; year++) {
+      yearOptions.push({
+        value: year,
+        label: year.toString()
+      });
+    }
+    return yearOptions.reverse();
+  }, []);
+
   const searchFields: SearchFormProps<MovieSearchType>['searchFields'] = [
     { key: 'title', placeholder: 'Tiêu đề' },
     {
@@ -312,6 +325,12 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
       placeholder: 'Quốc gia',
       type: FieldTypes.SELECT,
       options: countryOptions
+    },
+    {
+      key: 'releaseYear',
+      placeholder: 'Năm phát hành',
+      type: FieldTypes.SELECT,
+      options: years
     },
     {
       key: 'isFeatured',
