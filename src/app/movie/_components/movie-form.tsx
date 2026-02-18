@@ -219,7 +219,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={posterImageManager.handleDeleteOnClick}
-                  label='Ảnh xem trước'
+                  label='Ảnh xem trước (Poster)'
                   aspect={2 / 3}
                   defaultCrop
                   required
@@ -238,7 +238,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={thumbnailImageManager.handleDeleteOnClick}
-                  label='Ảnh bìa (16:9)'
+                  label='Ảnh bìa (16:9 - Thumbnail)'
                   aspect={16 / 9}
                   required
                 />
