@@ -22,6 +22,7 @@ import {
   DEFAULT_DATE_FORMAT,
   ErrorCode,
   languageOptions,
+  MOVIE_TYPE_SERIES,
   movieTypeOptions,
   STATUS_ACTIVE
 } from '@/constants';
@@ -98,6 +99,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     description: '',
     isFeatured: false,
     language: '',
+    latestEpisode: '',
+    latestSeason: '',
     originalTitle: '',
     posterUrl: '',
     releaseDate: '',
@@ -119,6 +122,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
       description: data?.description ?? '',
       isFeatured: data?.isFeatured ?? false,
       language: data?.language ?? '',
+      latestEpisode: data?.latestEpisode ?? '',
+      latestSeason: data?.latestSeason ?? '',
       originalTitle: data?.originalTitle ?? '',
       posterUrl: data?.posterUrl ?? '',
       releaseDate: formatDate(data?.releaseDate, DEFAULT_DATE_FORMAT) ?? '',
@@ -135,6 +140,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     data?.description,
     data?.isFeatured,
     data?.language,
+    data?.latestEpisode,
+    data?.latestSeason,
     data?.originalTitle,
     data?.posterUrl,
     data?.releaseDate,
@@ -341,7 +348,31 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   required
                 />
               </Col>
+              <Col>
+                <InputField
+                  control={form.control}
+                  name='latestSeason'
+                  label='Mùa mới nhất'
+                  placeholder='Mùa mới nhất'
+                  type='number'
+                />
+              </Col>
             </Row>
+            {isEditing && (
+              <Row>
+                {form.watch('type') === MOVIE_TYPE_SERIES && (
+                  <Col>
+                    <InputField
+                      control={form.control}
+                      name='latestEpisode'
+                      label='Tập mới nhất'
+                      placeholder='Tập mới nhất'
+                      type='number'
+                    />
+                  </Col>
+                )}
+              </Row>
+            )}
             <Row>
               <Col>
                 <BooleanField

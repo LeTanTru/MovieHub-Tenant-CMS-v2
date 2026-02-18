@@ -7,6 +7,8 @@ export const movieSchema = z.object({
   description: z.string().nonempty('Bắt buộc'),
   isFeatured: z.boolean(),
   language: z.string().nonempty('Bắt buộc'),
+  latestEpisode: z.string().optional().nullable(),
+  latestSeason: z.string().optional().nullable(),
   originalTitle: z.string().nonempty('Bắt buộc'),
   posterUrl: z.string().nonempty('Bắt buộc'),
   releaseDate: z.string().nonempty('Bắt buộc'),
