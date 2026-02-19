@@ -147,11 +147,13 @@ export default function PasswordField<T extends FieldValues>({
                     className,
                     'shadow-none placeholder:text-gray-300 focus-visible:border-transparent focus-visible:ring-2',
                     {
-                      'cursor-not-allowed border border-solid border-gray-300 bg-gray-200/50 text-gray-500 dark:border-slate-800':
+                      'cursor-not-allowed border border-solid border-gray-300 bg-gray-200/50 text-gray-500':
                         disabled,
                       'border-red-500 focus-visible:ring-red-500':
                         !!fieldState.error,
-                      'focus-visible:ring-main-color': !fieldState.error
+                      'focus-visible:ring-main-color': !fieldState.error,
+                      'pb-0.5': !isVisible || !!field.value,
+                      'pb-1': !field.value
                     }
                   )}
                 />

@@ -121,7 +121,7 @@ export default function MovieItemSeasonList({
             return null;
 
           return (
-            <ToolTip title={`Cập nhật tập, trailer`} sideOffset={0}>
+            <ToolTip title={`Cập nhật mùa ${record.label}`} sideOffset={0}>
               <span>
                 <Button
                   onClick={(e) => {
