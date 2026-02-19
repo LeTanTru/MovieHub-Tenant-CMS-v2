@@ -94,7 +94,7 @@ export default function MovieItemSeasonDetailList({
           record: MovieItemResType,
           buttonProps?: Record<string, any>
         ) => (
-          <ToolTip title={`Xem video`} sideOffset={0}>
+          <ToolTip title='Xem video' sideOffset={0}>
             <span>
               <Button
                 onClick={(e) => {
@@ -262,17 +262,31 @@ export default function MovieItemSeasonDetailList({
     })
   ];
 
+  const kindOptions =
+    !!type && +type === MOVIE_TYPE_SINGLE
+      ? movieItemSingleKindOptions.filter(
+          (item) =>
+            !movieItemId ||
+            (movieItemId && item.value !== MOVIE_ITEM_KIND_SEASON)
+        )
+      : movieItemSeriesKindOptions.filter(
+          (item) =>
+            !movieItemId ||
+            (movieItemId && item.value !== MOVIE_ITEM_KIND_SEASON)
+        );
+
   const searchFields: SearchFormProps<MovieItemSearchType>['searchFields'] = [
     { key: 'title', placeholder: `Tiêu đề ${getMovieTypeLabel(type)}` },
-    {
-      key: 'kind',
-      placeholder: 'Loại',
-      type: FieldTypes.SELECT,
-      options:
-        !!type && +type === MOVIE_TYPE_SINGLE
-          ? movieItemSingleKindOptions
-          : movieItemSeriesKindOptions
-    }
+    ...(kindOptions.length > 0
+      ? [
+          {
+            key: 'kind' as const,
+            placeholder: 'Loại',
+            type: FieldTypes.SELECT,
+            options: kindOptions
+          }
+        ]
+      : [])
   ];
 
   return (

@@ -90,9 +90,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
   const defaultValues: VideoLibraryBodyType = {
     content: '',
     description: '',
-    introEnd: 0,
-    outroStart: 0,
-    introStart: 0,
+    introEnd: null,
+    outroStart: null,
+    introStart: null,
     name: '',
     status: STATUS_ACTIVE,
     thumbnailUrl: '',
@@ -105,9 +105,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     return {
       content: data?.content ?? '',
       description: data?.description ?? '',
-      introEnd: data?.introEnd ?? 0,
-      introStart: data?.introStart ?? 0,
-      outroStart: data?.outroStart ?? 0,
+      introEnd: data?.introEnd ?? null,
+      introStart: data?.introStart ?? null,
+      outroStart: data?.outroStart ?? null,
       duration: data?.duration ?? 0,
       name: data?.name ?? '',
       status: STATUS_ACTIVE,
@@ -166,18 +166,15 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     await handleSubmit(
       {
         ...values,
-        introStart:
-          timeToSeconds(
-            values.introStart ? (values.introStart as string) : '00:00:00'
-          ) ?? null,
-        introEnd:
-          timeToSeconds(
-            values.introEnd ? (values.introEnd as string) : '00:00:00'
-          ) ?? null,
-        outroStart:
-          timeToSeconds(
-            values.outroStart ? (values.outroStart as string) : '00:00:00'
-          ) ?? null,
+        introStart: values.introStart
+          ? (timeToSeconds(values.introStart as string) ?? null)
+          : null,
+        introEnd: values.introEnd
+          ? (timeToSeconds(values.introEnd as string) ?? null)
+          : null,
+        outroStart: values.outroStart
+          ? (timeToSeconds(values.outroStart as string) ?? null)
+          : null,
         duration: values.duration,
         thumbnailUrl: imageManager.currentUrl,
         content:

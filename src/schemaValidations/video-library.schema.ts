@@ -1,3 +1,4 @@
+import { VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL } from '@/constants';
 import { z } from 'zod';
 
 export const videoLibrarySchema = z
@@ -25,17 +26,18 @@ export const videoLibrarySchema = z
     };
 
     // Validate URL fields when sourceType is EXTERNAL (2)
-    const isExternalSource = data.sourceType === 2;
+    const isExternalSource =
+      data.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL;
 
-    if (isExternalSource) {
-      // content is required and must be a valid URL
-      if (data.content && !isValidUrl(data.content)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Đường dẫn video không hợp lệ',
-          path: ['content']
-        });
-      }
+    if (!isExternalSource) return;
+
+    // content is required and must be a valid URL
+    if (data.content && !isValidUrl(data.content)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Đường dẫn video không hợp lệ',
+        path: ['content']
+      });
     }
 
     // vttUrl validation (optional but must be valid if provided)

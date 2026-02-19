@@ -125,17 +125,17 @@ export default function Modal({
             {(!!title || showClose) && (
               <div
                 className={cn(
-                  'flex items-center justify-between border-b border-gray-200 px-4 dark:border-none',
+                  'flex items-center justify-between border-b border-gray-200 px-4',
                   headerClassName
                 )}
               >
-                <div className='text-base font-semibold text-gray-800 dark:text-white'>
+                <div className='text-base font-semibold text-gray-800'>
                   {title}
                 </div>
 
                 {showClose && onClose !== undefined && (
                   <Button
-                    className='p-0! text-gray-500 transition hover:bg-transparent hover:text-black dark:hover:bg-transparent'
+                    className='p-0! text-gray-500 transition hover:bg-transparent hover:text-black'
                     onClick={onClose}
                     variant='ghost'
                   >
