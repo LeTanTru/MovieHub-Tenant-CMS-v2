@@ -21,7 +21,7 @@ export const movieSchema = z.object({
 
 export const movieSearchSchema = z.object({
   ageRating: z.number().optional().nullable(),
-  categoryIds: z.string().optional().nullable(),
+  categoryIds: z.array(z.string()).optional().nullable(),
   collectionId: z.string().optional().nullable(),
   country: z.string().optional().nullable(),
   excludeIds: z.array(z.string()).optional().nullable(),
