@@ -34,6 +34,7 @@ export type MovieItemResType = {
   video: VideoLibraryResType;
   releaseDate: string;
   totalEpisode: number;
+  isLatest: boolean;
 };
 
 export type MovieItemBodyType = z.infer<typeof movieItemSchema>;

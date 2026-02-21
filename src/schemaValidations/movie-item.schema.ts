@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const movieItemSchema = z
   .object({
     description: z.string().nonempty('Bắt buộc'),
+    isLatest: z.boolean().default(false),
     kind: z.number({ error: 'Bắt buộc' }),
     label: z.string().optional().nullable(),
     movieId: z.string().optional().nullable(),
@@ -19,14 +20,6 @@ export const movieItemSchema = z
     if (data.kind !== MOVIE_ITEM_KIND_SEASON && !data.parentId) {
       ctx.addIssue({
         path: ['parentId'],
-        code: z.ZodIssueCode.custom,
-        message: 'Bắt buộc'
-      });
-    }
-
-    if (data.kind === MOVIE_ITEM_KIND_SEASON && !data.totalEpisode) {
-      ctx.addIssue({
-        path: ['totalEpisode'],
         code: z.ZodIssueCode.custom,
         message: 'Bắt buộc'
       });

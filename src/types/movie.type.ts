@@ -3,6 +3,24 @@ import type { CategoryResType } from '@/types/category.type';
 import type { BaseSearchType } from '@/types/search.type';
 import { z } from 'zod';
 
+export type MetadataType = {
+  latestSeason: {
+    id: string;
+    title: string;
+    kind: number;
+    label: string;
+    releaseDate: string;
+  };
+  latestEpisode: {
+    id: string;
+    title: string;
+    kind: number;
+    label: string;
+    releaseDate: string;
+  };
+  duration: number;
+};
+
 export type MovieResType = {
   ageRating: number;
   categories: CategoryResType[];
@@ -12,12 +30,11 @@ export type MovieResType = {
   id: string;
   isFeatured: boolean;
   language: string;
-  latestEpisode: string;
-  latestSeason: string;
   modifiedDate: string;
   originalTitle: string;
   posterUrl: string;
   releaseDate: string;
+  metadata: string;
   seasons: {
     createdDate: string;
     description: string;

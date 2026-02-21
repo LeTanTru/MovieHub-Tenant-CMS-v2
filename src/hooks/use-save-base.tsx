@@ -116,7 +116,7 @@ const useSaveBase = <R extends FieldValues, T extends FieldValues>({
           if (res.result) {
             await Promise.all([
               queryClient.invalidateQueries({
-                queryKey: [queryKey, pathParams]
+                queryKey: [queryKey]
               }),
               queryClient.invalidateQueries({
                 queryKey: [`${queryKey}-list`]

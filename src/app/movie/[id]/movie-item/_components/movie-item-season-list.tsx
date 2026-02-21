@@ -41,6 +41,7 @@ import { PlayCircle, PlusIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
+import { Badge } from '@/components/ui/badge';
 
 export default function MovieItemSeasonList({
   queryKey
@@ -199,6 +200,16 @@ export default function MovieItemSeasonList({
           </span>
           &nbsp;
           <span>{value}</span>
+          <span className='ml-2'>
+            {record.isLatest && (
+              <Badge
+                variant='outline'
+                className='border-emerald-500 bg-emerald-50 text-emerald-500'
+              >
+                Mới nhất
+              </Badge>
+            )}
+          </span>
         </span>
       )
     },

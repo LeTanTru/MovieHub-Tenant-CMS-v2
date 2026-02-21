@@ -128,8 +128,8 @@
 }
 
 @layer base {
-  button:not(:disabled),
-  [role='button']:not(:disabled) {
+  button[data-slot]:not(:disabled),
+  [role='button'][data-slot]:not(:disabled) {
     cursor: pointer;
   }
 
