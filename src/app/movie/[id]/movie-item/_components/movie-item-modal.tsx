@@ -2,10 +2,10 @@
 
 import {
   AutoCompleteField,
+  CheckboxField,
   Col,
   DatePickerField,
   InputField,
-  NumberField,
   RichTextField,
   Row,
   SelectField,
@@ -19,10 +19,10 @@ import {
   DATE_TIME_FORMAT,
   DEFAULT_DATE_FORMAT,
   ErrorCode,
-  MOVIE_ITEM_KIND_EPISODE,
   MOVIE_ITEM_KIND_SEASON,
   MOVIE_TYPE_SERIES,
   MOVIE_TYPE_SINGLE,
+  MOVIE_TYPE_TRAILER,
   movieItemSeriesKindOptions,
   movieItemSingleKindOptions,
   queryKeys,
@@ -39,6 +39,7 @@ import type {
 import { formatDate, notify, renderImageUrl } from '@/utils';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
 export default function MovieItemModal({
   open,
@@ -74,6 +75,25 @@ export default function MovieItemModal({
             (movieItemId && item.value !== MOVIE_ITEM_KIND_SEASON)
         );
 
+  let objectName = '';
+
+  if (!!type) {
+    const _type = +type;
+    if (_type === MOVIE_TYPE_SINGLE) {
+      if (movieItemId) {
+        objectName = 'trailer';
+      } else {
+        objectName = 'mùa';
+      }
+    } else if (_type === MOVIE_TYPE_SERIES) {
+      if (movieItemId) {
+        objectName = 'tập, trailer';
+      } else {
+        objectName = 'mùa';
+      }
+    }
+  }
+
   const { data, loading, isEditing, handleSubmit, renderActions } = useSaveBase<
     MovieItemResType,
     MovieItemBodyType
@@ -81,7 +101,7 @@ export default function MovieItemModal({
     apiConfig: apiConfig.movieItem,
     options: {
       queryKey: queryKeys.MOVIE_ITEM,
-      objectName: 'mùa',
+      objectName,
       pathParams: {
         id: movieItem?.id
       },
@@ -110,6 +130,7 @@ export default function MovieItemModal({
 
   const defaultValues: MovieItemBodyType = {
     description: '',
+    isLatest: false,
     kind: kindOptions?.[0]?.value,
     label: '',
     movieId: movieId,
@@ -125,6 +146,7 @@ export default function MovieItemModal({
   const initialValues: MovieItemBodyType = useMemo(() => {
     return {
       description: data?.description ?? '',
+      isLatest: data?.isLatest ?? false,
       kind: data?.kind ?? kindOptions?.[0]?.value,
       label: data?.label ?? '',
       movieId: movieId,
@@ -138,6 +160,7 @@ export default function MovieItemModal({
     };
   }, [
     data?.description,
+    data?.isLatest,
     data?.kind,
     data?.label,
     data?.releaseDate,
@@ -155,11 +178,29 @@ export default function MovieItemModal({
     onClose();
   };
 
-  const onSubmit = async (values: MovieItemBodyType) => {
+  const onSubmit = async (
+    values: MovieItemBodyType,
+    form: UseFormReturn<MovieItemBodyType>
+  ) => {
+    if (!!type && +type === MOVIE_TYPE_SERIES) {
+      if (values.kind === MOVIE_ITEM_KIND_SEASON && !values.totalEpisode) {
+        form.setError('totalEpisode', {
+          message: 'Tổng số tập là bắt buộc'
+        });
+        return;
+      }
+    }
+
     await imageManager.handleSubmit();
 
     await handleSubmit({
       ...values,
+      totalEpisode:
+        !!type &&
+        +type === MOVIE_TYPE_SERIES &&
+        values.kind === MOVIE_ITEM_KIND_SEASON
+          ? values.totalEpisode
+          : null,
       movieId,
       parentId,
       releaseDate: formatDate(
@@ -177,7 +218,7 @@ export default function MovieItemModal({
       onClose={onClose}
       className='[&_.body-wrapper]:max-h-[80vh] [&_.body-wrapper]:w-200'
       bodyClassName='overflow-y-auto'
-      title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${movieItem ? (movieItem.kind === MOVIE_ITEM_KIND_EPISODE ? 'tập' : 'trailer') : 'tập, trailer'}`}
+      title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${objectName}`}
       aria-labelledby='movie-item-modal-title'
       scrollable
     >
@@ -256,24 +297,23 @@ export default function MovieItemModal({
                   />
                 </Col>
               </Row>
-              {!!type &&
-                +type === MOVIE_TYPE_SERIES &&
-                kind === MOVIE_ITEM_KIND_SEASON && (
-                  <Row>
+              <Row>
+                {!!type &&
+                  +type === MOVIE_TYPE_SERIES &&
+                  kind === MOVIE_ITEM_KIND_SEASON && (
                     <Col>
-                      <NumberField
+                      <InputField
                         control={form.control}
                         name='totalEpisode'
                         label='Tổng số tập'
                         placeholder='Tổng số tập'
                         required
+                        type='number'
                       />
                     </Col>
-                  </Row>
-                )}
-              {(kind !== MOVIE_ITEM_KIND_SEASON ||
-                (!!type && +type === MOVIE_TYPE_SINGLE)) && (
-                <Row>
+                  )}
+                {(kind !== MOVIE_ITEM_KIND_SEASON ||
+                  (!!type && +type === MOVIE_TYPE_SINGLE)) && (
                   <Col>
                     <AutoCompleteField
                       apiConfig={apiConfig.videoLibrary.autoComplete}
@@ -288,8 +328,17 @@ export default function MovieItemModal({
                       placeholder='Video'
                     />
                   </Col>
-                </Row>
-              )}
+                )}
+                {kind !== MOVIE_TYPE_TRAILER && (
+                  <Col className='mt-6 justify-center'>
+                    <CheckboxField
+                      control={form.control}
+                      name='isLatest'
+                      label='Đánh dấu là mới nhất'
+                    />
+                  </Col>
+                )}
+              </Row>
               <Row>
                 <Col span={24}>
                   <RichTextField

@@ -9,6 +9,7 @@ import {
   RichTextField,
   Row,
   SelectField,
+  TimePickerField,
   UploadImageField
 } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
@@ -27,6 +28,7 @@ import {
   STATUS_ACTIVE
 } from '@/constants';
 import { useFileUploadManager, useSaveBase } from '@/hooks';
+import { logger } from '@/logger';
 import {
   useCategoryListQuery,
   useDeleteFileMutation,
@@ -34,7 +36,7 @@ import {
 } from '@/queries';
 import { route } from '@/routes';
 import { movieSchema } from '@/schemaValidations';
-import type { MovieBodyType, MovieResType } from '@/types';
+import type { MetadataType, MovieBodyType, MovieResType } from '@/types';
 import { formatDate, renderImageUrl, renderListPageUrl } from '@/utils';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
@@ -97,10 +99,9 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     categoryIds: [],
     country: '',
     description: '',
+    duration: 0,
     isFeatured: false,
     language: '',
-    latestEpisode: '',
-    latestSeason: '',
     originalTitle: '',
     posterUrl: '',
     releaseDate: '',
@@ -109,6 +110,17 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     title: '',
     type: 0,
     year: new Date().getFullYear()
+  };
+
+  const getDuration = (metadata: string) => {
+    if (!metadata) return 0;
+    try {
+      const metadataObj: MetadataType = JSON.parse(metadata);
+      return metadataObj.duration || 0;
+    } catch (error) {
+      logger.error('Error parsing metadata:', error);
+      return 0;
+    }
   };
 
   const initialValues: MovieBodyType = useMemo(() => {
@@ -120,10 +132,9 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
           .map((category) => category.id.toString()) ?? [],
       country: data?.country ?? '',
       description: data?.description ?? '',
+      duration: getDuration(data?.metadata ?? ''),
       isFeatured: data?.isFeatured ?? false,
       language: data?.language ?? '',
-      latestEpisode: data?.latestEpisode ?? '',
-      latestSeason: data?.latestSeason ?? '',
       originalTitle: data?.originalTitle ?? '',
       posterUrl: data?.posterUrl ?? '',
       releaseDate: formatDate(data?.releaseDate, DEFAULT_DATE_FORMAT) ?? '',
@@ -140,8 +151,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     data?.description,
     data?.isFeatured,
     data?.language,
-    data?.latestEpisode,
-    data?.latestSeason,
+    data?.metadata,
     data?.originalTitle,
     data?.posterUrl,
     data?.releaseDate,
@@ -313,6 +323,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   label='Thể loại'
                   placeholder='Thể loại'
                   required
+                  disabled={isEditing}
                 />
               </Col>
             </Row>
@@ -349,30 +360,17 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                 />
               </Col>
               <Col>
-                <InputField
-                  control={form.control}
-                  name='latestSeason'
-                  label='Mùa mới nhất'
-                  placeholder='Mùa mới nhất'
-                  type='number'
-                />
+                {form.watch('type') === MOVIE_TYPE_SERIES && (
+                  <TimePickerField
+                    control={form.control}
+                    name='duration'
+                    label='Thời lượng trung bình mỗi tập'
+                    placeholder='Thời lượng trung bình mỗi tập'
+                    required
+                  />
+                )}
               </Col>
             </Row>
-            {isEditing && (
-              <Row>
-                {form.watch('type') === MOVIE_TYPE_SERIES && (
-                  <Col>
-                    <InputField
-                      control={form.control}
-                      name='latestEpisode'
-                      label='Tập mới nhất'
-                      placeholder='Tập mới nhất'
-                      type='number'
-                    />
-                  </Col>
-                )}
-              </Row>
-            )}
             <Row>
               <Col>
                 <BooleanField

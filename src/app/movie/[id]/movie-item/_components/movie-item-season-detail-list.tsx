@@ -47,6 +47,7 @@ import VideoPlayModal from './video-play-modal';
 import { HasPermission } from '@/components/has-permission';
 import MovieItemModal from './movie-item-modal';
 import { AiOutlineEdit } from 'react-icons/ai';
+import { Badge } from '@/components/ui/badge';
 
 export default function MovieItemSeasonDetailList({
   queryKey
@@ -215,6 +216,16 @@ export default function MovieItemSeasonDetailList({
           {record.kind === MOVIE_ITEM_KIND_EPISODE && `Tập ${record.label}. `}
           {record.kind === MOVIE_ITEM_KIND_TRAILER && `${record.label}: `}
           {value}
+          <span className='ml-2'>
+            {record.isLatest && (
+              <Badge
+                variant='outline'
+                className='border-emerald-500 bg-emerald-50 text-emerald-500'
+              >
+                Mới nhất
+              </Badge>
+            )}
+          </span>
         </span>
       )
     },
