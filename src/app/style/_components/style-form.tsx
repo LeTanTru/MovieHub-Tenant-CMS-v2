@@ -154,13 +154,14 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
                 />
               </Col>
               <Col>
-                <NumberField
+                <InputField
                   control={form.control}
                   name='type'
                   label='Loại'
                   placeholder='Loại'
                   required
                   min={1}
+                  type='number'
                 />
               </Col>
             </Row>
