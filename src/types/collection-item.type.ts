@@ -7,7 +7,7 @@ import type { BaseSearchType } from '@/types/search.type';
 import { z } from 'zod';
 
 export type CollectionItemResType = {
-  collectionId: number;
+  collectionId: string;
   createdDate: string;
   id: string;
   modifiedDate: string;

@@ -35,6 +35,7 @@ export type MovieResType = {
   posterUrl: string;
   releaseDate: string;
   metadata: string;
+  imageTitleUrl: string;
   seasons: {
     createdDate: string;
     description: string;

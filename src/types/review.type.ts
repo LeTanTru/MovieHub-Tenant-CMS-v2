@@ -37,7 +37,7 @@ export type ReviewResType = {
   createdDate: string;
   id: string;
   modifiedDate: string;
-  movieId: number;
+  movieId: string;
   rate: number;
   statistics: { averageRating: number; reviewCount: number };
   status: number;

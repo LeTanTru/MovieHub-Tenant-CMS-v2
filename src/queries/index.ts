@@ -13,3 +13,4 @@ export * from './movie-person.query';
 export * from './permission.query';
 export * from './review.query';
 export * from './sns.query';
+export * from './sidebar.query';

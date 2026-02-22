@@ -26,7 +26,7 @@ export type MovieSidebarResType = {
     country: string;
     createdDate: string;
     description: string;
-    id: number;
+    id: string;
     isFeatured: boolean;
     language: string;
     modifiedDate: string;

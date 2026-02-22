@@ -94,6 +94,13 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     onOpen: true
   });
 
+  const imageTitleManager = useFileUploadManager({
+    initialUrl: data?.imageTitleUrl,
+    deleteFileMutate: deleteFileMutate,
+    isEditing,
+    onOpen: true
+  });
+
   const defaultValues: MovieBodyType = {
     ageRating: 0,
     categoryIds: [],
@@ -133,6 +140,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
       country: data?.country ?? '',
       description: data?.description ?? '',
       duration: getDuration(data?.metadata ?? ''),
+      imageTitleUrl: data?.imageTitleUrl ?? '',
       isFeatured: data?.isFeatured ?? false,
       language: data?.language ?? '',
       originalTitle: data?.originalTitle ?? '',
@@ -149,6 +157,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     data?.categories,
     data?.country,
     data?.description,
+    data?.imageTitleUrl,
     data?.isFeatured,
     data?.language,
     data?.metadata,
@@ -164,14 +173,16 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
   const handleCancel = async () => {
     await Promise.all([
       posterImageManager.handleCancel(),
-      thumbnailImageManager.handleCancel()
+      thumbnailImageManager.handleCancel(),
+      imageTitleManager.handleCancel()
     ]);
   };
 
   const onSubmit = async (values: MovieBodyType) => {
     await Promise.all([
       posterImageManager.handleSubmit(),
-      thumbnailImageManager.handleSubmit()
+      thumbnailImageManager.handleSubmit(),
+      imageTitleManager.handleSubmit()
     ]);
 
     await handleSubmit({
@@ -182,7 +193,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
         DEFAULT_DATE_FORMAT
       ),
       thumbnailUrl: thumbnailImageManager.currentUrl,
-      posterUrl: posterImageManager.currentUrl
+      posterUrl: posterImageManager.currentUrl,
+      imageTitleUrl: imageTitleManager.currentUrl
     });
   };
 
@@ -221,7 +233,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
         {(form) => (
           <>
             <Row>
-              <Col span={12}>
+              <Col span={8}>
                 <UploadImageField
                   value={renderImageUrl(posterImageManager.currentUrl)}
                   loading={uploadImageLoading}
@@ -238,11 +250,10 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   deleteImageFn={posterImageManager.handleDeleteOnClick}
                   label='Ảnh bìa (2:3 - Poster)'
                   aspect={2 / 3}
-                  defaultCrop
                   required
                 />
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 <UploadImageField
                   value={renderImageUrl(thumbnailImageManager.currentUrl)}
                   loading={uploadImageLoading}
@@ -258,6 +269,25 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                   label='Ảnh xem trước (16:9 - Thumbnail)'
                   aspect={16 / 9}
                   required
+                />
+              </Col>
+              <Col span={8}>
+                <UploadImageField
+                  value={renderImageUrl(imageTitleManager.currentUrl)}
+                  loading={uploadImageLoading}
+                  control={form.control}
+                  name='imageTitleUrl'
+                  onChange={imageTitleManager.trackUpload}
+                  size={150}
+                  uploadImageFn={async (file: Blob) => {
+                    const res = await uploadImageMutate({ file });
+                    return res.data?.filePath ?? '';
+                  }}
+                  deleteImageFn={imageTitleManager.handleDeleteOnClick}
+                  label='Ảnh tiêu đề (Image Title)'
+                  showCrop={false}
+                  defaultCrop={false}
+                  originalSize
                 />
               </Col>
             </Row>
