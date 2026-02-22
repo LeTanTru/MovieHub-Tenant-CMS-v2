@@ -402,13 +402,14 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                   <Col span={12}>
                     <Row className='mb-0 h-full items-center justify-between'>
                       <Col span={18} className='my-0'>
-                        <NumberField
+                        <InputField
                           control={form.control}
                           name='filter.limit'
                           label='Giới hạn'
                           placeholder='Giới hạn'
                           min={1}
                           disabled={!!form.watch('filter.noLimit')}
+                          type='number'
                         />
                       </Col>
                       <Col span={6} className='my-0 mt-4'>

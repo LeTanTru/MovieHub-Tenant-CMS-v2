@@ -195,22 +195,6 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
       width: 250,
       align: 'center'
     },
-    {
-      title: 'Loại',
-      dataIndex: 'type',
-      render: (value) => {
-        const label = collectionTypeOptions.find(
-          (opt) => opt.value === value
-        )?.label;
-        return (
-          <span className='line-clamp-1 block truncate'>
-            {label ?? '------'}
-          </span>
-        );
-      },
-      width: 120,
-      align: 'center'
-    },
     handlers.renderActionColumn({
       actions: { detail: true, edit: true, delete: true },
       columnProps: {

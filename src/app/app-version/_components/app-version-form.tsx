@@ -163,12 +163,13 @@ export default function AppVersionForm({ queryKey }: { queryKey: string }) {
                 />
               </Col>
               <Col>
-                <NumberField
+                <InputField
                   control={form.control}
                   name='code'
                   label='Mã phiên bản'
                   placeholder='Mã phiên bản'
                   required
+                  type='number'
                 />
               </Col>
             </Row>
