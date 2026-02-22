@@ -39,7 +39,7 @@ import { movieSchema } from '@/schemaValidations';
 import type { MetadataType, MovieBodyType, MovieResType } from '@/types';
 import { formatDate, renderImageUrl, renderListPageUrl } from '@/utils';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 export default function MovieForm({ queryKey }: { queryKey: string }) {
   const { id } = useParams<{ id: string }>();
@@ -55,9 +55,12 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
       }))
       .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-  const { mutateAsync: uploadImageMutate, isPending: uploadImageLoading } =
-    useUploadLogoMutation();
+  const { mutateAsync: uploadImageMutate } = useUploadLogoMutation();
   const { mutateAsync: deleteFileMutate } = useDeleteFileMutation();
+
+  const [posterLoading, setPosterLoading] = useState(false);
+  const [thumbnailLoading, setThumbnailLoading] = useState(false);
+  const [imageTitleLoading, setImageTitleLoading] = useState(false);
 
   const {
     data,
@@ -236,16 +239,19 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
               <Col span={8}>
                 <UploadImageField
                   value={renderImageUrl(posterImageManager.currentUrl)}
-                  loading={uploadImageLoading}
+                  loading={posterLoading}
                   control={form.control}
                   name='posterUrl'
                   onChange={posterImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutate({
-                      file
-                    });
-                    return res.data?.filePath ?? '';
+                    setPosterLoading(true);
+                    try {
+                      const res = await uploadImageMutate({ file });
+                      return res.data?.filePath ?? '';
+                    } finally {
+                      setPosterLoading(false);
+                    }
                   }}
                   deleteImageFn={posterImageManager.handleDeleteOnClick}
                   label='Ảnh bìa (2:3 - Poster)'
@@ -256,14 +262,19 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
               <Col span={8}>
                 <UploadImageField
                   value={renderImageUrl(thumbnailImageManager.currentUrl)}
-                  loading={uploadImageLoading}
+                  loading={thumbnailLoading}
                   control={form.control}
                   name='thumbnailUrl'
                   onChange={thumbnailImageManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutate({ file });
-                    return res.data?.filePath ?? '';
+                    setThumbnailLoading(true);
+                    try {
+                      const res = await uploadImageMutate({ file });
+                      return res.data?.filePath ?? '';
+                    } finally {
+                      setThumbnailLoading(false);
+                    }
                   }}
                   deleteImageFn={thumbnailImageManager.handleDeleteOnClick}
                   label='Ảnh xem trước (16:9 - Thumbnail)'
@@ -274,14 +285,19 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
               <Col span={8}>
                 <UploadImageField
                   value={renderImageUrl(imageTitleManager.currentUrl)}
-                  loading={uploadImageLoading}
+                  loading={imageTitleLoading}
                   control={form.control}
                   name='imageTitleUrl'
                   onChange={imageTitleManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
-                    const res = await uploadImageMutate({ file });
-                    return res.data?.filePath ?? '';
+                    setImageTitleLoading(true);
+                    try {
+                      const res = await uploadImageMutate({ file });
+                      return res.data?.filePath ?? '';
+                    } finally {
+                      setImageTitleLoading(false);
+                    }
                   }}
                   deleteImageFn={imageTitleManager.handleDeleteOnClick}
                   label='Ảnh tiêu đề (Image Title)'
