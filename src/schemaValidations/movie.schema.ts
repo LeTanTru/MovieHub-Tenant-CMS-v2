@@ -10,6 +10,7 @@ export const movieSchema = z
     country: z.string().nonempty('Bắt buộc'),
     description: z.string().nonempty('Bắt buộc'),
     duration: z.number().optional().nullable(),
+    imageTitleUrl: z.string().optional().nullable(),
     isFeatured: z.boolean(),
     language: z.string().nonempty('Bắt buộc'),
     originalTitle: z.string().nonempty('Bắt buộc'),

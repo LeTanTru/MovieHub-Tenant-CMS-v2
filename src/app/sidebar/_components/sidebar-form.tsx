@@ -156,7 +156,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                       return res.data?.filePath ?? '';
                     }}
                     deleteImageFn={webImageManager.handleDeleteOnClick}
-                    label='Ảnh xem trước web (16:9)'
+                    label='Thumbnail web (Thumnail - 16:9)'
                     aspect={16 / 9}
                     required
                   />
@@ -176,7 +176,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                       return res.data?.filePath ?? '';
                     }}
                     deleteImageFn={mobileImageManager.handleDeleteOnClick}
-                    label='Ảnh xem trước mobile (2:3)'
+                    label='Thumbnail mobile (2:3)'
                     aspect={2 / 3}
                     required
                     defaultCrop

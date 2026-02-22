@@ -1,21 +1,28 @@
 'use client';
 
-import { ImageField, ToolTip } from '@/components/form';
+import { Button, ImageField, ToolTip } from '@/components/form';
 import { ListPageWrapper, PageWrapper } from '@/components/layout';
 import { DragDropTable } from '@/components/table';
 import { apiConfig, DEFAULT_DATE_FORMAT, FieldTypes } from '@/constants';
 import { useDragDrop, useListBase } from '@/hooks';
 import { cn } from '@/lib';
+import { logger } from '@/logger';
+import { useChangeStatusSidebarMutation } from '@/queries';
 import { movieSidebarSearchSchema } from '@/schemaValidations';
 import type {
   Column,
+  MovieSidebarBodyType,
   MovieSidebarResType,
   MovieSidebarSearchType,
   SearchFormProps
 } from '@/types';
-import { formatDate, renderImageUrl } from '@/utils';
+import { formatDate, notify, renderImageUrl } from '@/utils';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 export default function SidebarList({ queryKey }: { queryKey: string }) {
+  const { mutateAsync: changeStatusMutate, isPending: changeStatusPending } =
+    useChangeStatusSidebarMutation();
+
   const { data, loading, handlers } = useListBase<
     MovieSidebarResType,
     MovieSidebarSearchType
@@ -24,6 +31,69 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
     options: {
       queryKey,
       objectName: 'phim'
+    },
+    override: (handlers) => {
+      handlers.additionalColumns = () => ({
+        changeStatus: (
+          record: MovieSidebarResType,
+          buttonProps?: Record<string, any>
+        ) => {
+          if (
+            !handlers.hasPermission({
+              requiredPermissions: [apiConfig.sidebar.update.permissionCode]
+            })
+          )
+            return null;
+
+          const statusLabel = record.active ? 'Ẩn' : 'Hiện';
+
+          const payload: MovieSidebarBodyType & { id: string } = {
+            id: record.id,
+            active: !record.active,
+            movieId: record.movie.id,
+            mainColor: record.mainColor,
+            mobileThumbnailUrl: record.mobileThumbnailUrl,
+            webThumbnailUrl: record.webThumbnailUrl,
+            description: record.description
+          };
+
+          const handleChangeStatus = async () => {
+            await changeStatusMutate(payload, {
+              onSuccess: (res) => {
+                if (res.result) {
+                  notify.success('Cập nhật trạng thái thành công');
+                  handlers.invalidateQueries();
+                } else {
+                  notify.error('Cập nhật trạng thái thất bại');
+                }
+              },
+              onError: (error) => {
+                logger.error('Error while changing status:', error);
+                notify.error('Có lỗi xảy ra, vui lòng thử lại sau.');
+              }
+            });
+          };
+
+          const Icon = record.active ? AiOutlineEyeInvisible : AiOutlineEye;
+
+          return (
+            <ToolTip title={statusLabel} sideOffset={0}>
+              <span>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleChangeStatus();
+                  }}
+                  className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
+                  {...buttonProps}
+                >
+                  <Icon className='text-main-color size-4' />
+                </Button>
+              </span>
+            </ToolTip>
+          );
+        }
+      });
     }
   });
 
@@ -68,8 +138,18 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
     {
       title: 'Phim',
       dataIndex: ['movie', 'title'],
-      render: (value) => (
-        <span className='line-clamp-1 block truncate'>{value}</span>
+      render: (value, record) => (
+        <>
+          <span title={value} className='line-clamp-1 block truncate'>
+            {value}
+          </span>
+          <span
+            className='line-clamp-1 block truncate text-xs text-zinc-500'
+            title={`${record.movie.originalTitle}`}
+          >
+            {record.movie.originalTitle}
+          </span>
+        </>
       )
     },
     {
@@ -103,16 +183,19 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
       render: (_, record) => (
         <div className='flex items-center justify-center gap-2'>
           <span
-            className={cn('rounded-md px-2 py-0.5 text-sm', {
-              'bg-red-100 text-red-600': !record.active,
-              'bg-green-100 text-green-600': record.active
-            })}
+            className={cn(
+              'min-w-15 rounded-md border border-solid px-4 py-0.5 text-sm',
+              {
+                'border-red-200 bg-red-50 text-red-400': !record.active,
+                'border-green-200 bg-green-50 text-green-400': record.active
+              }
+            )}
           >
             {record.active ? 'Hiện' : 'Ẩn'}
           </span>
         </div>
       ),
-      width: 100,
+      width: 120,
       align: 'center'
     },
     handlers.renderActionColumn({
@@ -123,6 +206,7 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
           ]
         }),
         edit: true,
+        changeStatus: true,
         delete: true
       }
     })
@@ -150,7 +234,7 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
         <DragDropTable
           columns={columns}
           dataSource={sortedData}
-          loading={loading || loadingUpdateOrdering}
+          loading={loading || loadingUpdateOrdering || changeStatusPending}
           onDragEnd={onDragEnd}
         />
       </ListPageWrapper>
