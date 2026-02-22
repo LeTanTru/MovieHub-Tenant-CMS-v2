@@ -17,7 +17,7 @@ import type {
   MoviePersonResType,
   PersonResType
 } from '@/types';
-import { notify, renderImageUrl } from '@/utils';
+import { getLastWord, notify, renderImageUrl } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import type { UseFormReturn } from 'react-hook-form';
 
@@ -118,6 +118,7 @@ export default function MoviePersonModal({
                         <AvatarField
                           src={renderImageUrl(opt.extra?.avatarPath)}
                           disablePreview
+                          alt={getLastWord(opt.extra?.name ?? '')}
                         />
                         <span>{opt.extra?.otherName}</span>
                       </div>
