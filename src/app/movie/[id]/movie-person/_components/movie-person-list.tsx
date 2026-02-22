@@ -18,7 +18,7 @@ import type {
   MoviePersonSearchType,
   SearchFormProps
 } from '@/types';
-import { notify, renderImageUrl } from '@/utils';
+import { getLastWord, notify, renderImageUrl } from '@/utils';
 import { PlusIcon, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -202,11 +202,12 @@ export default function MoviePersonList({
       dataIndex: ['person', 'avatarPath'],
       width: 80,
       align: 'center',
-      render: (value) => (
+      render: (value, record) => (
         <AvatarField
           disablePreview={!value}
           src={renderImageUrl(value)}
           size={45}
+          alt={getLastWord(record.person.name)}
         />
       )
     },

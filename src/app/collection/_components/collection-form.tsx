@@ -296,7 +296,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                               type='button'
                               variant='outline'
                               onClick={() => removeColor(index)}
-                              className='border-red-500 text-red-500 hover:bg-red-50'
+                              className='border-red-500 text-red-500 hover:border-red-500/80 hover:text-red-500/80'
                             >
                               <X className='size-4' />
                             </Button>

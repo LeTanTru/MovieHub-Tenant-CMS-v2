@@ -20,7 +20,7 @@ import type {
   Column,
   SearchFormProps
 } from '@/types';
-import { notify, renderImageUrl } from '@/utils';
+import { getLastWord, notify, renderImageUrl } from '@/utils';
 import { AiOutlineCheck, AiOutlineLock } from 'react-icons/ai';
 
 export default function AudienceList({ queryKey }: { queryKey: string }) {
@@ -106,8 +106,12 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
       dataIndex: 'avatarPath',
       width: 80,
       align: 'center',
-      render: (value) => (
-        <AvatarField disablePreview={!value} src={renderImageUrl(value)} />
+      render: (value, record) => (
+        <AvatarField
+          disablePreview={!value}
+          src={renderImageUrl(value)}
+          alt={getLastWord(record.fullName)}
+        />
       )
     },
     {
@@ -132,7 +136,7 @@ export default function AudienceList({ queryKey }: { queryKey: string }) {
     {
       title: 'Số điện thoại',
       dataIndex: 'phone',
-      width: 120,
+      width: 200,
       render: (value) => (
         <span className='line-clamp-1 block truncate' title={value}>
           {value ?? '------'}

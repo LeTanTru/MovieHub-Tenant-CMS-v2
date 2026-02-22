@@ -128,11 +128,9 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
 
     await handleSubmit({
       ...values,
-      dateOfBirth: formatDate(
-        values.dateOfBirth,
-        DATE_TIME_FORMAT,
-        DEFAULT_DATE_FORMAT
-      ),
+      dateOfBirth: values.dateOfBirth
+        ? formatDate(values.dateOfBirth, DATE_TIME_FORMAT, DEFAULT_DATE_FORMAT)
+        : null,
       avatarPath: imageManager.currentUrl
     });
   };

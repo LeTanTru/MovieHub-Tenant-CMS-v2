@@ -32,7 +32,12 @@ import { useValidatePermission } from '@/hooks';
 import { cn } from '@/lib';
 import { useChangeReviewStatusMutation } from '@/queries';
 import type { ReviewResType } from '@/types';
-import { convertUTCToLocal, renderImageUrl, timeAgo } from '@/utils';
+import {
+  convertUTCToLocal,
+  getLastWord,
+  renderImageUrl,
+  timeAgo
+} from '@/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Ellipsis, Info, Mars, Venus } from 'lucide-react';
 import {
@@ -82,7 +87,7 @@ export default function ReviewItem({
           src={renderImageUrl(review.author.avatarPath)}
           previewClassName='rounded-full'
           size={40}
-          alt={review.author.fullName}
+          alt={getLastWord(review.author.fullName)}
           className='mr-4'
         />
         <div className='flex-1'>
@@ -153,7 +158,12 @@ export default function ReviewItem({
             <div className='flex items-center gap-x-6'>
               <div className='flex items-center gap-x-2'>
                 <ToolTip title='Thích'>
-                  <Button variant='ghost' className={cn('size-5! p-0!')}>
+                  <Button
+                    variant='ghost'
+                    className={cn(
+                      'size-5! p-0! text-gray-400 hover:text-gray-400'
+                    )}
+                  >
                     <FaArrowAltCircleUp className='size-5' />
                   </Button>
                 </ToolTip>
@@ -162,7 +172,12 @@ export default function ReviewItem({
 
               <div className='flex items-center gap-x-2'>
                 <ToolTip title='Không thích'>
-                  <Button variant='ghost' className={cn('size-5! p-0!')}>
+                  <Button
+                    variant='ghost'
+                    className={cn(
+                      'size-5! p-0! text-gray-400 hover:text-gray-400'
+                    )}
+                  >
                     <FaArrowAltCircleDown className='size-5' />
                   </Button>
                 </ToolTip>
@@ -233,7 +248,7 @@ export default function ReviewItem({
                                 <Button
                                   onClick={(e) => e.stopPropagation()}
                                   variant='outline'
-                                  className='w-20 border-red-500 text-red-500 transition-all duration-200 ease-linear hover:bg-transparent hover:text-red-500/80'
+                                  className='w-20 border-red-500 text-red-500 transition-all duration-200 ease-linear hover:border-red-500/80 hover:bg-transparent hover:text-red-500/80'
                                 >
                                   Không
                                 </Button>

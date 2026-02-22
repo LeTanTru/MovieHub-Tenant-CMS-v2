@@ -20,7 +20,7 @@ import type {
   PersonSearchType,
   SearchFormProps
 } from '@/types';
-import { formatDate, notify, renderImageUrl } from '@/utils';
+import { formatDate, getLastWord, notify, renderImageUrl } from '@/utils';
 
 export default function PersonList({
   queryKey,
@@ -59,8 +59,12 @@ export default function PersonList({
       dataIndex: 'avatarPath',
       width: 80,
       align: 'center',
-      render: (value) => (
-        <AvatarField disablePreview={!value} src={renderImageUrl(value)} />
+      render: (value, record) => (
+        <AvatarField
+          disablePreview={!value}
+          src={renderImageUrl(value)}
+          alt={getLastWord(record.name)}
+        />
       )
     },
     {

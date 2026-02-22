@@ -4,7 +4,12 @@ import { memo, type ReactNode } from 'react';
 import { AvatarField, Button, ToolTip } from '@/components/form';
 import { Ellipsis, Info, Mars, Pin, Reply, Venus } from 'lucide-react';
 import { cn } from '@/lib';
-import { convertUTCToLocal, renderImageUrl, timeAgo } from '@/utils';
+import {
+  convertUTCToLocal,
+  getLastWord,
+  renderImageUrl,
+  timeAgo
+} from '@/utils';
 import type {
   AuthorInfoType,
   CommentResType,
@@ -264,7 +269,7 @@ function CommentItem({
           src={renderImageUrl(authorInfo.avatarPath)}
           previewClassName='rounded-full'
           size={40}
-          alt={authorInfo.fullName}
+          alt={getLastWord(authorInfo.fullName)}
           className='mr-4'
         />
 
@@ -360,8 +365,8 @@ function CommentItem({
                   <ToolTip title='Thích'>
                     <Button
                       variant='ghost'
-                      className={cn('size-5! p-0!', {
-                        'like-pop [&_svg]:fill-blue-400 [&_svg]:stroke-blue-400':
+                      className={cn('size-5! p-0! hover:text-blue-500', {
+                        'like-pop [&_svg]:fill-blue-500 [&_svg]:stroke-blue-500':
                           isLiked
                       })}
                       onClick={() => handleVote(comment.id, REACTION_TYPE_LIKE)}
@@ -376,8 +381,8 @@ function CommentItem({
                   <ToolTip title='Không thích'>
                     <Button
                       variant='ghost'
-                      className={cn('size-5! p-0!', {
-                        'dislike-pop [&_svg]:fill-red-400 [&_svg]:stroke-red-400':
+                      className={cn('size-5! p-0! hover:text-red-500', {
+                        'dislike-pop [&_svg]:fill-red-500 [&_svg]:stroke-red-500':
                           isDisliked
                       })}
                       onClick={() =>
@@ -395,7 +400,7 @@ function CommentItem({
             {canCreate && (
               <Button
                 variant='ghost'
-                className='h-5! p-0!'
+                className='h-5! p-0! hover:bg-transparent'
                 onClick={() => handleReplyComment()}
               >
                 <Reply className='size-5' /> Trả lời
@@ -405,7 +410,7 @@ function CommentItem({
             {isAuthor && canUpdate && (
               <Button
                 variant='ghost'
-                className='text-main-color hover:text-main-color/50 h-5! p-0!'
+                className='text-main-color hover:text-main-color/50 h-5! p-0! hover:bg-transparent'
                 onClick={() => handleEditComment(comment)}
               >
                 <AiOutlineEdit className='size-5' />
@@ -483,7 +488,7 @@ function CommentItem({
                                 <Button
                                   onClick={(e) => e.stopPropagation()}
                                   variant='outline'
-                                  className='w-20 border-red-500 text-red-500 transition-all duration-200 ease-linear hover:bg-transparent hover:text-red-500/80'
+                                  className='w-20 border-red-500 text-red-500 transition-all duration-200 ease-linear hover:border-red-500/80 hover:bg-transparent hover:text-red-500/80'
                                 >
                                   Không
                                 </Button>
@@ -519,7 +524,7 @@ function CommentItem({
               {!isOpen ? (
                 <Button
                   variant='ghost'
-                  className='mt-2 h-5! p-0! font-medium hover:opacity-70'
+                  className='mt-2 h-5! p-0! font-medium hover:bg-transparent hover:opacity-70'
                   style={{ marginLeft: level * 40 }}
                   onClick={() => handleViewReplies(comment.id)}
                 >
@@ -535,7 +540,7 @@ function CommentItem({
                   {hasNextPage && (
                     <Button
                       variant='ghost'
-                      className='h-5! p-0! font-medium hover:opacity-70'
+                      className='h-5! p-0! font-medium hover:bg-transparent hover:opacity-70'
                       onClick={() => handleFetchNextPage()}
                     >
                       Xem thêm ({totalChildren - commentListSize})
@@ -544,7 +549,7 @@ function CommentItem({
 
                   <Button
                     variant='ghost'
-                    className='h-5! p-0! font-medium text-red-500 hover:opacity-70'
+                    className='h-5! p-0! font-medium text-red-500 hover:bg-transparent hover:opacity-70'
                     onClick={() => handleHideReplies(comment.id)}
                   >
                     Ẩn trả lời
