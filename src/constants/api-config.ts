@@ -672,6 +672,12 @@ const apiConfig = defineApiConfig({
       headers: baseHeader,
       permissionCode: 'STL_U',
       isRequiredTenantId: true
+    },
+    autoComplete: {
+      baseUrl: `${AppConstants.tenantApiUrl}/v1/style/auto-complete`,
+      method: 'GET',
+      headers: baseHeader,
+      isRequiredTenantId: true
     }
   },
   collection: {

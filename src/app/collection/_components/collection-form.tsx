@@ -323,7 +323,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                       label='Thiết kế'
                       placeholder='Thiết kế'
                       required
-                      apiConfig={apiConfig.style.getList}
+                      apiConfig={apiConfig.style.autoComplete}
                       mappingData={(item: StyleResType) => ({
                         label: item.name,
                         value: item.id.toString()
