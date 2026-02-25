@@ -39,6 +39,23 @@ import type { ApiResponse } from '@/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { CircleLoading } from '@/components/loading';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+
+const ASPECT_RATIOS = [
+  { label: '1:1', value: 1 },
+  { label: '4:3', value: 4 / 3 },
+  { label: '3:4', value: 3 / 4 },
+  { label: '16:9', value: 16 / 9 },
+  { label: '9:16', value: 9 / 16 },
+  { label: '3:2', value: 3 / 2 },
+  { label: '2:3', value: 2 / 3 }
+] as const;
 
 type Area = { x: number; y: number; width: number; height: number };
 
@@ -101,6 +118,7 @@ type UploadImageFieldProps<T extends FieldValues> = {
   defaultCrop?: boolean;
   showCrop?: boolean;
   originalSize?: boolean;
+  allowCustomAspect?: boolean;
   onChange?: (url: string) => void;
   uploadImageFn: (file: Blob) => Promise<string>;
   deleteImageFn?: (url: string) => Promise<ApiResponse<any> | undefined>;
@@ -120,6 +138,7 @@ export default function UploadImageField<T extends FieldValues>({
   defaultCrop = true,
   showCrop = true,
   originalSize = false,
+  allowCustomAspect = false,
   onChange,
   uploadImageFn,
   deleteImageFn
@@ -130,6 +149,7 @@ export default function UploadImageField<T extends FieldValues>({
     showCrop && defaultCrop
   );
   const [zoom, setZoom] = useState<number>(1);
+  const [customAspect, setCustomAspect] = useState<number>(aspect);
   const {
     field: { value: fieldValue, onChange: fieldOnChange },
     fieldState: { error }
@@ -215,6 +235,7 @@ export default function UploadImageField<T extends FieldValues>({
         setDialogOpen(true);
         setZoom(1);
         setCroppedAreaPixels(null);
+        setCustomAspect(aspect);
       } else {
         // Upload directly without showing dialog when showCrop is false
         handleApply();
@@ -331,12 +352,12 @@ export default function UploadImageField<T extends FieldValues>({
             </DialogHeader>
 
             <AspectRatio
-              ratio={aspect < 1 ? 1 : aspect}
+              ratio={customAspect < 1 ? 1 : customAspect}
               className='bg-muted h-full'
             >
               {previewUrl && shouldCrop ? (
                 <Cropper
-                  aspectRatio={aspect}
+                  aspectRatio={customAspect}
                   className='h-full w-full'
                   image={previewUrl}
                   zoom={zoom}
@@ -372,6 +393,32 @@ export default function UploadImageField<T extends FieldValues>({
                     className='cursor-pointer [&_span[role="slider"]]:bg-gray-500'
                   />
                   <ZoomInIcon className='shrink-0 opacity-60' size={16} />
+                </div>
+              )}
+
+              {allowCustomAspect && shouldCrop && (
+                <div className='flex items-center gap-2'>
+                  <span className='text-muted-foreground text-sm'>
+                    Tỉ lệ khung hình:
+                  </span>
+                  <Select
+                    value={customAspect.toString()}
+                    onValueChange={(val) => setCustomAspect(parseFloat(val))}
+                  >
+                    <SelectTrigger className='w-24'>
+                      <SelectValue placeholder='Chọn tỉ lệ' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ASPECT_RATIOS.map((ratio) => (
+                        <SelectItem
+                          key={ratio.value}
+                          value={ratio.value.toString()}
+                        >
+                          {ratio.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 

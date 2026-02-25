@@ -72,7 +72,7 @@ export default function CollectionItemModal({
       title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} chi tiết bộ sưu tập`}
       open={open}
       onClose={onClose}
-      className='[&_.body-wrapper]:top-1/3 [&_.body-wrapper]:h-auto [&_.body-wrapper]:min-h-0 [&_.body-wrapper]:w-200'
+      bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='collection-item-modal-title'
       closeOnBackdropClick
     >

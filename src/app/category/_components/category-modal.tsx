@@ -75,7 +75,7 @@ export default function CategoryModal({
       open={open}
       onClose={onClose}
       title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} danh mục`}
-      className='[&_.body-wrapper]:top-1/3 [&_.body-wrapper]:h-auto [&_.body-wrapper]:min-h-0 [&_.body-wrapper]:w-200'
+      bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='category-modal-title'
       closeOnBackdropClick
     >

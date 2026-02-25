@@ -10,7 +10,13 @@ import {
   FieldTypes,
   MAX_PAGE_SIZE
 } from '@/constants';
-import { useDragDrop, useListBase, useNavigate, useQueryParams } from '@/hooks';
+import {
+  useDisclosure,
+  useDragDrop,
+  useListBase,
+  useNavigate,
+  useQueryParams
+} from '@/hooks';
 import { logger } from '@/logger';
 import { route } from '@/routes';
 import { collectionSearchSchema } from '@/schemaValidations';
@@ -21,10 +27,19 @@ import type {
   SearchFormProps
 } from '@/types';
 import { generatePath, renderListPageUrl } from '@/utils';
-import { TbListDetails } from 'react-icons/tb';
+import { TbListDetails, TbPalette } from 'react-icons/tb';
+import { useState } from 'react';
+import StyleInfoModal from './style-info-modal';
 
 export default function CollectionList({ queryKey }: { queryKey: string }) {
   const navigate = useNavigate(false);
+  const {
+    opened: openedStyleModal,
+    open: openStyleModal,
+    close: closeStyleModal
+  } = useDisclosure(false);
+  const [selectedCollection, setSelectedCollection] =
+    useState<CollectionResType | null>(null);
 
   const { searchParams, serializeParams } =
     useQueryParams<CollectionSearchType>();
@@ -82,6 +97,36 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
               </span>
             </ToolTip>
           );
+        },
+        styleInfo: (
+          record: CollectionResType,
+          buttonProps: Record<string, any>
+        ) => {
+          if (
+            !(
+              searchParams.type &&
+              +searchParams.type === COLLECTION_TYPE_SECTION
+            )
+          )
+            return null;
+
+          return (
+            <ToolTip title={`Xem thiết kế`} sideOffset={0}>
+              <span>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedCollection(record);
+                    openStyleModal();
+                  }}
+                  className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
+                  {...buttonProps}
+                >
+                  <TbPalette className='text-main-color size-4' />
+                </Button>
+              </span>
+            </ToolTip>
+          );
         }
       });
       handlers.additionalParams = () => ({
@@ -109,27 +154,8 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
     {
       title: 'Tên',
       dataIndex: 'name',
-      render: (value) => (
-        <span className='line-clamp-1 block truncate'>{value}</span>
-      )
+      render: (value) => <span className='whitespace-nowrap'>{value}</span>
     },
-    ...(searchParams.type && +searchParams.type === COLLECTION_TYPE_SECTION
-      ? [
-          {
-            title: 'Thiết kế',
-            dataIndex: ['style', 'name'],
-            render: (value: string) => {
-              return (
-                <span title={value} className='line-clamp-1 block truncate'>
-                  {value || '------'}
-                </span>
-              );
-            },
-            width: 300,
-            align: 'center' as const
-          }
-        ]
-      : []),
     {
       title: 'Màu',
       dataIndex: 'color',
@@ -196,9 +222,9 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
       align: 'center'
     },
     handlers.renderActionColumn({
-      actions: { detail: true, edit: true, delete: true },
+      actions: { styleInfo: true, detail: true, edit: true, delete: true },
       columnProps: {
-        fixed: true
+        width: 150
       }
     })
   ];
@@ -232,6 +258,14 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
           onDragEnd={onDragEnd}
         />
       </ListPageWrapper>
+
+      {selectedCollection && (
+        <StyleInfoModal
+          opened={openedStyleModal}
+          onClose={closeStyleModal}
+          style={selectedCollection.style}
+        />
+      )}
     </PageWrapper>
   );
 }
