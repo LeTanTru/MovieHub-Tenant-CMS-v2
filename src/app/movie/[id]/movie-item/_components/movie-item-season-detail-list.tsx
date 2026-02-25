@@ -266,9 +266,6 @@ export default function MovieItemSeasonDetailList({
           record.kind !== MOVIE_ITEM_KIND_SEASON,
         edit: true,
         delete: true
-      },
-      columnProps: {
-        fixed: true
       }
     })
   ];

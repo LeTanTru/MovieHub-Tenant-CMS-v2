@@ -136,8 +136,8 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}
-                  label='Ảnh bìa'
-                  aspect={2 / 3}
+                  label='Ảnh minh họa'
+                  aspect={16 / 9}
                   required
                   defaultCrop
                 />

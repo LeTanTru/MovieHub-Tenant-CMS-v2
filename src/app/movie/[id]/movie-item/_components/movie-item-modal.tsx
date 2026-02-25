@@ -216,8 +216,7 @@ export default function MovieItemModal({
     <Modal
       open={open}
       onClose={onClose}
-      className='[&_.body-wrapper]:max-h-[80vh] [&_.body-wrapper]:w-200'
-      bodyClassName='overflow-y-auto'
+      bodyWrapperClassName='h-[80vh] max-[1537px]:w-225 max-[1367px]:w-200'
       title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${objectName}`}
       aria-labelledby='movie-item-modal-title'
       scrollable

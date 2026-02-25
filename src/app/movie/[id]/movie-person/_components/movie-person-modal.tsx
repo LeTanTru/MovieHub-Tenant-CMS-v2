@@ -76,7 +76,7 @@ export default function MoviePersonModal({
       title={`Thêm ${kind === PERSON_KIND_ACTOR ? 'diễn viên' : 'đạo diễn'}`}
       open={open}
       onClose={close}
-      className='w-175 [&_.body-wrapper]:bottom-[25%] [&_.body-wrapper]:h-fit'
+      bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='video-modal-title'
       closeOnBackdropClick
     >

@@ -240,9 +240,6 @@ export default function MovieItemSeasonList({
           +searchParams.type === MOVIE_TYPE_SINGLE,
         edit: true,
         delete: true
-      },
-      columnProps: {
-        fixed: true
       }
     })
   ];

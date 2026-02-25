@@ -5,6 +5,7 @@ import { AvatarField, Button, InputField, ToolTip } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import { HasPermission } from '@/components/has-permission';
 import { ListPageWrapper } from '@/components/layout';
+import { CircleLoading } from '@/components/loading';
 import { DragDropTable } from '@/components/table';
 import { Separator } from '@/components/ui/separator';
 import { apiConfig, MAX_PAGE_SIZE, PERSON_KIND_ACTOR } from '@/constants';
@@ -42,8 +43,10 @@ export default function MoviePersonList({
 
   const moviePersonModal = useDisclosure(false);
 
-  const { mutateAsync: updateMoviePersonMutate } =
-    useUpdateMoviePersonMutation();
+  const {
+    mutateAsync: updateMoviePersonMutate,
+    isPending: updateMoviePersonLoading
+  } = useUpdateMoviePersonMutation();
 
   const { data, loading, handlers, listQuery } = useListBase<
     MoviePersonResType,
@@ -111,7 +114,9 @@ export default function MoviePersonList({
                   className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                   {...buttonProps}
                 >
-                  {isEditing ? (
+                  {updateMoviePersonLoading && isEditing ? (
+                    <CircleLoading className='size-4' />
+                  ) : isEditing ? (
                     <AiOutlineSave className='text-main-color size-4' />
                   ) : (
                     <AiOutlineEdit className='text-main-color size-4' />
@@ -167,6 +172,13 @@ export default function MoviePersonList({
       return;
     }
 
+    const updatedData = data.map((item) =>
+      item.id === record.id
+        ? { ...item, characterName: newCharacterName }
+        : item
+    );
+    handlers.setData(updatedData);
+
     await updateMoviePersonMutate(
       {
         id: record.id,
@@ -178,18 +190,23 @@ export default function MoviePersonList({
           if (res.result) {
             notify.success('Cập nhật tên nhân vật thành công');
             setSelectedRow('');
-
-            const updatedData = data.map((item) =>
-              item.id === record.id
-                ? { ...item, characterName: newCharacterName }
-                : item
-            );
-            handlers.setData(updatedData);
+          } else {
+            notify.error('Cập nhật tên nhân vật thất bại');
+            handlers.setData(data);
+            setCharacterNames((prev) => ({
+              ...prev,
+              [record.id]: record.characterName || ''
+            }));
           }
         },
         onError: (error) => {
           logger.error(`Error while updating character name: ${error}`);
-          notify.success('Có lỗi xảy ra');
+          notify.error('Có lỗi xảy ra');
+          handlers.setData(data);
+          setCharacterNames((prev) => ({
+            ...prev,
+            [record.id]: record.characterName || ''
+          }));
         }
       }
     );

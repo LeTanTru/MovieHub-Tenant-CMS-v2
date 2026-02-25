@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom';
 import { useIsMounted } from '@/hooks';
 import { X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/form';
+import { Activity } from '@/components/activity';
 
 export type ModalProps = Omit<HTMLMotionProps<'div'>, 'title'> & {
   children: ReactNode;
@@ -26,6 +27,7 @@ export type ModalProps = Omit<HTMLMotionProps<'div'>, 'title'> & {
   bodyRef?: React.RefObject<HTMLDivElement | null>;
   bodyStyle?: React.CSSProperties;
   scrollable?: boolean;
+  bodyWrapperClassName?: string;
 };
 
 export default function Modal({
@@ -39,18 +41,24 @@ export default function Modal({
   showClose = true,
   variants = {
     initial: {
-      y: -100,
-      opacity: 0,
-      scale: 0.95
+      opacity: 0.5,
+      scale: 0.5
     },
-    animate: { y: 0, opacity: 1, scale: 1 },
-    exit: { y: -100, opacity: 0, scale: 0.95 }
+    animate: {
+      opacity: 1,
+      scale: 1
+    },
+    exit: {
+      opacity: 0.5,
+      scale: 0.5
+    }
   },
   headerClassName,
   bodyClassName,
   bodyRef,
   bodyStyle,
   scrollable = false,
+  bodyWrapperClassName,
   ...rest
 }: ModalProps) {
   const isMounted = useIsMounted();
@@ -80,6 +88,17 @@ export default function Modal({
     };
   }, [open, children, scrollable]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (!open) return;
+
+    document.body.classList.add('body-lock');
+
+    return () => {
+      document.body.classList.remove('body-lock');
+    };
+  }, [open]);
+
   const handleScrollDown = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ top: 200, behavior: 'smooth' });
@@ -93,6 +112,7 @@ export default function Modal({
       {open && (
         <m.div
           onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
           className={cn(
             'fixed inset-0 z-20 flex items-center justify-center',
             className
@@ -100,9 +120,13 @@ export default function Modal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{
+            duration: 0.15,
+            ease: 'linear'
+          }}
           {...rest}
         >
-          {backdrop && (
+          <Activity visible={backdrop}>
             <m.div
               className='backdrop absolute inset-0 bg-black/50'
               initial={{ opacity: 0 }}
@@ -110,42 +134,44 @@ export default function Modal({
               exit={{ opacity: 0 }}
               onClick={closeOnBackdropClick ? onClose : undefined}
             />
-          )}
+          </Activity>
 
           <m.div
-            className={
-              'body-wrapper absolute top-1/2 left-1/2 h-[80vh] min-h-[80vh] w-300 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white shadow-[0px_0px_10px_2px] shadow-black/40'
-            }
+            className={cn(
+              'body-wrapper absolute top-1/2 left-1/2 w-250 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white shadow-[0px_0px_10px_2px] shadow-black/40',
+              bodyWrapperClassName
+            )}
             initial={variants.initial}
             animate={variants.animate}
             exit={variants.exit}
             transition={{ duration: 0.15, ease: 'linear' }}
             onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
           >
-            {(!!title || showClose) && (
+            <Activity visible={!!title || !!showClose}>
               <div
                 className={cn(
-                  'flex items-center justify-between border-b border-gray-200 px-4',
+                  'header-title flex h-10 items-center justify-between border-b border-none border-solid border-gray-200 py-2 pr-2 pl-4 dark:border-none dark:text-white',
                   headerClassName
                 )}
               >
-                <div className='text-base font-semibold text-gray-800'>
+                <div className='font-semibold text-gray-800 dark:text-white'>
                   {title}
                 </div>
 
-                {showClose && onClose !== undefined && (
+                <Activity visible={showClose && onClose !== undefined}>
                   <Button
-                    className='p-0! text-gray-500 transition hover:bg-transparent hover:text-black'
+                    className='h-fit! p-0! text-gray-500 transition hover:bg-transparent hover:text-black dark:text-gray-400 dark:hover:text-white'
                     onClick={onClose}
                     variant='ghost'
                   >
                     <X className='size-5' />
                   </Button>
-                )}
+                </Activity>
               </div>
-            )}
+            </Activity>
 
-            <div ref={bodyRef} className='body relative h-full'>
+            <div ref={bodyRef} className='body relative h-[calc(100%-40px)]'>
               <div
                 ref={scrollRef}
                 className={cn(
@@ -165,7 +191,7 @@ export default function Modal({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     onClick={handleScrollDown}
-                    className='absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce rounded-full p-2 text-white shadow-[0px_0px_10px_2px] shadow-gray-300 transition'
+                    className='absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce rounded-full p-2 text-white shadow-[0px_0px_10px_2px] shadow-gray-300 transition-all'
                     aria-label='Scroll down'
                   >
                     <ChevronDown className='size-5 text-slate-800' />
