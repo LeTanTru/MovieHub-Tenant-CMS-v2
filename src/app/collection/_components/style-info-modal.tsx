@@ -21,7 +21,6 @@ export default function StyleInfoModal({
       title='Thông tin thiết kế'
       bodyWrapperClassName='w-200'
       bodyClassName='p-4'
-      closeOnBackdropClick
     >
       <Row className='mb-0'>
         <Col span={24}>
@@ -44,16 +43,33 @@ export default function StyleInfoModal({
         </Col>
       </Row>
       <Row className='mb-0'>
-        <Col span={24}>
+        <Col>
           <label className='mb-1 block text-sm font-bold text-gray-700'>
-            Ảnh:
+            Ảnh Mobile:
           </label>
-          {style.imageUrl ? (
+          {style.imageMobileUrl ? (
             <ImageField
               disablePreview={false}
-              src={renderImageUrl(style.imageUrl)}
-              previewAspect={2 / 3}
+              src={renderImageUrl(style.imageMobileUrl)}
               originalSize
+              freeAspect
+              freePreviewAspect
+            />
+          ) : (
+            <span className='text-gray-500'>Không có ảnh</span>
+          )}
+        </Col>
+        <Col>
+          <label className='mb-1 block text-sm font-bold text-gray-700'>
+            Ảnh Web:
+          </label>
+          {style.imageWebUrl ? (
+            <ImageField
+              disablePreview={false}
+              src={renderImageUrl(style.imageWebUrl)}
+              originalSize
+              freeAspect
+              freePreviewAspect
             />
           ) : (
             <span className='text-gray-500'>Không có ảnh</span>

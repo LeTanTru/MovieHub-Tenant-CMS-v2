@@ -61,7 +61,6 @@ export default function VideoPlayModal({
       onClose={onClose}
       className='video-play-modal overflow-hidden'
       aria-labelledby='video-play-modal-title'
-      closeOnBackdropClick
       bodyRef={bodyRef}
     >
       <div

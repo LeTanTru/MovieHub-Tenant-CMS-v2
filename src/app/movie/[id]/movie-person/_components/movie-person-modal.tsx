@@ -78,7 +78,6 @@ export default function MoviePersonModal({
       onClose={close}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='video-modal-title'
-      closeOnBackdropClick
     >
       <BaseForm
         defaultValues={defaultValues}

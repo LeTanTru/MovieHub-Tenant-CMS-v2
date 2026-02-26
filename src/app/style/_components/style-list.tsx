@@ -30,16 +30,38 @@ export default function StyleList({ queryKey }: { queryKey: string }) {
 
   const columns: Column<StyleResType>[] = [
     {
-      title: '#',
-      dataIndex: 'imageUrl',
-      width: 80,
+      title: 'Ảnh mobile',
+      dataIndex: 'imageMobileUrl',
+      width: 120,
       align: 'center',
       render: (value) => (
         <ImageField
           disablePreview={!value}
           src={renderImageUrl(value)}
-          aspect={1}
+          aspect={0}
           freePreviewAspect
+          width={46}
+          height={46}
+          className='mx-auto size-[46px] border-none'
+          imageClassName='size-[46px]'
+        />
+      )
+    },
+    {
+      title: 'Ảnh web',
+      dataIndex: 'imageWebUrl',
+      width: 120,
+      align: 'center',
+      render: (value) => (
+        <ImageField
+          disablePreview={!value}
+          src={renderImageUrl(value)}
+          aspect={0}
+          freePreviewAspect
+          width={46}
+          height={46}
+          className='mx-auto size-[46px] border-none'
+          imageClassName='size-[46px]'
         />
       )
     },

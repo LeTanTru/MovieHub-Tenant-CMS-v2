@@ -300,8 +300,10 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                     }
                   }}
                   deleteImageFn={imageTitleManager.handleDeleteOnClick}
-                  label='Ảnh tiêu đề (Image Title)'
+                  label='Ảnh tiêu đề (Image title)'
                   allowCustomAspect
+                  originalSize
+                  defaultCrop={false}
                 />
               </Col>
             </Row>

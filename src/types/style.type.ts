@@ -5,7 +5,8 @@ export type StyleResType = {
   createdDate: string;
   description: string;
   id: string;
-  imageUrl: string;
+  imageMobileUrl: string;
+  imageWebUrl: string;
   isDefault: boolean;
   modifiedDate: string;
   name: string;
