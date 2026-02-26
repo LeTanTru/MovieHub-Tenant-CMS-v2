@@ -32,10 +32,14 @@ export default function CollectionItemModal({
     id: string;
   }>();
 
-  const { loading, isEditing, handleSubmit, renderActions } = useSaveBase<
-    CollectionItemResType,
-    CollectionItemBodyType
-  >({
+  const {
+    loading,
+    isEditing,
+    isFormChanged,
+    onFormChange,
+    handleSubmit,
+    renderActions
+  } = useSaveBase<CollectionItemResType, CollectionItemBodyType>({
     apiConfig: apiConfig.collectionItem,
     options: {
       queryKey: queryKeys.COLLECTION_ITEM,
@@ -74,11 +78,13 @@ export default function CollectionItemModal({
       onClose={onClose}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='collection-item-modal-title'
+      confirmOnClose={isFormChanged}
     >
       <BaseForm
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         schema={collectionItemSchema}
+        onFormChange={onFormChange}
       >
         {(form) => {
           return (

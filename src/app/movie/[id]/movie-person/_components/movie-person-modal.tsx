@@ -20,6 +20,7 @@ import type {
 import { getLastWord, notify, renderImageUrl } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import type { UseFormReturn } from 'react-hook-form';
+import { useState } from 'react';
 
 export default function MoviePersonModal({
   moviePersonList,
@@ -38,6 +39,7 @@ export default function MoviePersonModal({
 }) {
   const { mutateAsync: createMoviePersonMutate } =
     useCreateMoviePersonMutation();
+  const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
 
   const defaultValues: MoviePersonBodyType = {
     kind: kind,
@@ -78,11 +80,13 @@ export default function MoviePersonModal({
       onClose={close}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='video-modal-title'
+      confirmOnClose={isFormChanged}
     >
       <BaseForm
         defaultValues={defaultValues}
         schema={moviePersonSchema}
         onSubmit={handleSubmit}
+        onFormChange={(changed) => setIsFormChanged(changed)}
       >
         {(form) => (
           <>

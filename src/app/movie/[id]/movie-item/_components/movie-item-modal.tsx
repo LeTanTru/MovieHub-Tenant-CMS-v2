@@ -94,10 +94,15 @@ export default function MovieItemModal({
     }
   }
 
-  const { data, loading, isEditing, handleSubmit, renderActions } = useSaveBase<
-    MovieItemResType,
-    MovieItemBodyType
-  >({
+  const {
+    data,
+    loading,
+    isEditing,
+    isFormChanged,
+    onFormChange,
+    handleSubmit,
+    renderActions
+  } = useSaveBase<MovieItemResType, MovieItemBodyType>({
     apiConfig: apiConfig.movieItem,
     options: {
       queryKey: queryKeys.MOVIE_ITEM,
@@ -220,12 +225,14 @@ export default function MovieItemModal({
       title={`${isEditing ? 'Cập nhật' : 'Thêm'} ${objectName}`}
       aria-labelledby='movie-item-modal-title'
       scrollable
+      confirmOnClose={isFormChanged}
     >
       <BaseForm
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         schema={movieItemSchema}
         initialValues={initialValues}
+        onFormChange={onFormChange}
       >
         {(form) => {
           const kind = form.watch('kind');
