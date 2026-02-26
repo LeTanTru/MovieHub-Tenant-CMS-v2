@@ -6,6 +6,7 @@ import { DragDropTable } from '@/components/table';
 import {
   apiConfig,
   COLLECTION_TYPE_SECTION,
+  COLLECTION_TYPE_TOPIC,
   collectionTypeOptions,
   FieldTypes,
   MAX_PAGE_SIZE
@@ -24,7 +25,8 @@ import type {
   CollectionResType,
   CollectionSearchType,
   Column,
-  SearchFormProps
+  SearchFormProps,
+  StyleResType
 } from '@/types';
 import { generatePath, renderListPageUrl } from '@/utils';
 import { TbListDetails, TbPalette } from 'react-icons/tb';
@@ -44,6 +46,8 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
   const { searchParams, serializeParams } =
     useQueryParams<CollectionSearchType>();
 
+  const type = searchParams.type;
+
   const { data, loading, handlers } = useListBase<
     CollectionResType,
     CollectionSearchType
@@ -51,10 +55,10 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
     apiConfig: apiConfig.collection,
     options: {
       queryKey,
-      objectName: 'bộ sưu tập'
-      // defaultFilters: {
-      //   type: COLLECTION_TYPE_TOPIC
-      // }
+      objectName: 'bộ sưu tập',
+      defaultFilters: {
+        type: COLLECTION_TYPE_TOPIC
+      }
     },
     override: (handlers) => {
       handlers.additionalColumns = () => ({
@@ -231,14 +235,28 @@ export default function CollectionList({ queryKey }: { queryKey: string }) {
 
   const searchFields: SearchFormProps<CollectionSearchType>['searchFields'] = [
     { key: 'name', placeholder: 'Tên bộ sưu tập' },
-    { key: 'style', placeholder: 'Thiết kế' },
     {
       key: 'type',
       placeholder: 'Loại',
       options: collectionTypeOptions,
       type: FieldTypes.SELECT,
       submitOnChanged: true
-    }
+    },
+    ...(!!type && +type === COLLECTION_TYPE_SECTION
+      ? [
+          {
+            key: 'styleId' as const,
+            placeholder: 'Thiết kế',
+            type: FieldTypes.AUTO_COMPLETE,
+            apiConfig: apiConfig.style.autoComplete,
+            mappingData: (item: StyleResType) => ({
+              label: item.name,
+              value: item.id.toString()
+            }),
+            searchParams: ['name']
+          }
+        ]
+      : [])
   ];
 
   return (

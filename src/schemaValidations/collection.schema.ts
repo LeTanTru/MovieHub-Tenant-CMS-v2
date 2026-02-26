@@ -23,6 +23,6 @@ export const collectionSchema = z.object({
 
 export const collectionSearchSchema = z.object({
   name: z.string().optional().nullable(),
-  style: z.string().optional().nullable(),
+  styleId: z.string().optional().nullable(),
   type: z.number().optional().nullable()
 });
