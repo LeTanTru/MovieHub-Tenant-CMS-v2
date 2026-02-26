@@ -137,9 +137,10 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
                   }}
                   deleteImageFn={imageManager.handleDeleteOnClick}
                   label='Ảnh minh họa'
-                  aspect={16 / 9}
                   required
-                  defaultCrop
+                  allowCustomAspect
+                  defaultCrop={false}
+                  originalSize
                 />
               </Col>
             </Row>
