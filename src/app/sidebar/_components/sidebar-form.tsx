@@ -179,7 +179,6 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     label='Thumbnail mobile (2:3)'
                     aspect={2 / 3}
                     required
-                    defaultCrop
                   />
                 </Col>
               </Row>

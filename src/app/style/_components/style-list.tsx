@@ -39,7 +39,7 @@ export default function StyleList({ queryKey }: { queryKey: string }) {
           disablePreview={!value}
           src={renderImageUrl(value)}
           aspect={1}
-          previewAspect={2 / 3}
+          freePreviewAspect
         />
       )
     },
