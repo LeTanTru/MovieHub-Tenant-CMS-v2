@@ -25,10 +25,15 @@ export default function CategoryModal({
   category: CategoryResType | null;
   onClose: () => void;
 }) {
-  const { data, loading, isEditing, handleSubmit, renderActions } = useSaveBase<
-    CategoryResType,
-    CategoryBodyType
-  >({
+  const {
+    data,
+    loading,
+    isEditing,
+    isFormChanged,
+    onFormChange,
+    handleSubmit,
+    renderActions
+  } = useSaveBase<CategoryResType, CategoryBodyType>({
     apiConfig: apiConfig.category,
     options: {
       queryKey: queryKeys.CATEGORY,
@@ -77,12 +82,14 @@ export default function CategoryModal({
       title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} danh mục`}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='category-modal-title'
+      confirmOnClose={isFormChanged}
     >
       <BaseForm
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         schema={categorySchema}
         initialValues={initialValues}
+        onFormChange={onFormChange}
       >
         {(form) => (
           <>
