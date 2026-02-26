@@ -14,9 +14,10 @@ export type ModalProps = Omit<HTMLMotionProps<'div'>, 'title'> & {
   open: boolean;
   onClose?: () => void;
   backdrop?: boolean;
-  closeOnBackdropClick?: boolean;
   title?: string | ReactNode;
   showClose?: boolean;
+  confirmClose?: boolean;
+  confirmCloseMessage?: string;
   variants?: {
     initial: Record<string, any>;
     animate: Record<string, any>;
@@ -35,23 +36,15 @@ export default function Modal({
   open,
   onClose,
   backdrop = true,
-  closeOnBackdropClick = false,
   className,
   title,
   showClose = true,
+  confirmClose = false,
+  confirmCloseMessage = 'Bạn có chắc chắn muốn hủy không ?',
   variants = {
-    initial: {
-      opacity: 0.5,
-      scale: 0.5
-    },
-    animate: {
-      opacity: 1,
-      scale: 1
-    },
-    exit: {
-      opacity: 0.5,
-      scale: 0.5
-    }
+    initial: { opacity: 0.5, scale: 0.5 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0.5, scale: 0.5 }
   },
   headerClassName,
   bodyClassName,
@@ -63,7 +56,8 @@ export default function Modal({
 }: ModalProps) {
   const isMounted = useIsMounted();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showScrollArrow, setShowScrollArrow] = useState<boolean>(false);
+  const [showScrollArrow, setShowScrollArrow] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
     if (!scrollable) return;
@@ -88,21 +82,38 @@ export default function Modal({
     };
   }, [open, children, scrollable]);
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (!open) return;
-
     document.body.classList.add('body-lock');
-
     return () => {
       document.body.classList.remove('body-lock');
     };
   }, [open]);
 
+  // Reset confirmation dialog when modal closes
+  useEffect(() => {
+    if (!open) setShowConfirm(false);
+  }, [open]);
+
   const handleScrollDown = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ top: 200, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ top: 200, behavior: 'smooth' });
+  };
+
+  const handleCloseRequest = () => {
+    if (confirmClose) {
+      setShowConfirm(true);
+    } else {
+      onClose?.();
     }
+  };
+
+  const handleConfirmYes = () => {
+    setShowConfirm(false);
+    onClose?.();
+  };
+
+  const handleConfirmNo = () => {
+    setShowConfirm(false);
   };
 
   if (!isMounted) return;
@@ -120,10 +131,7 @@ export default function Modal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{
-            duration: 0.15,
-            ease: 'linear'
-          }}
+          transition={{ duration: 0.15, ease: 'linear' }}
           {...rest}
         >
           <Activity visible={backdrop}>
@@ -132,7 +140,7 @@ export default function Modal({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={closeOnBackdropClick ? onClose : undefined}
+              onClick={handleCloseRequest}
             />
           </Activity>
 
@@ -162,7 +170,7 @@ export default function Modal({
                 <Activity visible={showClose && onClose !== undefined}>
                   <Button
                     className='h-fit! p-0! text-gray-500 transition hover:bg-transparent hover:text-black dark:text-gray-400 dark:hover:text-white'
-                    onClick={onClose}
+                    onClick={handleCloseRequest}
                     variant='ghost'
                   >
                     <X className='size-5' />
@@ -199,6 +207,48 @@ export default function Modal({
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Confirmation overlay */}
+            <AnimatePresence>
+              {showConfirm && (
+                <m.div
+                  className='absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/40'
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15, ease: 'linear' }}
+                  onClick={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
+                  <m.div
+                    className='mx-4 flex flex-col items-center gap-4 rounded-lg bg-white px-6 py-5 shadow-lg dark:bg-gray-800'
+                    initial={{ scale: 0.85, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.85, opacity: 0 }}
+                    transition={{ duration: 0.05, ease: 'linear' }}
+                  >
+                    <p className='text-center text-sm font-medium text-gray-700 dark:text-gray-200'>
+                      {confirmCloseMessage}
+                    </p>
+                    <div className='flex gap-3'>
+                      <Button
+                        variant='outline'
+                        className='w-20 border-red-500 text-red-500 transition-all duration-200 ease-linear hover:border-red-500/80 hover:bg-transparent hover:text-red-500/80'
+                        onClick={handleConfirmNo}
+                      >
+                        Không
+                      </Button>
+                      <Button
+                        className='bg-main-color hover:bg-main-color/80 w-20 text-white'
+                        onClick={handleConfirmYes}
+                      >
+                        Có
+                      </Button>
+                    </div>
+                  </m.div>
+                </m.div>
+              )}
+            </AnimatePresence>
           </m.div>
         </m.div>
       )}

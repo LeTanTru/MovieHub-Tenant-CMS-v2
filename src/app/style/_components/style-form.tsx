@@ -51,8 +51,15 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
     }
   });
 
-  const imageManager = useFileUploadManager({
-    initialUrl: data?.imageUrl,
+  const imageMobileManager = useFileUploadManager({
+    initialUrl: data?.imageMobileUrl,
+    deleteFileMutate: deleteFileMutate,
+    isEditing,
+    onOpen: true
+  });
+
+  const imageWebManager = useFileUploadManager({
+    initialUrl: data?.imageWebUrl,
     deleteFileMutate: deleteFileMutate,
     isEditing,
     onOpen: true
@@ -60,7 +67,8 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
 
   const defaultValues: StyleBodyType = {
     description: '',
-    imageUrl: '',
+    imageMobileUrl: '',
+    imageWebUrl: '',
     isDefault: false,
     name: '',
     type: 1
@@ -69,33 +77,38 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
   const initialValues: StyleBodyType = useMemo(() => {
     return {
       description: data?.description ?? '',
-      imageUrl: data?.imageUrl ?? '',
+      imageMobileUrl: data?.imageMobileUrl ?? '',
+      imageWebUrl: data?.imageWebUrl ?? '',
       isDefault: data?.isDefault ?? false,
       name: data?.name ?? '',
       type: data?.type ?? 1
     };
   }, [
     data?.description,
-    data?.imageUrl,
+    data?.imageMobileUrl,
+    data?.imageWebUrl,
     data?.isDefault,
     data?.name,
     data?.type
   ]);
 
   const handleCancel = async () => {
-    await imageManager.handleCancel();
+    await imageMobileManager.handleCancel();
+    await imageWebManager.handleCancel();
   };
 
   const onSubmit = async (
     values: StyleBodyType,
     form: UseFormReturn<StyleBodyType>
   ) => {
-    await imageManager.handleSubmit();
+    await imageMobileManager.handleSubmit();
+    await imageWebManager.handleSubmit();
 
     await handleSubmit(
       {
         ...values,
-        imageUrl: imageManager.currentUrl
+        imageMobileUrl: imageMobileManager.currentUrl,
+        imageWebUrl: imageWebManager.currentUrl
       },
       form,
       styleErrorMaps
@@ -123,24 +136,44 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
         {(form) => (
           <>
             <Row>
-              <Col span={24}>
+              <Col>
                 <UploadImageField
-                  value={renderImageUrl(imageManager.currentUrl)}
+                  value={renderImageUrl(imageMobileManager.currentUrl)}
                   loading={uploadImageLoading}
                   control={form.control}
-                  name='imageUrl'
-                  onChange={imageManager.trackUpload}
+                  name='imageMobileUrl'
+                  onChange={imageMobileManager.trackUpload}
                   size={150}
                   uploadImageFn={async (file: Blob) => {
                     const res = await uploadImageMutate({ file });
                     return res.data?.filePath ?? '';
                   }}
-                  deleteImageFn={imageManager.handleDeleteOnClick}
-                  label='Ảnh minh họa'
+                  deleteImageFn={imageMobileManager.handleDeleteOnClick}
+                  label='Ảnh mobile'
                   required
                   allowCustomAspect
-                  defaultCrop={false}
                   originalSize
+                  defaultCrop={false}
+                />
+              </Col>
+              <Col>
+                <UploadImageField
+                  value={renderImageUrl(imageWebManager.currentUrl)}
+                  loading={uploadImageLoading}
+                  control={form.control}
+                  name='imageWebUrl'
+                  onChange={imageWebManager.trackUpload}
+                  size={150}
+                  uploadImageFn={async (file: Blob) => {
+                    const res = await uploadImageMutate({ file });
+                    return res.data?.filePath ?? '';
+                  }}
+                  deleteImageFn={imageWebManager.handleDeleteOnClick}
+                  label='Ảnh web'
+                  required
+                  allowCustomAspect
+                  originalSize
+                  defaultCrop={false}
                 />
               </Col>
             </Row>

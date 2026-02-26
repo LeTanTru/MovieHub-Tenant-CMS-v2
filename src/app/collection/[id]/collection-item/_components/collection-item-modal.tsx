@@ -74,7 +74,6 @@ export default function CollectionItemModal({
       onClose={onClose}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='collection-item-modal-title'
-      closeOnBackdropClick
     >
       <BaseForm
         onSubmit={onSubmit}

@@ -77,7 +77,6 @@ export default function CategoryModal({
       title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} danh mục`}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='category-modal-title'
-      closeOnBackdropClick
     >
       <BaseForm
         onSubmit={onSubmit}
