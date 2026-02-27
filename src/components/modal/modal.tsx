@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useRef, useState, useEffect } from 'react';
-import { AnimatePresence, motion, HTMLMotionProps } from 'framer-motion';
+import { AnimatePresence, m, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib';
 import { createPortal } from 'react-dom';
 import { useIsMounted } from '@/hooks';
@@ -121,7 +121,7 @@ export default function Modal({
   return createPortal(
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
           className={cn(
@@ -135,7 +135,7 @@ export default function Modal({
           {...rest}
         >
           <Activity visible={backdrop}>
-            <motion.div
+            <m.div
               className='backdrop absolute inset-0 bg-black/50'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -144,7 +144,7 @@ export default function Modal({
             />
           </Activity>
 
-          <motion.div
+          <m.div
             className={cn(
               'body-wrapper absolute top-1/2 left-1/2 w-250 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white shadow-[0px_0px_10px_2px] shadow-black/40',
               bodyWrapperClassName
@@ -194,7 +194,7 @@ export default function Modal({
 
               <AnimatePresence>
                 {scrollable && showScrollArrow && (
-                  <motion.button
+                  <m.button
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -203,7 +203,7 @@ export default function Modal({
                     aria-label='Scroll down'
                   >
                     <ChevronDown className='size-5 text-slate-800' />
-                  </motion.button>
+                  </m.button>
                 )}
               </AnimatePresence>
             </div>
@@ -211,7 +211,7 @@ export default function Modal({
             {/* Confirmation overlay */}
             <AnimatePresence>
               {showConfirm && (
-                <motion.div
+                <m.div
                   className='absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/40'
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -220,7 +220,7 @@ export default function Modal({
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  <motion.div
+                  <m.div
                     className='flex flex-col items-center gap-4 rounded-lg bg-white px-6 py-5 shadow-lg dark:bg-gray-800'
                     initial={{ scale: 0.85, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -245,12 +245,12 @@ export default function Modal({
                         Có
                       </Button>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </m.div>
+                </m.div>
               )}
             </AnimatePresence>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body
