@@ -141,30 +141,6 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
     data?.type
   ]);
 
-  // const onSubmit = async (
-  //   values: CollectionBodyType,
-  //   form: UseFormReturn<CollectionBodyType>
-  // ) => {
-  //   if (!values.styleId && values.type === COLLECTION_TYPE_SECTION) {
-  //     form.setError('styleId', { message: 'Bắt buộc' });
-  //   } else {
-  //     const payload = {
-  //       ...values,
-  //       filter: JSON.stringify(
-  //         omit(
-  //           {
-  //             ...values.filter,
-  //             limit: values.filter.noLimit ? null : values.filter.limit
-  //           },
-  //           ['noLimit']
-  //         )
-  //       ),
-  //       colors: values.colors
-  //     };
-  //     await handleSubmit(payload as any, form, collectionErrorMaps);
-  //   }
-  // };
-
   const onSubmit = async (
     values: CollectionBodyType,
     form: UseFormReturn<CollectionBodyType>
@@ -174,12 +150,31 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
     } else {
       const { noLimit, ...filterWithoutNoLimit } = values.filter;
 
-      const payload = {
-        ...values,
-        filter: JSON.stringify({
+      const filterDefaults = {
+        type: 0,
+        ageRating: 0,
+        language: '',
+        country: '',
+        isFeatured: false,
+        categoryIds: [],
+        limit: null
+      };
+
+      const cleanedFilter = Object.fromEntries(
+        Object.entries({
           ...filterWithoutNoLimit,
           limit: noLimit ? null : values.filter.limit
-        }),
+        }).filter(([key, value]) => {
+          const defaultValue =
+            filterDefaults[key as keyof typeof filterDefaults];
+          if (!Array.isArray(value)) return value !== defaultValue;
+          return Array.isArray(value) && value.length > 0;
+        })
+      );
+
+      const payload = {
+        ...values,
+        filter: JSON.stringify(cleanedFilter),
         colors: values.colors
       };
       await handleSubmit(payload as any, form, collectionErrorMaps);
