@@ -264,7 +264,8 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                 <Col span={12}>
                   <div className='space-y-2'>
                     <label className='ml-2 text-sm font-medium'>
-                      Màu <span className='text-red-500'>*</span>
+                      Màu (chọn ít nhất 2){' '}
+                      <span className='text-red-500'>*</span>
                     </label>
                     <div className='mt-1 space-y-2'>
                       {colors.map((color: string, index: number) => (
@@ -286,7 +287,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                             className='w-28 rounded border border-gray-300 px-3 py-2 text-sm uppercase'
                             placeholder='#000000'
                           />
-                          {colors.length > 1 && (
+                          {colors.length > 2 && (
                             <Button
                               type='button'
                               variant='outline'
