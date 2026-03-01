@@ -427,6 +427,13 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                       label='Nổi bật'
                     />
                   </Col>
+                  <Col className='justify-end'>
+                    <BooleanField
+                      name='filter.comingSoon'
+                      control={form.control}
+                      label='Sắp ra mắt'
+                    />
+                  </Col>
                 </Row>
                 <Row className='mb-0 justify-end'>
                   <Col span={4}>
