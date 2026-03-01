@@ -10,13 +10,14 @@ import {
 } from '@/components/providers';
 import type { Metadata } from 'next';
 import { PermissionGuard } from '@/components/permission-guard';
+import { DetectResizing } from '@/components/detect-resizing';
 
 const inter = Be_Vietnam_Pro({
   weight: ['300', '400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   variable: '--font-be-vietnam-pro',
   display: 'swap',
-  preload: false
+  preload: true
 });
 
 export const metadata: Metadata = {
@@ -43,7 +44,10 @@ export default async function RootLayout({
           <QueryProvider>
             <AppProvider>
               <Suspense>
-                <PermissionGuard>{children}</PermissionGuard>
+                <PermissionGuard>
+                  {children}
+                  <DetectResizing />
+                </PermissionGuard>
               </Suspense>
               <NextTopLoader showSpinner={false} />
             </AppProvider>
