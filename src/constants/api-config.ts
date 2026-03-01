@@ -13,36 +13,42 @@ const apiConfig = defineApiConfig({
     loginManager: {
       baseUrl: `${AppConstants.metaApiUrl}/api/token`,
       method: 'POST',
-      headers: baseHeader
+      headers: baseHeader,
+      isRequiredXClientType: true
     },
     loginEmployee: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/login`,
       method: 'POST',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     logout: {
       baseUrl: `${AppConstants.metaApiUrl}/v1/auth/logout`,
       method: 'POST',
-      headers: baseHeader
+      headers: baseHeader,
+      isRequiredXClientType: true
     },
     refreshToken: {
       baseUrl: `${AppConstants.metaApiUrl}/api/token`,
       method: 'POST',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   customer: {
     getProfile: {
       baseUrl: `${AppConstants.metaApiUrl}/v1/customer/profile`,
       method: 'GET',
-      headers: baseHeader
+      headers: baseHeader,
+      isRequiredXClientType: true
     },
     updateProfile: {
       baseUrl: `${AppConstants.metaApiUrl}/v1/customer/update-profile`,
       method: 'PUT',
-      headers: baseHeader
+      headers: baseHeader,
+      isRequiredXClientType: true
     }
   },
   category: {
@@ -51,35 +57,40 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'CA_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/category/admin/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'CA_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/category/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'CA_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/category/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'CA_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/category/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'CA_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   comment: {
@@ -88,55 +99,63 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'CMT_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'CMT_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'CMT_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     changeStatus: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/change-status`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'CMT_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     pin: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/pin`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'CMT_PIN',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     vote: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/vote`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'CMT_VOTE',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'CMT_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     voteList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/comment/vote-list/:movieId`,
       method: 'GET',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   employee: {
@@ -145,54 +164,62 @@ const apiConfig = defineApiConfig({
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'EM_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'EM_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'EM_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getById: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/get/:id`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'EM_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'EM_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getProfile: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/profile`,
       method: 'GET',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'EM_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     updateProfile: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/employee/update-profile`,
       method: 'PUT',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   group: {
@@ -201,28 +228,32 @@ const apiConfig = defineApiConfig({
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'GR_T_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getById: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/get/:id`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'GR_T_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'GR_T_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/group/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'GR_T_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   movie: {
@@ -231,42 +262,48 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'MOV_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/admin/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'MOV_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'MOV_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'MOV_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'MOV_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     collectionFilter: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie/collection-filter/:collectionId`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'MOV_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   movieItem: {
@@ -275,42 +312,48 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'MOV_I_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/admin/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'MOV_I_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'MOV_I_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'MOV_I_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'MOV_I_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     updateOrdering: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-item/update-ordering`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'MOV_I_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   moviePerson: {
@@ -319,35 +362,40 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'MOV_P_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'MOV_P_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'MOV_P_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'MOV_P_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     updateOrdering: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/movie-person/update-ordering`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'MOV_P_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   person: {
@@ -355,42 +403,48 @@ const apiConfig = defineApiConfig({
       baseUrl: `${AppConstants.tenantApiUrl}/v1/person/admin/auto-complete`,
       method: 'GET',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getById: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/person/admin/get/:id`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'PSN_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/person/admin/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'PSN_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/person/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'PSN_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/person/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'PSN_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/person/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'PSN_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   review: {
@@ -399,34 +453,39 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'REV_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     changeStatus: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/review/change-status`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'REV_C_S',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/review/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'REV_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getById: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/review/get/:id`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'REV_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     voteList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/review/vote-list/:movieId`,
       method: 'GET',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   permission: {
@@ -443,35 +502,40 @@ const apiConfig = defineApiConfig({
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'USR_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/user/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'USR_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getById: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/user/get/:id`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'USR_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/user/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'USR_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/user/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'USR_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   file: {
@@ -481,7 +545,8 @@ const apiConfig = defineApiConfig({
       headers: multipartHeader,
       permissionCode: 'FILE_U',
       isUpload: true,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     uploadVideo: {
       baseUrl: `${AppConstants.mediaUrl}/v1/file/upload-video`,
@@ -489,14 +554,16 @@ const apiConfig = defineApiConfig({
       headers: multipartHeader,
       permissionCode: 'FILE_U_V',
       isUpload: true,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.mediaUrl}/v1/file/delete-file`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'FILE_U_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   sns: {
@@ -505,12 +572,14 @@ const apiConfig = defineApiConfig({
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'GET_SNS_CONFIG',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     sendSignal: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sns/send-signal`,
       method: 'POST',
-      headers: baseHeader
+      headers: baseHeader,
+      isRequiredXClientType: true
     }
   },
   sidebar: {
@@ -519,42 +588,48 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'SDB_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/admin/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'SDB_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'SDB_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'SDB_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'SDB_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     updateOrdering: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sidebar/update-ordering`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'SBD_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   videoLibrary: {
@@ -563,41 +638,47 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'VID_L_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/video-library/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'VID_L_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/video-library/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'VID_L_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/video-library/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'VID_L_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/video-library/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'VID_L_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     autoComplete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/video-library/auto-complete`,
       method: 'GET',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   appVersion: {
@@ -606,35 +687,40 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'APP_V_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/app-version/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'APP_V_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/app-version/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'APP_V_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/app-version/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'APP_V_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/app-version/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'APP_V_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   style: {
@@ -643,41 +729,47 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'STL_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/style/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'STL_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/style/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'STL_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/style/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'STL_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/style/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'STL_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     autoComplete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/style/auto-complete`,
       method: 'GET',
       headers: baseHeader,
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   collection: {
@@ -686,42 +778,48 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'COL_V',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     getList: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection/admin/list`,
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'COL_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'COL_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'COL_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     update: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection/update`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'COL_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     updateOrdering: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection/update-ordering`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'COL_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   },
   collectionItem: {
@@ -730,28 +828,32 @@ const apiConfig = defineApiConfig({
       method: 'GET',
       headers: baseHeader,
       permissionCode: 'COL_I_L',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     create: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection-item/create`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'COL_I_C',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     delete: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection-item/delete/:id`,
       method: 'DELETE',
       headers: baseHeader,
       permissionCode: 'COL_I_D',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     },
     updateOrdering: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/collection-item/update-ordering`,
       method: 'PUT',
       headers: baseHeader,
       permissionCode: 'COL_I_U',
-      isRequiredTenantId: true
+      isRequiredTenantId: true,
+      isRequiredXClientType: true
     }
   }
 });

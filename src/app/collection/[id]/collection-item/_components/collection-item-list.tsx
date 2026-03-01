@@ -48,12 +48,11 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
     options: {
       queryKey,
       objectName: 'chi tiết bộ sưu tập',
-      excludeFromQueryFilter: ['type', 'collectionTitle']
+      excludeFromQueryFilter: ['type', 'collectionTitle'],
+      defaultFilters: { collectionId },
+      notShowFromSearchParams: ['collectionId']
     },
     override: (handlers) => {
-      handlers.additionalParams = () => ({
-        collectionId
-      });
       handlers.renderAddButton = () => {
         return (
           <HasPermission
