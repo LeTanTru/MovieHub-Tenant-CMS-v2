@@ -8,7 +8,8 @@ const filterSchema = z.object({
   isFeatured: z.boolean().optional().nullable(),
   categoryIds: z.array(z.string()).optional().nullable(),
   limit: z.number().optional().nullable(),
-  noLimit: z.boolean().optional().nullable()
+  noLimit: z.boolean().optional().nullable(),
+  comingSoon: z.boolean().optional().nullable()
 });
 
 export const collectionSchema = z.object({
