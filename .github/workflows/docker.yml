@@ -1,4 +1,4 @@
-name: Build, Push, Deploy Fe MovieHub
+name: Build, Push, Deploy Tenant CMS MovieHub
 
 on:
   push:
