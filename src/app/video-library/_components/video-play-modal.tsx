@@ -4,7 +4,12 @@ import './video-play-modal.css';
 import { Modal } from '@/components/modal';
 import { VideoPlayer } from '@/components/video-player';
 import type { VideoLibraryResType } from '@/types';
-import { renderImageUrl, renderVideoUrl, renderVttUrl } from '@/utils';
+import {
+  getAccessTokenFromLocalStorage,
+  renderImageUrl,
+  renderVideoUrl,
+  renderVttUrl
+} from '@/utils';
 import { VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL } from '@/constants';
 import { useEffect, useRef, useState } from 'react';
 
@@ -78,10 +83,11 @@ export default function VideoPlayModal({
           duration={video.duration}
           introEnd={video.introEnd}
           introStart={video.introStart}
-          source={renderVideoUrl(video.content)}
+          src={renderVideoUrl(video.content)}
           thumbnailUrl={renderImageUrl(video.thumbnailUrl)}
           vttUrl={renderVttUrl(video.vttUrl)}
           outroStart={video.outroStart}
+          token={getAccessTokenFromLocalStorage() || ''}
         />
       </div>
     </Modal>

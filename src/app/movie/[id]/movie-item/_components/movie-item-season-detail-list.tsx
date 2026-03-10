@@ -104,6 +104,7 @@ export default function MovieItemSeasonDetailList({
                 }}
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
                 disabled={!record.video || !record.video.duration}
+                variant='ghost'
                 {...buttonProps}
               >
                 <PlayCircle className='text-main-color size-4' />

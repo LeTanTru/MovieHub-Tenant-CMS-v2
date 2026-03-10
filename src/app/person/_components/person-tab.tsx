@@ -11,13 +11,14 @@ import {
   TAB_PERSON_KIND_ACTOR,
   TAB_PERSON_KIND_DIRECTOR
 } from '@/constants';
-import { useIsMounted } from '@/hooks';
+import { useIsMounted, useQueryParams } from '@/hooks';
 import { getData, setData } from '@/utils';
 import { useEffect, useState } from 'react';
 
 export default function PersonTab() {
   const [activeTab, setActiveTab] = useState('');
   const isMounted = useIsMounted();
+  const { setQueryParams } = useQueryParams();
 
   const tabs = [
     {
@@ -35,6 +36,11 @@ export default function PersonTab() {
       )
     }
   ];
+
+  const handleTabChange = (tab: string) => {
+    setQueryParams({});
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     const currentTab = getData(storageKeys.ACTIVE_TAB_PERSON_KIND);
@@ -58,7 +64,7 @@ export default function PersonTab() {
       ]}
     >
       <div className='rounded-lg bg-white'>
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+        <Tabs defaultValue={activeTab} onValueChange={handleTabChange}>
           <TabsList className='relative h-auto w-full justify-start gap-0.5 bg-transparent p-4 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-zinc-100'>
             {tabs.map((tab) => (
               <TabsTrigger

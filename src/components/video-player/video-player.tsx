@@ -3,7 +3,9 @@
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/audio.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
+import { LazyMotion, domAnimation } from 'framer-motion';
 import {
+  BufferingIndicator,
   CaptionButton,
   FullscreenToggleButton,
   NextButton,
@@ -15,6 +17,7 @@ import {
   SeekForwardButton,
   SettingMenu,
   SkipIntroButton,
+  SkipOutroButton,
   TimeSlider,
   VolumeIndicator,
   VolumeToggleButton
@@ -26,6 +29,7 @@ import {
   MediaProvider,
   MediaProviderAdapter,
   MediaTimeUpdateEventDetail,
+  MediaTimeUpdateEvent,
   Poster,
   Track,
   TrackProps
@@ -35,9 +39,16 @@ import {
   defaultLayoutIcons,
   DefaultVideoLayoutSlots
 } from '@vidstack/react/player/layouts/default';
-import { createContext, useContext, useRef, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  ComponentProps
+} from 'react';
 import { cn } from '@/lib';
-import { getAccessTokenFromLocalStorage } from '@/utils';
 
 type IndicatorAction = 'initial' | 'play-pause' | 'volume' | 'none';
 const IndicatorContext = createContext<{
@@ -50,144 +61,262 @@ const IndicatorContext = createContext<{
 
 export const useIndicator = () => useContext(IndicatorContext);
 
-export default function VideoPlayer({
-  auth,
-  duration,
-  introEnd,
-  introStart,
-  outroStart,
-  slots,
-  source,
-  textTracks,
-  thumbnailUrl,
-  vttUrl,
-  className,
-  token
-}: {
+type VideoPlayerProps = Omit<
+  ComponentProps<typeof MediaPlayer>,
+  'ref' | 'children' | 'viewType' | 'streamType'
+> & {
   auth: boolean;
   duration: number;
   introEnd: number;
   introStart: number;
+  next?: boolean;
   outroStart: number;
+  prev?: boolean;
+  skipOutro?: boolean;
   slots?: DefaultVideoLayoutSlots;
-  source: string;
   textTracks?: TrackProps[];
   thumbnailUrl: string;
-  vttUrl: string;
-  className?: string;
   token?: string;
-}) {
-  const playerRef = useRef<MediaPlayerInstance>(null);
-  const [showSkip, setShowSkip] = useState<boolean>(true);
-  const [currentAction, setCurrentAction] =
-    useState<IndicatorAction>('initial');
+  vttUrl: string;
+  onNextClick?: () => void;
+  onPrevClick?: () => void;
+  onSeeked?: (currentTime: number) => void;
+};
 
-  const handleTimeChange = (detail: MediaTimeUpdateEventDetail) => {
-    const { currentTime } = detail;
-    const shouldShowSkip = currentTime >= introStart && currentTime < introEnd;
+const VideoPlayer = forwardRef<MediaPlayerInstance, VideoPlayerProps>(
+  function VideoPlayer(
+    {
+      auth,
+      duration,
+      introEnd,
+      introStart,
+      next,
+      outroStart,
+      prev,
+      skipOutro = false,
+      slots,
+      textTracks,
+      thumbnailUrl,
+      token,
+      vttUrl,
+      onNextClick,
+      onPrevClick,
+      onSeeked,
+      onTimeUpdate,
+      onEnded,
+      autoPlay = true,
+      volume = 0.5,
+      className,
+      ...mediaPlayerProps
+    },
+    ref
+  ) {
+    const playerRef = useRef<MediaPlayerInstance>(null);
+    const [showSkipIntro, setShowSkipIntro] = useState<boolean>(false);
+    const [showSkipOutro, setShowSkipOutro] = useState<boolean>(false);
+    const [currentAction, setCurrentAction] =
+      useState<IndicatorAction>('initial');
 
-    setShowSkip((prev) => (prev !== shouldShowSkip ? shouldShowSkip : prev));
-  };
+    // Expose internal ref to parent
+    if (typeof ref === 'function') {
+      ref(playerRef.current);
+    } else if (ref) {
+      ref.current = playerRef.current;
+    }
 
-  return (
-    <IndicatorContext.Provider value={{ currentAction, setCurrentAction }}>
-      <MediaPlayer
-        ref={playerRef}
-        viewType='video'
-        streamType='on-demand'
-        logLevel='silent'
-        crossOrigin
-        playsInline
-        preferNativeHLS={false}
-        autoPlay
-        src={source}
-        fullscreenOrientation={'none'}
-        onProviderChange={
-          auth ? (provider) => onProviderChange(provider) : undefined
-        }
-        onPlay={() => setCurrentAction('play-pause')}
-        onPause={() => setCurrentAction('play-pause')}
-        onVolumeChange={() => setCurrentAction('volume')}
-        volume={0}
-        className={cn(
-          'video-player relative h-full rounded-none! border-none!',
-          className
-        )}
-        onTimeUpdate={handleTimeChange}
-      >
-        <MediaProvider slot='media' className='cursor-pointer'>
-          <Poster className='vds-poster' src={thumbnailUrl} />
-          {textTracks?.map((track) => (
-            <Track {...(track as any)} key={track.src} />
-          ))}
-        </MediaProvider>
-        <DefaultVideoLayout
-          thumbnails={vttUrl}
-          icons={defaultLayoutIcons}
-          slots={{
-            playButton: <PlayToggleButton />,
-            muteButton: <VolumeToggleButton />,
-            fullscreenButton: <FullscreenToggleButton />,
-            pipButton: <PiPToggleButton />,
-            settingsMenu: (
-              <SettingMenu placement='top end' tooltipPlacement='top' />
-            ),
-            captionButton: <CaptionButton />,
-            beforeSettingsMenu: (
-              <>
-                <PreviousButton />
-                <NextButton />
-                <SeekBackwardButton />
-                <SeekForwardButton />
-              </>
-            ),
-            googleCastButton: null,
-            afterTimeSlider: showSkip ? (
-              <SkipIntroButton
-                onClick={() => {
-                  if (playerRef.current && introEnd) {
-                    playerRef.current.currentTime = introEnd;
-                  }
-                }}
-              />
-            ) : (
-              <></>
-            ),
-            timeSlider: (
-              <TimeSlider
-                introStart={introStart}
-                introEnd={introEnd}
-                duration={duration}
-                outroStart={outroStart}
-                vttUrl={vttUrl}
-              />
-            ),
-            centerControlsGroupCenter: (
-              <>
-                <PlayPauseIndicator />
-              </>
-            ),
-            topControlsGroupCenter: (
-              <>
-                <VolumeIndicator />
-              </>
-            ),
-            ...slots
-          }}
-        />
-      </MediaPlayer>
-    </IndicatorContext.Provider>
-  );
-}
+    /*
+    * Set pointer to 'fine' for both touch and mouse devices
+    
+    useEffect(() => {
+      let rafId: number;
 
-function onProviderChange(provider: MediaProviderAdapter | null) {
+      const setPointerFine = () => {
+        const player = playerRef.current;
+        if (!player) return;
+        // Set via internal state signal so vidstack's reactive system reflects 'fine'
+        player.$state.pointer.set('fine');
+      };
+
+      const setup = () => {
+        const el = playerRef.current?.el;
+        if (!el) return false;
+
+        // Apply immediately for the current connection
+        setPointerFine();
+
+        // Re-apply every time vidstack reconnects (e.g. modal open/close).
+        // 'media-player-connect' is dispatched at the end of onConnect,
+        // after #onPointerChange has already set pointer to 'coarse'.
+        el.addEventListener('media-player-connect', setPointerFine);
+        return true;
+      };
+
+      let el: HTMLElement | undefined;
+      if (!setup()) {
+        rafId = requestAnimationFrame(() => {
+          setup();
+          el = playerRef.current?.el;
+        });
+      } else {
+        el = playerRef.current?.el;
+      }
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        el?.removeEventListener('media-player-connect', setPointerFine);
+      };
+    }, []);
+    */
+
+    useEffect(() => {
+      setShowSkipIntro(false);
+      setShowSkipOutro(false);
+    }, [duration, introEnd, introStart, onNextClick, outroStart, skipOutro]);
+
+    const handleTimeChange = (
+      detail: MediaTimeUpdateEventDetail,
+      nativeEvent: MediaTimeUpdateEvent
+    ) => {
+      const { currentTime } = detail;
+      const shouldShowSkipIntro =
+        currentTime >= introStart && currentTime < introEnd;
+      const shouldShowSkipOutro =
+        skipOutro &&
+        !!onNextClick &&
+        duration > 0 &&
+        outroStart > 0 &&
+        outroStart < duration &&
+        currentTime >= outroStart &&
+        currentTime < duration;
+
+      setShowSkipIntro((prev) =>
+        prev !== shouldShowSkipIntro ? shouldShowSkipIntro : prev
+      );
+      setShowSkipOutro((prev) =>
+        prev !== shouldShowSkipOutro ? shouldShowSkipOutro : prev
+      );
+      onTimeUpdate?.(detail, nativeEvent);
+    };
+
+    return (
+      <LazyMotion features={domAnimation} strict>
+        <IndicatorContext.Provider value={{ currentAction, setCurrentAction }}>
+          <MediaPlayer
+            ref={playerRef}
+            viewType='video'
+            streamType='on-demand'
+            logLevel='silent'
+            crossOrigin
+            playsInline
+            preferNativeHLS={false}
+            autoPlay={autoPlay}
+            fullscreenOrientation={'none'}
+            volume={volume}
+            className={cn(
+              'video-player relative h-full rounded-none! border-none!',
+              className
+            )}
+            onProviderChange={
+              auth ? (provider) => onProviderChange(provider, token) : undefined
+            }
+            onPlay={() => setCurrentAction('play-pause')}
+            onPause={() => setCurrentAction('play-pause')}
+            onVolumeChange={() => setCurrentAction('volume')}
+            onTimeUpdate={handleTimeChange}
+            onSeeked={onSeeked}
+            onEnded={onEnded}
+            {...mediaPlayerProps}
+          >
+            <MediaProvider slot='media' className='cursor-pointer'>
+              <Poster className='vds-poster' src={thumbnailUrl} />
+              {textTracks?.map((track) => (
+                <Track {...(track as any)} key={track.src} />
+              ))}
+            </MediaProvider>
+            <DefaultVideoLayout
+              smallLayoutWhen={false}
+              thumbnails={vttUrl}
+              icons={defaultLayoutIcons}
+              slots={{
+                playButton: <PlayToggleButton />,
+                muteButton: <VolumeToggleButton />,
+                fullscreenButton: <FullscreenToggleButton />,
+                pipButton: <PiPToggleButton />,
+                settingsMenu: (
+                  <SettingMenu placement='top end' tooltipPlacement='top' />
+                ),
+                captionButton: <CaptionButton />,
+                beforeSettingsMenu: (
+                  <>
+                    <div className='max-640:hidden contents'>
+                      {prev && onPrevClick && (
+                        <PreviousButton onClick={onPrevClick} />
+                      )}
+                      {next && onNextClick && (
+                        <NextButton onClick={onNextClick} />
+                      )}
+                      <SeekBackwardButton />
+                      <SeekForwardButton />
+                    </div>
+                  </>
+                ),
+                googleCastButton: null,
+                afterTimeSlider:
+                  showSkipIntro || showSkipOutro ? (
+                    <>
+                      {showSkipIntro && (
+                        <SkipIntroButton
+                          onClick={() => {
+                            if (playerRef.current && introEnd) {
+                              playerRef.current.currentTime = introEnd;
+                            }
+                          }}
+                        />
+                      )}
+                      {showSkipOutro && (
+                        <SkipOutroButton onClick={onNextClick} />
+                      )}
+                    </>
+                  ) : null,
+                timeSlider: (
+                  <TimeSlider
+                    introStart={introStart}
+                    introEnd={introEnd}
+                    duration={duration}
+                    outroStart={outroStart}
+                    vttUrl={vttUrl}
+                  />
+                ),
+                centerControlsGroupCenter: (
+                  <>
+                    <PlayPauseIndicator />
+                    <VolumeIndicator />
+                  </>
+                ),
+                topControlsGroupCenter: <></>,
+                bufferingIndicator: <BufferingIndicator />,
+                ...slots
+              }}
+            />
+          </MediaPlayer>
+        </IndicatorContext.Provider>
+      </LazyMotion>
+    );
+  }
+);
+
+VideoPlayer.displayName = 'VideoPlayer';
+
+export default VideoPlayer;
+
+function onProviderChange(
+  provider: MediaProviderAdapter | null,
+  token?: string
+) {
   if (isHLSProvider(provider)) {
     provider.config = {
       xhrSetup(xhr) {
-        xhr.setRequestHeader(
-          'Authorization',
-          `Bearer ${getAccessTokenFromLocalStorage()}`
-        );
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     };
   }
