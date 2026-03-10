@@ -352,8 +352,8 @@ export default function GroupForm() {
                 <Button
                   onClick={() => navigate(route.group.getList.path)}
                   type='button'
-                  variant={'ghost'}
-                  className='border border-red-500 text-red-500 hover:border-red-500/50 hover:bg-transparent! hover:text-red-500/50'
+                  variant='outline'
+                  className='border-destructive text-destructive hover:border-destructive/80 hover:text-destructive/80'
                 >
                   <ArrowLeftFromLine />
                   Hủy

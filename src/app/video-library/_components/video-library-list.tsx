@@ -52,12 +52,13 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
           record: VideoLibraryResType,
           buttonProps?: Record<string, any>
         ) => (
-          <ToolTip title={`Xem video`} sideOffset={0}>
+          <ToolTip title='Xem video' sideOffset={0}>
             <span>
               <Button
                 disabled={record.state !== VIDEO_LIBRARY_STATE_COMPLETE}
                 onClick={() => handleOpenPlayModal(record)}
                 className='border-none bg-transparent px-2! shadow-none hover:bg-transparent'
+                variant='ghost'
                 {...buttonProps}
               >
                 <PlayCircle className='text-main-color size-4' />

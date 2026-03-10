@@ -1,7 +1,6 @@
 'use client';
 
 import { useIndicator } from '@/components/video-player/video-player';
-import { cn } from '@/lib';
 import { useMediaState } from '@vidstack/react';
 import { AnimatePresence, m } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -36,13 +35,12 @@ export default function VolumeIndicator() {
             opacity: { duration: 0.2 },
             scale: { duration: 0.2, ease: 'easeOut' }
           }}
-          className={cn(
-            'pointer-events-none absolute inset-0 top-25 z-50 flex h-full items-center justify-center'
-          )}
+          className={
+            'pointer-events-none absolute inset-0 z-50 flex h-full items-center justify-center'
+          }
         >
-          <div className='rounded-lg bg-black/60 px-8 py-4 text-2xl font-semibold text-white backdrop-blur-sm'>
-            {Math.round(volume * 100)}
-            <span className='text-sm'>%</span>
+          <div className='flex aspect-video items-center justify-center gap-1 rounded-lg bg-black/60 px-4 py-2 text-base font-semibold text-white backdrop-blur-sm md:px-8 md:py-4 md:text-xl'>
+            {Math.round(volume * 100)}%
           </div>
         </m.div>
       )}

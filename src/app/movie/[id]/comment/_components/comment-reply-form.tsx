@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { UseFormReturn } from 'react-hook-form';
 import { Button, Col, Row, TextAreaField } from '@/components/form';
 import { BaseForm } from '@/components/form/base-form';
 import { Send } from 'lucide-react';
@@ -30,7 +31,7 @@ export default function CommentReplyForm({
   onSubmitted,
   onCancel
 }: CommentReplyFormProps) {
-  const formRef = useRef<any>(null);
+  const formMethodsRef = useRef<UseFormReturn<CommentBodyType> | null>(null);
   const wrapperRef = useClickOutside<HTMLDivElement>(() =>
     setShowPicker(false)
   );
@@ -98,7 +99,7 @@ export default function CommentReplyForm({
     });
 
     if (onSubmitted) onSubmitted();
-    formRef.current.reset();
+    formMethodsRef.current?.reset();
     setShowPicker(false);
     setEditingComment(null);
   };
@@ -124,9 +125,10 @@ export default function CommentReplyForm({
 
       picker.addEventListener('emoji-click', (event: any) => {
         const emoji = event.detail.unicode;
-        if (formRef.current) {
-          const currentValue = formRef.current.getValues('content') || '';
-          formRef.current.setValue('content', currentValue + emoji);
+        if (formMethodsRef.current) {
+          const currentValue =
+            formMethodsRef.current.getValues('content') || '';
+          formMethodsRef.current.setValue('content', currentValue + emoji);
         }
       });
 
@@ -152,9 +154,9 @@ export default function CommentReplyForm({
       schema={commentSchema}
       onSubmit={onSubmit}
       className='shadow-[0px_0px_2px_2px] shadow-gray-200'
-      ref={formRef}
     >
       {(form) => {
+        formMethodsRef.current = form;
         return (
           <Row className='mb-0'>
             <Col span={24}>

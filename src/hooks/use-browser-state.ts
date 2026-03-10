@@ -5,6 +5,7 @@ const TOLERANCE = 0;
 const useBrowserState = () => {
   const [isResizing, setIsResizing] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
+  console.log('🚀 ~ useBrowserState ~ zoomLevel:', zoomLevel);
   const [isMaximized, setIsMaximized] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 

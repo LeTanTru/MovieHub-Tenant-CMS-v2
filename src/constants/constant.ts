@@ -99,3 +99,6 @@ export const COMMENT_STATUS_HIDE = -1;
 
 export const REVIEW_STATUS_SHOW = 1;
 export const REVIEW_STATUS_HIDE = -1;
+
+export const EMPTY_OBJECT = {};
+export const EMPTY_ARRAY = [];

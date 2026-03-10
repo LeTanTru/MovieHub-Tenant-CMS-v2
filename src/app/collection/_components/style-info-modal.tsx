@@ -19,15 +19,15 @@ export default function StyleInfoModal({
       open={opened}
       onClose={onClose}
       title='Thông tin thiết kế'
-      bodyWrapperClassName='w-200'
+      bodyWrapperClassName='w-200 min-h-150'
       bodyClassName='p-4'
     >
       <Row className='mb-0'>
         <Col span={24}>
           <div className='flex items-center gap-2'>
-            <label className='block text-sm font-bold text-gray-700'>
+            <span className='block text-sm font-bold text-gray-700'>
               Tên thiết kế:
-            </label>
+            </span>
             <span className='text-gray-900'>{style.name || '------'}</span>
           </div>
         </Col>

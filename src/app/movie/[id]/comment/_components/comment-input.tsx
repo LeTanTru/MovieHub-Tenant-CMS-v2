@@ -20,7 +20,7 @@ export default function CommentInput({
   queryKey: string;
   movieId: string;
 }) {
-  const formRef = useRef<any>(null);
+  const formMethodsRef = useRef<UseFormReturn<CommentBodyType> | null>(null);
 
   const [showPicker, setShowPicker] = useState(false);
   const queryClient = useQueryClient();
@@ -82,9 +82,10 @@ export default function CommentInput({
 
       picker.addEventListener('emoji-click', (event: any) => {
         const emoji = event.detail.unicode;
-        if (formRef.current) {
-          const currentValue = formRef.current.getValues('content') || '';
-          formRef.current.setValue('content', currentValue + emoji);
+        if (formMethodsRef.current) {
+          const currentValue =
+            formMethodsRef.current.getValues('content') || '';
+          formMethodsRef.current.setValue('content', currentValue + emoji);
         }
       });
 
@@ -116,10 +117,10 @@ export default function CommentInput({
       defaultValues={defaultValues}
       schema={commentSchema}
       onSubmit={onSubmit}
-      ref={formRef}
       className='-mb-4'
     >
       {(form) => {
+        formMethodsRef.current = form;
         return (
           <>
             <Row className='mb-0'>

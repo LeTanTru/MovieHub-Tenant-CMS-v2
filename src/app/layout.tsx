@@ -10,7 +10,6 @@ import {
 } from '@/components/providers';
 import type { Metadata } from 'next';
 import { PermissionGuard } from '@/components/permission-guard';
-import { DetectResizing } from '@/components/detect-resizing';
 
 const inter = Be_Vietnam_Pro({
   weight: ['300', '400', '500', '600', '700', '800', '900'],
@@ -44,10 +43,7 @@ export default async function RootLayout({
           <QueryProvider>
             <AppProvider>
               <Suspense>
-                <PermissionGuard>
-                  {children}
-                  <DetectResizing />
-                </PermissionGuard>
+                <PermissionGuard>{children}</PermissionGuard>
               </Suspense>
               <NextTopLoader showSpinner={false} />
             </AppProvider>

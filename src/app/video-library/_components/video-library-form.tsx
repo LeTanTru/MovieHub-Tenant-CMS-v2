@@ -32,6 +32,7 @@ import { route } from '@/routes';
 import { videoLibrarySchema } from '@/schemaValidations';
 import type { VideoLibraryBodyType, VideoLibraryResType } from '@/types';
 import {
+  getAccessTokenFromLocalStorage,
   renderImageUrl,
   renderListPageUrl,
   renderVideoUrl,
@@ -168,7 +169,9 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
         ...values,
         introStart: values.introStart
           ? (timeToSeconds(values.introStart as string) ?? null)
-          : null,
+          : values.introEnd
+            ? 0
+            : null,
         introEnd: values.introEnd
           ? (timeToSeconds(values.introEnd as string) ?? null)
           : null,
@@ -398,7 +401,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                           outroStart={timeToSeconds(
                             (outroStart as string) || '00:00:00'
                           )}
-                          source={validatedContent}
+                          src={validatedContent}
                           thumbnailUrl={renderImageUrl(imageManager.currentUrl)}
                           vttUrl={validatedVttUrl || ''}
                         />
@@ -429,9 +432,11 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                           timeToSeconds((outroStart as string) || '00:00:00') ||
                           data.outroStart
                         }
-                        source={renderVideoUrl(data.content)}
+                        src={renderVideoUrl(data.content)}
                         thumbnailUrl={renderImageUrl(data.thumbnailUrl)}
                         vttUrl={renderVttUrl(data.vttUrl)}
+                        token={getAccessTokenFromLocalStorage() || ''}
+                        skipOutro={true}
                       />
                     ) : (
                       // Upload video
@@ -482,7 +487,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
               </>
               {loading && (
                 <div className='absolute inset-0 bg-white/80'>
-                  <CircleLoading className='stroke-dodger-blue mt-20 size-8' />
+                  <CircleLoading className='stroke-main-color mt-20 size-8' />
                 </div>
               )}
             </>

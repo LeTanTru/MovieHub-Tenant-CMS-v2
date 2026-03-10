@@ -545,8 +545,7 @@ const apiConfig = defineApiConfig({
       headers: multipartHeader,
       permissionCode: 'FILE_U',
       isUpload: true,
-      isRequiredTenantId: true,
-      isRequiredXClientType: true
+      isRequiredTenantId: true
     },
     uploadVideo: {
       baseUrl: `${AppConstants.mediaUrl}/v1/file/upload-video`,
@@ -554,16 +553,14 @@ const apiConfig = defineApiConfig({
       headers: multipartHeader,
       permissionCode: 'FILE_U_V',
       isUpload: true,
-      isRequiredTenantId: true,
-      isRequiredXClientType: true
+      isRequiredTenantId: true
     },
     delete: {
       baseUrl: `${AppConstants.mediaUrl}/v1/file/delete-file`,
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'FILE_U_D',
-      isRequiredTenantId: true,
-      isRequiredXClientType: true
+      isRequiredTenantId: true
     }
   },
   sns: {
@@ -572,14 +569,12 @@ const apiConfig = defineApiConfig({
       method: 'POST',
       headers: baseHeader,
       permissionCode: 'GET_SNS_CONFIG',
-      isRequiredTenantId: true,
-      isRequiredXClientType: true
+      isRequiredTenantId: true
     },
     sendSignal: {
       baseUrl: `${AppConstants.tenantApiUrl}/v1/sns/send-signal`,
       method: 'POST',
-      headers: baseHeader,
-      isRequiredXClientType: true
+      headers: baseHeader
     }
   },
   sidebar: {
