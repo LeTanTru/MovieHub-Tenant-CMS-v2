@@ -144,12 +144,32 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
   const columns: Column<MovieResType>[] = [
     {
       title: '#',
-      dataIndex: 'thumbnailUrl',
-      width: 80,
+      dataIndex: 'posterUrl',
+      width: 64,
       align: 'center',
       render: (value) => {
         return (
-          <ImageField disablePreview={!value} src={renderImageUrl(value)} />
+          <ImageField
+            disablePreview={!value}
+            src={renderImageUrl(value)}
+            aspect={2 / 3}
+            previewAspect={2 / 3}
+          />
+        );
+      }
+    },
+    {
+      title: '#',
+      dataIndex: 'thumbnailUrl',
+      width: 100,
+      align: 'center',
+      render: (value) => {
+        return (
+          <ImageField
+            disablePreview={!value}
+            src={renderImageUrl(value)}
+            aspect={16 / 9}
+          />
         );
       }
     },

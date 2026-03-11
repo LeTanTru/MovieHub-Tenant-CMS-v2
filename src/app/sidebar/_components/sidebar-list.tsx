@@ -116,21 +116,26 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
     {
       title: '#',
       dataIndex: 'webThumbnailUrl',
-      width: 80,
-      align: 'center',
-      render: (value) => (
-        <ImageField disablePreview={!value} src={renderImageUrl(value)} />
-      )
-    },
-    {
-      title: '#',
-      dataIndex: 'mobileThumbnailUrl',
-      width: 80,
+      width: 110,
       align: 'center',
       render: (value) => (
         <ImageField
           disablePreview={!value}
           src={renderImageUrl(value)}
+          aspect={16 / 9}
+        />
+      )
+    },
+    {
+      title: '#',
+      dataIndex: 'mobileThumbnailUrl',
+      width: 64,
+      align: 'center',
+      render: (value) => (
+        <ImageField
+          disablePreview={!value}
+          src={renderImageUrl(value)}
+          aspect={2 / 3}
           previewAspect={2 / 3}
         />
       )
