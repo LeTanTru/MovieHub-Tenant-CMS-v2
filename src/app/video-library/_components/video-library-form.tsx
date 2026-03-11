@@ -250,6 +250,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
                     label='Ảnh nền (16:9)'
                     aspect={16 / 9}
                     required
+                    defaultCrop={false}
                   />
                 </Col>
               </Row>

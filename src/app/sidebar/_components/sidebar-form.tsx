@@ -159,6 +159,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     label='Thumbnail web (Thumnail - 16:9)'
                     aspect={16 / 9}
                     required
+                    defaultCrop={false}
                   />
                 </Col>
                 <Col span={12}>
@@ -179,6 +180,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     label='Thumbnail mobile (2:3)'
                     aspect={2 / 3}
                     required
+                    defaultCrop={false}
                   />
                 </Col>
               </Row>

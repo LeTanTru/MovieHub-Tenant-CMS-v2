@@ -199,6 +199,7 @@ export default function ProfileForm() {
                   deleteImageFn={logoImageManager.handleDeleteOnClick}
                   label='Logo (16:9)'
                   aspect={16 / 9}
+                  defaultCrop={false}
                 />
               </Col>
             )}

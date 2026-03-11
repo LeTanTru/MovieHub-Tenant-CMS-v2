@@ -256,6 +256,7 @@ export default function MovieItemModal({
                     deleteImageFn={imageManager.handleDeleteOnClick}
                     label='Ảnh xem trước (16:9)'
                     aspect={16 / 9}
+                    defaultCrop={false}
                   />
                 </Col>
               </Row>
