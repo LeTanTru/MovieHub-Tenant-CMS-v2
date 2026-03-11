@@ -100,18 +100,19 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
     values: StyleBodyType,
     form: UseFormReturn<StyleBodyType>
   ) => {
-    await imageMobileManager.handleSubmit();
-    await imageWebManager.handleSubmit();
-
-    await handleSubmit(
-      {
-        ...values,
-        imageMobileUrl: imageMobileManager.currentUrl,
-        imageWebUrl: imageWebManager.currentUrl
-      },
-      form,
-      styleErrorMaps
-    );
+    await Promise.all([
+      imageMobileManager.handleSubmit(),
+      imageWebManager.handleSubmit(),
+      handleSubmit(
+        {
+          ...values,
+          imageMobileUrl: imageMobileManager.currentUrl,
+          imageWebUrl: imageWebManager.currentUrl
+        },
+        form,
+        styleErrorMaps
+      )
+    ]);
   };
 
   return (
@@ -148,11 +149,12 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageMobileManager.handleDeleteOnClick}
-                  label='Ảnh mobile'
+                  label='Ảnh mobile (2:3)'
                   required
                   allowCustomAspect
                   originalSize
                   defaultCrop={false}
+                  aspect={2 / 3}
                 />
               </Col>
               <Col>
@@ -168,11 +170,12 @@ export default function StyleForm({ queryKey }: { queryKey: string }) {
                     return res.data?.filePath ?? '';
                   }}
                   deleteImageFn={imageWebManager.handleDeleteOnClick}
-                  label='Ảnh web'
+                  label='Ảnh web (16:9)'
                   required
                   allowCustomAspect
                   originalSize
                   defaultCrop={false}
+                  aspect={16 / 9}
                 />
               </Col>
             </Row>

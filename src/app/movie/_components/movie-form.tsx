@@ -185,20 +185,19 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
     await Promise.all([
       posterImageManager.handleSubmit(),
       thumbnailImageManager.handleSubmit(),
-      imageTitleManager.handleSubmit()
+      imageTitleManager.handleSubmit(),
+      handleSubmit({
+        ...values,
+        releaseDate: formatDate(
+          values.releaseDate,
+          DATE_TIME_FORMAT,
+          DEFAULT_DATE_FORMAT
+        ),
+        thumbnailUrl: thumbnailImageManager.currentUrl,
+        posterUrl: posterImageManager.currentUrl,
+        imageTitleUrl: imageTitleManager.currentUrl
+      })
     ]);
-
-    await handleSubmit({
-      ...values,
-      releaseDate: formatDate(
-        values.releaseDate,
-        DATE_TIME_FORMAT,
-        DEFAULT_DATE_FORMAT
-      ),
-      thumbnailUrl: thumbnailImageManager.currentUrl,
-      posterUrl: posterImageManager.currentUrl,
-      imageTitleUrl: imageTitleManager.currentUrl
-    });
   };
 
   const years = useMemo(() => {

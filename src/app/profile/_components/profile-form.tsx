@@ -113,32 +113,31 @@ export default function ProfileForm() {
   ) => {
     await Promise.all([
       avatarImageManager.handleSubmit(),
-      logoImageManager.handleSubmit()
-    ]);
-
-    await profileMutation(
-      {
-        ...values,
-        avatarPath: avatarImageManager.currentUrl,
-        logoPath: logoImageManager.currentUrl
-      },
-      {
-        onSuccess: (res) => {
-          if (res.result) {
-            notify.success('Cập nhật hồ sơ thành công');
-          } else {
-            const code = res.code;
-            if (code && profileErrorMaps[code])
-              applyFormErrors(form, code, profileErrorMaps);
-            else notify.error('Cập nhật hồ sơ thất bại');
-          }
+      logoImageManager.handleSubmit(),
+      profileMutation(
+        {
+          ...values,
+          avatarPath: avatarImageManager.currentUrl,
+          logoPath: logoImageManager.currentUrl
         },
-        onError: (error) => {
-          logger.error('Error while updating profile: ', error);
-          notify.error('Cập nhật hồ sơ thất bại');
+        {
+          onSuccess: (res) => {
+            if (res.result) {
+              notify.success('Cập nhật hồ sơ thành công');
+            } else {
+              const code = res.code;
+              if (code && profileErrorMaps[code])
+                applyFormErrors(form, code, profileErrorMaps);
+              else notify.error('Cập nhật hồ sơ thất bại');
+            }
+          },
+          onError: (error) => {
+            logger.error('Error while updating profile: ', error);
+            notify.error('Cập nhật hồ sơ thất bại');
+          }
         }
-      }
-    );
+      )
+    ]);
   };
 
   const handleCancel = async () => {

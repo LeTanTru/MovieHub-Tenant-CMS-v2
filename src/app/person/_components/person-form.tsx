@@ -124,15 +124,20 @@ export default function PersonForm({ queryKey }: { queryKey: string }) {
   };
 
   const onSubmit = async (values: PersonBodyType) => {
-    await imageManager.handleSubmit();
-
-    await handleSubmit({
-      ...values,
-      dateOfBirth: values.dateOfBirth
-        ? formatDate(values.dateOfBirth, DATE_TIME_FORMAT, DEFAULT_DATE_FORMAT)
-        : null,
-      avatarPath: imageManager.currentUrl
-    });
+    await Promise.all([
+      imageManager.handleSubmit(),
+      handleSubmit({
+        ...values,
+        dateOfBirth: values.dateOfBirth
+          ? formatDate(
+              values.dateOfBirth,
+              DATE_TIME_FORMAT,
+              DEFAULT_DATE_FORMAT
+            )
+          : null,
+        avatarPath: imageManager.currentUrl
+      })
+    ]);
   };
 
   return (

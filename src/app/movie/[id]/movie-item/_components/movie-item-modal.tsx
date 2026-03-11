@@ -196,25 +196,26 @@ export default function MovieItemModal({
       }
     }
 
-    await imageManager.handleSubmit();
-
-    await handleSubmit({
-      ...values,
-      totalEpisode:
-        !!type &&
-        +type === MOVIE_TYPE_SERIES &&
-        values.kind === MOVIE_ITEM_KIND_SEASON
-          ? values.totalEpisode
-          : null,
-      movieId,
-      parentId,
-      releaseDate: formatDate(
-        values.releaseDate,
-        DATE_TIME_FORMAT,
-        DEFAULT_DATE_FORMAT
-      ),
-      thumbnailUrl: imageManager.currentUrl
-    });
+    await Promise.all([
+      imageManager.handleSubmit(),
+      handleSubmit({
+        ...values,
+        totalEpisode:
+          !!type &&
+          +type === MOVIE_TYPE_SERIES &&
+          values.kind === MOVIE_ITEM_KIND_SEASON
+            ? values.totalEpisode
+            : null,
+        movieId,
+        parentId,
+        releaseDate: formatDate(
+          values.releaseDate,
+          DATE_TIME_FORMAT,
+          DEFAULT_DATE_FORMAT
+        ),
+        thumbnailUrl: imageManager.currentUrl
+      })
+    ]);
   };
 
   return (

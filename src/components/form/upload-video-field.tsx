@@ -16,7 +16,7 @@ import {
 } from 'react-hook-form';
 
 import { Button } from '@/components/form';
-import { FormLabel, FormMessage } from '@/components/ui/form';
+import { FormLabel } from '@/components/ui/form';
 import { cn } from '@/lib';
 import { useFileUpload } from '@/hooks';
 import { CircleLoading } from '@/components/loading';

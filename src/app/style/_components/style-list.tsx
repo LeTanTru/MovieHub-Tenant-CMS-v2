@@ -38,8 +38,8 @@ export default function StyleList({ queryKey }: { queryKey: string }) {
         <ImageField
           disablePreview={!value}
           src={renderImageUrl(value)}
-          aspect={2 / 3}
-          previewAspect={2 / 3}
+          freeAspect
+          freePreviewAspect
         />
       )
     },
@@ -52,7 +52,8 @@ export default function StyleList({ queryKey }: { queryKey: string }) {
         <ImageField
           disablePreview={!value}
           src={renderImageUrl(value)}
-          aspect={16 / 9}
+          freeAspect
+          freePreviewAspect
         />
       )
     },
