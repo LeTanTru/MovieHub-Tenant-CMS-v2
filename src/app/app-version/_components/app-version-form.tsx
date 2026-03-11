@@ -92,16 +92,17 @@ export default function AppVersionForm({ queryKey }: { queryKey: string }) {
     values: AppVersionBodyType,
     form: UseFormReturn<AppVersionBodyType>
   ) => {
-    await imageManager.handleSubmit();
-
-    await handleSubmit(
-      {
-        ...values,
-        filePath: imageManager.currentUrl
-      },
-      form,
-      appVersionErrorMaps
-    );
+    await Promise.all([
+      imageManager.handleSubmit(),
+      handleSubmit(
+        {
+          ...values,
+          filePath: imageManager.currentUrl
+        },
+        form,
+        appVersionErrorMaps
+      )
+    ]);
   };
 
   return (

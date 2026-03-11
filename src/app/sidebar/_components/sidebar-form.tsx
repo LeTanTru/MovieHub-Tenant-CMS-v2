@@ -107,14 +107,13 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
   const onSubmit = async (values: MovieSidebarBodyType) => {
     await Promise.all([
       webImageManager.handleSubmit(),
-      mobileImageManager.handleSubmit()
+      mobileImageManager.handleSubmit(),
+      handleSubmit({
+        ...values,
+        webThumbnailUrl: webImageManager.currentUrl,
+        mobileThumbnailUrl: mobileImageManager.currentUrl
+      })
     ]);
-
-    await handleSubmit({
-      ...values,
-      webThumbnailUrl: webImageManager.currentUrl,
-      mobileThumbnailUrl: mobileImageManager.currentUrl
-    });
   };
 
   return (
@@ -158,8 +157,10 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     deleteImageFn={webImageManager.handleDeleteOnClick}
                     label='Thumbnail web (Thumnail - 16:9)'
                     aspect={16 / 9}
-                    required
+                    allowCustomAspect
+                    originalSize
                     defaultCrop={false}
+                    required
                   />
                 </Col>
                 <Col span={12}>
@@ -180,6 +181,8 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
                     label='Thumbnail mobile (2:3)'
                     aspect={2 / 3}
                     required
+                    allowCustomAspect
+                    originalSize
                     defaultCrop={false}
                   />
                 </Col>

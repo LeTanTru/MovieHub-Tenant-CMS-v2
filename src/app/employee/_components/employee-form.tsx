@@ -122,16 +122,17 @@ export default function EmployeeForm({ queryKey }: { queryKey: string }) {
     values: EmployeeBodyType,
     form: UseFormReturn<EmployeeBodyType>
   ) => {
-    await imageManager.handleSubmit();
-
-    await handleSubmit(
-      {
-        ...values,
-        avatarPath: imageManager.currentUrl
-      },
-      form,
-      employeeErrorMaps
-    );
+    await Promise.all([
+      imageManager.handleSubmit(),
+      handleSubmit(
+        {
+          ...values,
+          avatarPath: imageManager.currentUrl
+        },
+        form,
+        employeeErrorMaps
+      )
+    ]);
   };
 
   return (

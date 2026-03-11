@@ -161,33 +161,32 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
 
     await Promise.all([
       imageManager.handleSubmit(),
-      videoManager.handleSubmit()
-    ]);
-
-    await handleSubmit(
-      {
-        ...values,
-        introStart: values.introStart
-          ? (timeToSeconds(values.introStart as string) ?? null)
-          : values.introEnd
-            ? 0
+      videoManager.handleSubmit(),
+      handleSubmit(
+        {
+          ...values,
+          introStart: values.introStart
+            ? (timeToSeconds(values.introStart as string) ?? null)
+            : values.introEnd
+              ? 0
+              : null,
+          introEnd: values.introEnd
+            ? (timeToSeconds(values.introEnd as string) ?? null)
             : null,
-        introEnd: values.introEnd
-          ? (timeToSeconds(values.introEnd as string) ?? null)
-          : null,
-        outroStart: values.outroStart
-          ? (timeToSeconds(values.outroStart as string) ?? null)
-          : null,
-        duration: values.duration,
-        thumbnailUrl: imageManager.currentUrl,
-        content:
-          values.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL
-            ? values.content
-            : videoManager.currentUrl
-      },
-      form,
-      videoLibraryErrorMaps
-    );
+          outroStart: values.outroStart
+            ? (timeToSeconds(values.outroStart as string) ?? null)
+            : null,
+          duration: values.duration,
+          thumbnailUrl: imageManager.currentUrl,
+          content:
+            values.sourceType === VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL
+              ? values.content
+              : videoManager.currentUrl
+        },
+        form,
+        videoLibraryErrorMaps
+      )
+    ]);
   };
 
   return (
