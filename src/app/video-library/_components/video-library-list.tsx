@@ -79,10 +79,14 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
     {
       title: '#',
       dataIndex: 'thumbnailUrl',
-      width: 80,
+      width: 110,
       align: 'center',
       render: (value) => (
-        <ImageField disablePreview={!value} src={renderImageUrl(value)} />
+        <ImageField
+          disablePreview={!value}
+          src={renderImageUrl(value)}
+          aspect={16 / 9}
+        />
       )
     },
     {

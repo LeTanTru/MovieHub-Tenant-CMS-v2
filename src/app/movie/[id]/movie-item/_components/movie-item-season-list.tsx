@@ -177,14 +177,13 @@ export default function MovieItemSeasonList({
     {
       title: '#',
       dataIndex: 'thumbnailUrl',
-      width: 80,
+      width: 110,
       align: 'center',
       render: (value) => (
         <ImageField
           disablePreview={!value}
           src={renderImageUrl(value)}
-          className='rounded'
-          previewClassName='rounded'
+          aspect={16 / 9}
         />
       )
     },

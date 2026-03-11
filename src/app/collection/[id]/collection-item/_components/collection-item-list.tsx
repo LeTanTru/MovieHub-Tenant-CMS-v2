@@ -97,17 +97,34 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
     ...(sortedData.length > 1 ? [sortColumn] : []),
     {
       title: '#',
-      dataIndex: ['movie', 'thumbnailUrl'],
-      width: 80,
+      dataIndex: ['movie', 'posterUrl'],
+      width: 64,
       align: 'center',
-      render: (value) => (
-        <ImageField
-          disablePreview={!value}
-          src={renderImageUrl(value)}
-          className='rounded'
-          previewClassName='rounded'
-        />
-      )
+      render: (value) => {
+        return (
+          <ImageField
+            disablePreview={!value}
+            src={renderImageUrl(value)}
+            aspect={2 / 3}
+            previewAspect={2 / 3}
+          />
+        );
+      }
+    },
+    {
+      title: '#',
+      dataIndex: ['movie', 'thumbnailUrl'],
+      width: 100,
+      align: 'center',
+      render: (value) => {
+        return (
+          <ImageField
+            disablePreview={!value}
+            src={renderImageUrl(value)}
+            aspect={16 / 9}
+          />
+        );
+      }
     },
     {
       title: 'Tiêu đề phim',
