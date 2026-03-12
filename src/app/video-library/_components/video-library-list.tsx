@@ -86,6 +86,7 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
           disablePreview={!value}
           src={renderImageUrl(value)}
           aspect={16 / 9}
+          previewAspect={16 / 9}
         />
       )
     },

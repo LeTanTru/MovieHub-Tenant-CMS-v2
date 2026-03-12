@@ -200,6 +200,7 @@ export default function MovieItemSeasonDetailList({
           disablePreview={!value}
           src={renderImageUrl(value)}
           aspect={16 / 9}
+          previewAspect={16 / 9}
         />
       )
     },

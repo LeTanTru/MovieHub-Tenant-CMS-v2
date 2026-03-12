@@ -55,7 +55,7 @@ export default function ImageField({
   width,
   height,
   aspect = 1,
-  previewAspect = 16 / 9,
+  previewAspect = 1 / 1,
   previewSize = 500,
   disablePreview = false,
   originalSize = false,
