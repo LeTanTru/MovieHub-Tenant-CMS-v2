@@ -68,6 +68,7 @@ export const ErrorCode = {
   MOVIE_ITEM_ERROR_VIDEO_REQUIRED: 'ERROR-MOVIE-ITEM-ERROR-0003',
   MOVIE_ITEM_ERROR_KIND_INVALID: 'ERROR-MOVIE-ITEM-ERROR-0004',
   MOVIE_ITEM_ERROR_INVALID_REQUEST: 'ERROR-MOVIE-ITEM-ERROR-0005',
+  MOVIE_ITEM_ERROR_LABEL_EXISTED: 'ERROR-MOVIE-ITEM-ERROR-0006',
 
   // === App version error code ===
   APP_VERSION_ERROR_NOT_FOUND: 'ERROR-APP-VERSION-0000',
@@ -166,6 +167,9 @@ export const movieItemErrorMaps: ErrorMaps<MovieItemBodyType> = {
         message: 'Vui lòng chọn mùa để thêm'
       }
     ]
+  ],
+  [ErrorCode.MOVIE_ITEM_ERROR_LABEL_EXISTED]: [
+    ['label', { type: 'manual', message: 'Nhãn đã tồn tại' }]
   ]
 };
 
