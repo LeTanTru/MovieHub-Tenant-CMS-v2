@@ -349,7 +349,14 @@ function CommentItem({
                 })}
                 onClick={() => onPin(comment.id, !comment.isPinned)}
               >
-                <Pin className='size-5' />
+                <Pin
+                  className={cn(
+                    'size-5 transition-all duration-200 ease-linear',
+                    {
+                      'rotate-45': comment.isPinned
+                    }
+                  )}
+                />
               </Button>
             )}
           </div>
@@ -510,6 +517,31 @@ function CommentItem({
             )}
           </div>
 
+          <LazyMotion features={domAnimation} strict>
+            <AnimatePresence initial={false}>
+              {(replyingComment?.id === comment.id ||
+                editingComment?.id === comment.id) && (
+                <m.div
+                  key='reply'
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.1, ease: 'linear' }}
+                  className='mt-2'
+                >
+                  <CommentReplyForm
+                    parentId={rootId.toString()}
+                    movieId={comment.movieId.toString()}
+                    defaultMention={`@${authorInfo.fullName}`}
+                    queryKey={queryKeys.COMMENT}
+                    onSubmitted={handleReplySubmit}
+                    onCancel={handleCancelReply}
+                  />
+                </m.div>
+              )}
+            </AnimatePresence>
+          </LazyMotion>
+
           {isActiveParent && commentListSize > 0 && (
             <>
               {renderChildren(commentList, level + 1, rootId)}
@@ -558,31 +590,6 @@ function CommentItem({
               )}
             </>
           )}
-
-          <LazyMotion features={domAnimation} strict>
-            <AnimatePresence initial={false}>
-              {(replyingComment?.id === comment.id ||
-                editingComment?.id === comment.id) && (
-                <m.div
-                  key='reply'
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.1, ease: 'linear' }}
-                  className='mt-2'
-                >
-                  <CommentReplyForm
-                    parentId={rootId.toString()}
-                    movieId={comment.movieId.toString()}
-                    defaultMention={`@${authorInfo.fullName}`}
-                    queryKey={queryKeys.COMMENT}
-                    onSubmitted={handleReplySubmit}
-                    onCancel={handleCancelReply}
-                  />
-                </m.div>
-              )}
-            </AnimatePresence>
-          </LazyMotion>
         </div>
       </div>
     </div>

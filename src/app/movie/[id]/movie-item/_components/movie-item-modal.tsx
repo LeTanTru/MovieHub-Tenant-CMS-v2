@@ -23,6 +23,7 @@ import {
   MOVIE_TYPE_SERIES,
   MOVIE_TYPE_SINGLE,
   MOVIE_TYPE_TRAILER,
+  movieItemErrorMaps,
   movieItemSeriesKindOptions,
   movieItemSingleKindOptions,
   queryKeys,
@@ -198,23 +199,27 @@ export default function MovieItemModal({
 
     await Promise.all([
       imageManager.handleSubmit(),
-      handleSubmit({
-        ...values,
-        totalEpisode:
-          !!type &&
-          +type === MOVIE_TYPE_SERIES &&
-          values.kind === MOVIE_ITEM_KIND_SEASON
-            ? values.totalEpisode
-            : null,
-        movieId,
-        parentId,
-        releaseDate: formatDate(
-          values.releaseDate,
-          DATE_TIME_FORMAT,
-          DEFAULT_DATE_FORMAT
-        ),
-        thumbnailUrl: imageManager.currentUrl
-      })
+      handleSubmit(
+        {
+          ...values,
+          totalEpisode:
+            !!type &&
+            +type === MOVIE_TYPE_SERIES &&
+            values.kind === MOVIE_ITEM_KIND_SEASON
+              ? values.totalEpisode
+              : null,
+          movieId,
+          parentId,
+          releaseDate: formatDate(
+            values.releaseDate,
+            DATE_TIME_FORMAT,
+            DEFAULT_DATE_FORMAT
+          ),
+          thumbnailUrl: imageManager.currentUrl
+        },
+        form,
+        movieItemErrorMaps
+      )
     ]);
   };
 
