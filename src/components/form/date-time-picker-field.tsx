@@ -147,7 +147,7 @@ export default function DateTimePickerField<T extends FieldValues>({
                       {
                         'border-red-500 focus-visible:border-red-500 focus-visible:ring-[1px] focus-visible:ring-red-500 data-[state=open]:border-red-500 data-[state=open]:ring-1 data-[state=open]:ring-red-500':
                           fieldState.error,
-                        'text-gray-300': !field.value
+                        'text-gray-300 hover:text-gray-300': !field.value
                       }
                     )}
                   >
@@ -302,7 +302,7 @@ export default function DateTimePickerField<T extends FieldValues>({
                     <Button
                       size='lg'
                       variant='outline'
-                      className='mx-auto'
+                      className='mx-auto w-1/2'
                       onClick={() => {
                         field.onChange('');
                         setIsOpen(false);
@@ -314,7 +314,7 @@ export default function DateTimePickerField<T extends FieldValues>({
                   <Button
                     size='lg'
                     variant='primary'
-                    className='mx-auto'
+                    className='mx-auto w-1/2'
                     onClick={() => {
                       const now = new Date();
                       updateFieldValue(now);

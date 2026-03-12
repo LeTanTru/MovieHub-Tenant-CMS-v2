@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity as BaseActivity, ReactNode } from 'react';
+import { Activity as BaseActivity, type ReactNode } from 'react';
 
 export default function Activity({
   visible,

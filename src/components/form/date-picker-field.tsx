@@ -106,6 +106,7 @@ export default function DatePickerField<T extends FieldValues>({
                   <Button
                     ref={triggerRef}
                     variant='outline'
+                    role='combobox'
                     className={cn(
                       'w-full justify-between text-left font-normal text-black opacity-100',
                       'focus:ring-0 focus-visible:border-gray-200 focus-visible:ring-0',
