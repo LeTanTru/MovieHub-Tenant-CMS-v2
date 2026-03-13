@@ -422,7 +422,7 @@ const AppSidebar = () => {
               src={renderImageUrl(profile?.avatarPath)}
               disablePreview
               size={40}
-              alt={getLastWord(profile?.fullName ?? '')}
+              alt={getLastWord(profile?.fullName || '')}
             />
           </SidebarMenuItem>
         </SidebarMenu>
