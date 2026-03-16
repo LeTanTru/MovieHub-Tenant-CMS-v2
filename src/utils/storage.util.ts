@@ -12,9 +12,13 @@ export const getData = (key: string): string | null => {
   return isBrowser() ? localStorage.getItem(key) : null;
 };
 
-export const removeData = (key: string): void => {
+export const removeData = (key: string | string[]): void => {
   if (isBrowser()) {
-    localStorage.removeItem(key);
+    if (Array.isArray(key)) {
+      key.forEach((k) => localStorage.removeItem(k));
+    } else {
+      localStorage.removeItem(key);
+    }
   }
 };
 

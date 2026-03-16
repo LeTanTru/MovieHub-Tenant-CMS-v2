@@ -78,11 +78,6 @@ export const MOVIE_IS_NOT_FEATURED = 0;
 export const MOVIE_SIDEBAR_ACTIVE = 1;
 export const MOVIE_SIDEBAR_INACTIVE = 0;
 
-export const CMD_CLIENT_VERIFY_TOKEN = 'CLIENT_VERIFY_TOKEN';
-export const CMD_CLIENT_PING = 'CLIENT_PING';
-export const CMD_BROADCAST = 'BROADCAST';
-export const CMD_DONE_CONVERT_VIDEO = 'CMD_DONE_CONVERT_VIDEO';
-
 export const VIDEO_LIBRARY_SOURCE_TYPE_INTERNAL = 1;
 export const VIDEO_LIBRARY_SOURCE_TYPE_EXTERNAL = 2;
 
@@ -102,3 +97,5 @@ export const REVIEW_STATUS_HIDE = -1;
 
 export const EMPTY_OBJECT = {};
 export const EMPTY_ARRAY = [];
+
+export const WEB_PLATFORM = 0;
