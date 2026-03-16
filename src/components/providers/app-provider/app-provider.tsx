@@ -5,23 +5,19 @@ import {
   KIND_EMPLOYEE,
   KIND_MANAGER,
   socketSendCMDs,
-  storageKeys
+  storageKeys,
+  WEB_PLATFORM
 } from '@/constants';
 import { logger } from '@/logger';
-import {
-  useEmployeeProfileQuery,
-  useGetClientTokenMutation,
-  useManagerProfileQuery
-} from '@/queries';
+import { useEmployeeProfileQuery, useManagerProfileQuery } from '@/queries';
 import { useAppLoadingStore, useAuthStore, useSocketStore } from '@/store';
-import { getData, isTokenExpired, removeData } from '@/utils';
+import { getData, removeData } from '@/utils';
 import { domAnimation, LazyMotion } from 'framer-motion';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 export default function AppProvider({ children }: { children: ReactNode }) {
   const accessToken = getData(storageKeys.ACCESS_TOKEN);
   const kind = getData(storageKeys.USER_KIND);
-  const [clientToken, setClientToken] = useState<string>('');
   const setLoading = useAppLoadingStore((s) => s.setLoading);
   const setProfile = useAuthStore((s) => s.setProfile);
   const setSocket = useSocketStore((s) => s.setSocket);
@@ -33,34 +29,21 @@ export default function AppProvider({ children }: { children: ReactNode }) {
   const {
     data: managerProfile,
     isLoading: managerProfileLoading,
-    isFetching: managerProfileFetching,
     error: manageProfileError
   } = useManagerProfileQuery(shouldFetchProfile && +kind === KIND_MANAGER);
   const {
     data: employeeProfile,
     isLoading: employeeProfileLoading,
-    isFetching: employeeProfileFetching,
     error: employeeProfileError
   } = useEmployeeProfileQuery(shouldFetchProfile && +kind === KIND_EMPLOYEE);
-  const { mutateAsync: getClientToken } = useGetClientTokenMutation();
 
   useEffect(() => {
-    setLoading(
-      managerProfileLoading ||
-        managerProfileFetching ||
-        employeeProfileLoading ||
-        employeeProfileFetching
-    );
-  }, [
-    employeeProfileFetching,
-    employeeProfileLoading,
-    managerProfileFetching,
-    managerProfileLoading,
-    setLoading
-  ]);
+    setLoading(managerProfileLoading || employeeProfileLoading);
+  }, [employeeProfileLoading, managerProfileLoading, setLoading]);
 
   useEffect(() => {
     if (!managerProfile && !employeeProfile) return;
+
     const result = managerProfile?.result || employeeProfile?.result;
     const data = managerProfile?.data || employeeProfile?.data;
     if (result && data) {
@@ -68,9 +51,11 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     } else {
       const code = managerProfile?.code || employeeProfile?.code;
       if (code === ErrorCode.EMPLOYEE_ERROR_NOT_FOUND) {
-        removeData(storageKeys.ACCESS_TOKEN);
-        removeData(storageKeys.REFRESH_TOKEN);
-        removeData(storageKeys.USER_KIND);
+        removeData([
+          storageKeys.ACCESS_TOKEN,
+          storageKeys.REFRESH_TOKEN,
+          storageKeys.USER_KIND
+        ]);
       }
     }
   }, [employeeProfile, managerProfile, setProfile]);
@@ -85,38 +70,16 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     if (!accessToken || !kind) return;
 
     if (+kind !== KIND_MANAGER && +kind !== KIND_EMPLOYEE) {
-      removeData(storageKeys.ACCESS_TOKEN);
-      removeData(storageKeys.REFRESH_TOKEN);
-      removeData(storageKeys.USER_KIND);
+      removeData([
+        storageKeys.ACCESS_TOKEN,
+        storageKeys.REFRESH_TOKEN,
+        storageKeys.USER_KIND
+      ]);
     }
   }, [accessToken, kind]);
 
   useEffect(() => {
-    if (!accessToken || isTokenExpired(accessToken)) {
-      setClientToken('');
-      return;
-    }
-
-    if (clientToken) return;
-
-    const handleGetClientToken = async () => {
-      try {
-        const res = await getClientToken({
-          appName: envConfig.NEXT_PUBLIC_APP_NAME
-        });
-        if (res.data?.token) {
-          setClientToken(res.data.token);
-        }
-      } catch (error) {
-        logger.error('Error while getting client token', error);
-      }
-    };
-
-    handleGetClientToken();
-  }, [accessToken, clientToken, getClientToken]);
-
-  useEffect(() => {
-    if (!clientToken) return;
+    if (!accessToken) return;
 
     const socket = new WebSocket(envConfig.NEXT_PUBLIC_API_SOCKET);
     setSocket(socket);
@@ -124,31 +87,34 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     let pingInterval: NodeJS.Timeout | null = null;
 
     socket.onopen = () => {
-      socket.send(
-        JSON.stringify({
-          cmd: socketSendCMDs.CMD_CLIENT_VERIFY_TOKEN,
-          platform: 0,
-          clientVersion: '1.0',
-          lang: 'vi',
-          token: clientToken,
-          app: 'CLIENT_APP',
-          data: { app: 'CLIENT_APP' }
-        })
-      );
-
-      pingInterval = setInterval(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        logger.info('Socket connected');
         socket.send(
           JSON.stringify({
-            cmd: socketSendCMDs.CMD_CLIENT_PING,
-            platform: 0,
+            cmd: socketSendCMDs.CMD_CLIENT_VERIFY_TOKEN,
+            platform: WEB_PLATFORM,
             clientVersion: '1.0',
             lang: 'vi',
-            token: clientToken,
+            token: accessToken,
             app: 'CLIENT_APP',
             data: { app: 'CLIENT_APP' }
           })
         );
-      }, 30 * 1000);
+
+        pingInterval = setInterval(() => {
+          socket.send(
+            JSON.stringify({
+              cmd: socketSendCMDs.CMD_CLIENT_PING,
+              platform: WEB_PLATFORM,
+              clientVersion: '1.0',
+              lang: 'vi',
+              token: accessToken,
+              app: 'CLIENT_APP',
+              data: { app: 'CLIENT_APP' }
+            })
+          );
+        }, 30 * 1000);
+      }
     };
 
     socket.onclose = () => {
@@ -161,7 +127,7 @@ export default function AppProvider({ children }: { children: ReactNode }) {
       if (pingInterval) clearInterval(pingInterval);
       socket.close();
     };
-  }, [clientToken, setSocket]);
+  }, [accessToken, setSocket]);
 
   return (
     <LazyMotion features={domAnimation} strict>
