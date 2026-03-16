@@ -16,12 +16,15 @@ const useSocketEvent = (
 
     const handleMessage = (event: MessageEvent) => {
       try {
-        const data: { cmd: string; data: { message: string }; app: string } =
-          JSON.parse(event.data);
+        const data: {
+          cmd: string;
+          data: { cmd: string; data: any };
+          app: string;
+        } = JSON.parse(event.data);
         if (data.cmd === cmd) {
-          if (data.data.message) {
-            const message: { cmd: string } = JSON.parse(data.data.message);
-            if (message.cmd === subCmd) callback(data.data);
+          const body: { cmd: string; data: any } = data.data;
+          if (body.cmd === subCmd) {
+            callback(body.data);
           }
         }
       } catch (err: any) {
@@ -35,7 +38,7 @@ const useSocketEvent = (
     return () => {
       socket.removeEventListener('message', handleMessage);
     };
-  }, [socket, cmd, callback, subCmd]);
+  }, [callback, cmd, socket, subCmd]);
 };
 
 export default useSocketEvent;

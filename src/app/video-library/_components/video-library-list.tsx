@@ -163,7 +163,7 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
     ];
 
   useSocketEvent(
-    socketReceiveCMDs.CMD_BROADCAST,
+    socketReceiveCMDs.CMD_CLIENT_RECEIVED_PUSH_NOTIFICATION,
     socketReceiveCMDs.CMD_DONE_CONVERT_VIDEO,
     () => listQuery.refetch()
   );

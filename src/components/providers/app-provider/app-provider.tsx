@@ -26,16 +26,10 @@ export default function AppProvider({ children }: { children: ReactNode }) {
     kind && (+kind === KIND_MANAGER || +kind === KIND_EMPLOYEE);
   const shouldFetchProfile = !!accessToken && !!isValidKind;
 
-  const {
-    data: managerProfile,
-    isLoading: managerProfileLoading,
-    error: manageProfileError
-  } = useManagerProfileQuery(shouldFetchProfile && +kind === KIND_MANAGER);
-  const {
-    data: employeeProfile,
-    isLoading: employeeProfileLoading,
-    error: employeeProfileError
-  } = useEmployeeProfileQuery(shouldFetchProfile && +kind === KIND_EMPLOYEE);
+  const { data: managerProfile, isLoading: managerProfileLoading } =
+    useManagerProfileQuery(shouldFetchProfile && +kind === KIND_MANAGER);
+  const { data: employeeProfile, isLoading: employeeProfileLoading } =
+    useEmployeeProfileQuery(shouldFetchProfile && +kind === KIND_EMPLOYEE);
 
   useEffect(() => {
     setLoading(managerProfileLoading || employeeProfileLoading);
@@ -59,12 +53,6 @@ export default function AppProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [employeeProfile, managerProfile, setProfile]);
-
-  useEffect(() => {
-    const error = manageProfileError || employeeProfileError;
-    if (!error) return;
-    logger.error('Error while fetching profile', error);
-  }, [employeeProfileError, manageProfileError]);
 
   useEffect(() => {
     if (!accessToken || !kind) return;
