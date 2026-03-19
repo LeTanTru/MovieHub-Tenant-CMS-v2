@@ -3,7 +3,7 @@ import { queryKeys } from '@/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chi tiết bộ sưu tập'
+  title: 'Phim'
 };
 
 export default function CollectionItemListPage() {

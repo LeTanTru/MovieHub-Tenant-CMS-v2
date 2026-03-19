@@ -3,7 +3,7 @@ import { queryKeys } from '@/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Thư viện video'
+  title: 'Video'
 };
 
 export default function VideoLibraryListPage() {

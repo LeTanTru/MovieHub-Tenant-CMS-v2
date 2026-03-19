@@ -169,7 +169,7 @@ export default function VideoLibraryList({ queryKey }: { queryKey: string }) {
   );
 
   return (
-    <PageWrapper breadcrumbs={[{ label: 'Thư viện video' }]}>
+    <PageWrapper breadcrumbs={[{ label: 'Video' }]}>
       <ListPageWrapper
         searchForm={handlers.renderSearchForm({
           searchFields,

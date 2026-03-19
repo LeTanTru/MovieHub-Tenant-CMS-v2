@@ -120,7 +120,7 @@ export default function SidebarForm({ queryKey }: { queryKey: string }) {
     <PageWrapper
       breadcrumbs={[
         {
-          label: 'Phim nổi bật',
+          label: 'Phim hot',
           href: renderListPageUrl(route.sidebar.getList.path, queryString)
         },
         {

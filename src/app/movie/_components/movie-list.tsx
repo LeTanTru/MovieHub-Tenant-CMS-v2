@@ -316,7 +316,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
     { key: 'title', placeholder: 'Tiêu đề' },
     {
       key: 'categoryIds',
-      placeholder: 'Danh mục',
+      placeholder: 'Thể loại',
       type: FieldTypes.MULTI_SELECT,
       options: categoryList
     },
@@ -355,7 +355,7 @@ export default function MovieList({ queryKey }: { queryKey: string }) {
     },
     {
       key: 'isFeatured',
-      placeholder: 'Nổi bật',
+      placeholder: 'Hot',
       type: FieldTypes.BOOLEAN
     }
   ];

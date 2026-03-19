@@ -303,7 +303,7 @@ export default function MovieItemSeasonDetailList({
       breadcrumbs={[
         { label: 'Phim', href: route.movie.getList.path },
         {
-          label: searchParams.movieTitle ?? 'Mùa',
+          label: searchParams.movieTitle ?? 'Phần',
           href: renderListPageUrl(
             generatePath(route.movieItem.getList.path, {
               id: movieId

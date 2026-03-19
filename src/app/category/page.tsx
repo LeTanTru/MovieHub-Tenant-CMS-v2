@@ -3,7 +3,7 @@ import { queryKeys } from '@/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Danh mục'
+  title: 'Thể loại'
 };
 
 export default function CategoryListPage() {

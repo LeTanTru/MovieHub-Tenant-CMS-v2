@@ -38,13 +38,13 @@ const menuConfig: MenuItem[] = [
     children: [
       {
         key: 'category-list',
-        label: 'Danh mục phim',
+        label: 'Thể loại',
         path: route.category.getList.path,
         permissionCode: [apiConfig.category.getList.permissionCode]
       },
       {
         key: 'video-library-list',
-        label: 'Thư viện video',
+        label: 'Video',
         path: route.videoLibrary.getList.path,
         permissionCode: [apiConfig.videoLibrary.getList.permissionCode]
       },
@@ -74,7 +74,7 @@ const menuConfig: MenuItem[] = [
     children: [
       {
         key: 'sidebar-movie-list',
-        label: 'Phim nổi bật',
+        label: 'Phim hot',
         path: route.sidebar.getList.path,
         permissionCode: [apiConfig.sidebar.getList.permissionCode]
       },

@@ -3,7 +3,7 @@ import { queryKeys } from '@/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Phim nổi bật'
+  title: 'Phim hot'
 };
 
 export default function SidebarSavePage() {

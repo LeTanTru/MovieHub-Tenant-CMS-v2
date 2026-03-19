@@ -43,7 +43,7 @@ export default function CollectionItemModal({
     apiConfig: apiConfig.collectionItem,
     options: {
       queryKey: queryKeys.COLLECTION_ITEM,
-      objectName: 'chi tiết bộ sưu tập',
+      objectName: 'phim',
       pathParams: {},
       mode: 'create'
     },
@@ -73,7 +73,7 @@ export default function CollectionItemModal({
 
   return (
     <Modal
-      title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} chi tiết bộ sưu tập`}
+      title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} phim`}
       open={open}
       onClose={onClose}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'

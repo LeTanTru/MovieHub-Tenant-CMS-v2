@@ -228,7 +228,7 @@ export default function SidebarList({ queryKey }: { queryKey: string }) {
     ];
 
   return (
-    <PageWrapper breadcrumbs={[{ label: 'Phim nổi bật' }]}>
+    <PageWrapper breadcrumbs={[{ label: 'Phim hot' }]}>
       <ListPageWrapper
         searchForm={handlers.renderSearchForm({
           searchFields,

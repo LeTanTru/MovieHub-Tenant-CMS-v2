@@ -84,13 +84,13 @@ export default function MovieItemModal({
       if (movieItemId) {
         objectName = 'trailer';
       } else {
-        objectName = 'mùa';
+        objectName = 'phần';
       }
     } else if (_type === MOVIE_TYPE_SERIES) {
       if (movieItemId) {
         objectName = 'tập, trailer';
       } else {
-        objectName = 'mùa';
+        objectName = 'phần';
       }
     }
   }
@@ -116,7 +116,7 @@ export default function MovieItemModal({
     override: (handlers) => {
       handlers.handleSubmitError = (code) => {
         if (code === ErrorCode.MOVIE_ITEM_ERROR_PARENT_REQUIRED) {
-          notify.error('Vui lòng chọn mùa để thêm');
+          notify.error('Vui lòng chọn phần để thêm');
         }
       };
       handlers.handleSubmitSuccess = async () => {

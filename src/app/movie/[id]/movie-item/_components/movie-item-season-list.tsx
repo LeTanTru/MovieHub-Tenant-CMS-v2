@@ -68,7 +68,7 @@ export default function MovieItemSeasonList({
     apiConfig: apiConfig.movieItem,
     options: {
       queryKey,
-      objectName: 'mùa',
+      objectName: 'phần',
       excludeFromQueryFilter: ['type', 'movieTitle'],
       defaultFilters: {
         movieId,
@@ -123,7 +123,7 @@ export default function MovieItemSeasonList({
             return null;
 
           return (
-            <ToolTip title={`Cập nhật mùa ${record.label}`} sideOffset={0}>
+            <ToolTip title={`Cập nhật phần ${record.label}`} sideOffset={0}>
               <span>
                 <Button
                   onClick={(e) => {
@@ -165,7 +165,7 @@ export default function MovieItemSeasonList({
     onDragEnd
   } = useDragDrop<MovieItemResType>({
     key: `${queryKey}-list`,
-    objectName: 'mùa',
+    objectName: 'phần',
     data,
     apiConfig: apiConfig.movieItem.updateOrdering,
     sortField: 'ordering',
@@ -189,15 +189,15 @@ export default function MovieItemSeasonList({
       )
     },
     {
-      title: 'Tiêu đề mùa',
+      title: 'Tiêu đề phần',
       dataIndex: 'title',
       render: (value, record) => (
         <span
           className={cn('line-clamp-1 block truncate uppercase')}
-          title={`${record.kind === MOVIE_ITEM_KIND_SEASON && `Mùa ${record.label}: ${value}`}`}
+          title={`${record.kind === MOVIE_ITEM_KIND_SEASON && `Phần ${record.label}: ${value}`}`}
         >
           <span className='font-bold'>
-            {record.kind === MOVIE_ITEM_KIND_SEASON && `Mùa ${record.label}:`}
+            {record.kind === MOVIE_ITEM_KIND_SEASON && `Phần ${record.label}:`}
           </span>
           &nbsp;
           <span>{value}</span>
@@ -246,7 +246,7 @@ export default function MovieItemSeasonList({
   ];
 
   const searchFields: SearchFormProps<MovieItemSearchType>['searchFields'] = [
-    { key: 'title', placeholder: 'Tiêu đề mùa' }
+    { key: 'title', placeholder: 'Tiêu đề' }
   ];
 
   const handleViewDetail = (record: MovieItemResType) => {
@@ -269,7 +269,7 @@ export default function MovieItemSeasonList({
     <PageWrapper
       breadcrumbs={[
         { label: 'Phim', href: route.movie.getList.path },
-        { label: searchParams.movieTitle ?? 'Mùa' }
+        { label: searchParams.movieTitle ?? 'Phần' }
       ]}
     >
       <ListPageWrapper
