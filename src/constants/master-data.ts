@@ -1553,7 +1553,7 @@ export const movieTypeOptions = [
 export const movieItemKindOptions = [
   {
     value: MOVIE_ITEM_KIND_SEASON,
-    label: 'Mùa'
+    label: 'Phần'
   },
   {
     value: MOVIE_ITEM_KIND_EPISODE,
@@ -1568,7 +1568,7 @@ export const movieItemKindOptions = [
 export const movieItemSingleKindOptions = [
   {
     value: MOVIE_ITEM_KIND_SEASON,
-    label: 'Mùa'
+    label: 'Phần'
   },
   {
     value: MOVIE_TYPE_TRAILER,
@@ -1579,7 +1579,7 @@ export const movieItemSingleKindOptions = [
 export const movieItemSeriesKindOptions = [
   {
     value: MOVIE_ITEM_KIND_SEASON,
-    label: 'Mùa'
+    label: 'Phần'
   },
   {
     value: MOVIE_ITEM_KIND_EPISODE,
@@ -1594,11 +1594,11 @@ export const movieItemSeriesKindOptions = [
 export const featureOptions = [
   {
     value: MOVIE_IS_FEATURED,
-    label: 'Nổi bật'
+    label: 'Hot'
   },
   {
     value: MOVIE_IS_NOT_FEATURED,
-    label: 'Không nổi bật'
+    label: 'Không hot'
   }
 ];
 

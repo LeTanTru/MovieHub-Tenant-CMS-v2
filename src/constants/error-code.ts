@@ -150,7 +150,7 @@ export const categoryErrorMaps: ErrorMaps<CategoryBodyType> = {
       'name',
       {
         type: 'manual',
-        message: 'Tên danh mục đã tồn tại'
+        message: 'Tên thể loại đã tồn tại'
       }
     ]
   ]
@@ -164,7 +164,7 @@ export const movieItemErrorMaps: ErrorMaps<MovieItemBodyType> = {
       'parentId',
       {
         type: 'manual',
-        message: 'Vui lòng chọn mùa để thêm'
+        message: 'Vui lòng chọn phần để thêm'
       }
     ]
   ],

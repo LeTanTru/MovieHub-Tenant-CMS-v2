@@ -193,7 +193,7 @@ export default function VideoLibraryForm({ queryKey }: { queryKey: string }) {
     <PageWrapper
       breadcrumbs={[
         {
-          label: 'Thư viện video',
+          label: 'Video',
           href: renderListPageUrl(route.videoLibrary.getList.path, queryString)
         },
         { label: `${!isEditing ? 'Thêm mới' : 'Cập nhật'} video` }

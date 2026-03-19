@@ -31,12 +31,12 @@ export default function CategoryList({ queryKey }: { queryKey: string }) {
     apiConfig: apiConfig.category,
     options: {
       queryKey,
-      objectName: 'danh mục'
+      objectName: 'thể loại'
     },
     override: (handlers) => {
       handlers.handleDeleteError = (code) => {
         if (code === ErrorCode.CATEGORY_ERROR_HAS_MOVIE) {
-          notify.error('Danh mục này đang có phim liên kết');
+          notify.error('Thể loại này đang có phim liên kết');
         }
       };
       handlers.renderAddButton = () => {
@@ -60,7 +60,7 @@ export default function CategoryList({ queryKey }: { queryKey: string }) {
           )
             return null;
           return (
-            <ToolTip title={`Cập nhật danh mục`} sideOffset={0}>
+            <ToolTip title={`Cập nhật thể loại`} sideOffset={0}>
               <span>
                 <Button
                   onClick={(e) => {
@@ -110,7 +110,7 @@ export default function CategoryList({ queryKey }: { queryKey: string }) {
   ];
 
   return (
-    <PageWrapper breadcrumbs={[{ label: 'Danh mục' }]}>
+    <PageWrapper breadcrumbs={[{ label: 'Thể loại' }]}>
       <ListPageWrapper
         searchForm={handlers.renderSearchForm({
           searchFields,

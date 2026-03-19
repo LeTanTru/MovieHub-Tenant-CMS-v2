@@ -37,7 +37,7 @@ export default function CategoryModal({
     apiConfig: apiConfig.category,
     options: {
       queryKey: queryKeys.CATEGORY,
-      objectName: 'danh mục',
+      objectName: 'thể loại',
       pathParams: {
         id: category?.id
       },
@@ -79,7 +79,7 @@ export default function CategoryModal({
     <Modal
       open={open}
       onClose={onClose}
-      title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} danh mục`}
+      title={`${!isEditing ? 'Thêm mới' : 'Cập nhật'} thể loại`}
       bodyWrapperClassName='w-200 max-[1537px]:w-175 max-[1367px]:w-150 top-1/3'
       aria-labelledby='category-modal-title'
       confirmOnClose={isFormChanged}
@@ -98,8 +98,8 @@ export default function CategoryModal({
                 <InputField
                   control={form.control}
                   name='name'
-                  label='Tên danh mục'
-                  placeholder='Tên danh mục'
+                  label='Tên thể loại'
+                  placeholder='Tên thể loại'
                   required
                 />
               </Col>

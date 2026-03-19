@@ -389,8 +389,8 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                     <MultiSelectField
                       control={form.control}
                       name='filter.categoryIds'
-                      label='Danh mục'
-                      placeholder='Danh mục'
+                      label='Thể loại'
+                      placeholder='Thể loại'
                       options={categoryList}
                     />
                   </Col>
@@ -423,7 +423,7 @@ export default function CollectionForm({ queryKey }: { queryKey: string }) {
                     <BooleanField
                       name='filter.isFeatured'
                       control={form.control}
-                      label='Nổi bật'
+                      label='Hot'
                     />
                   </Col>
                   <Col className='justify-end'>

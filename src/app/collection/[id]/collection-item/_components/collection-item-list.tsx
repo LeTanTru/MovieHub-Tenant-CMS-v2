@@ -47,7 +47,7 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
     apiConfig: apiConfig.collectionItem,
     options: {
       queryKey,
-      objectName: 'chi tiết bộ sưu tập',
+      objectName: 'phim',
       excludeFromQueryFilter: ['type', 'collectionTitle'],
       defaultFilters: { collectionId },
       notShowFromSearchParams: ['collectionId']
@@ -77,7 +77,7 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
     onDragEnd
   } = useDragDrop<CollectionItemResType>({
     key: `${queryKey}-list`,
-    objectName: 'chi tiết bộ sưu tập',
+    objectName: 'phim',
     data,
     apiConfig: apiConfig.collectionItem.updateOrdering,
     sortField: 'ordering',
@@ -242,7 +242,7 @@ export default function CollectionItemList({ queryKey }: { queryKey: string }) {
           )
         },
         {
-          label: searchParams.collectionTitle ?? 'Chi tiết bộ sưu tập'
+          label: searchParams.collectionTitle ?? 'Phim'
         }
       ]}
     >

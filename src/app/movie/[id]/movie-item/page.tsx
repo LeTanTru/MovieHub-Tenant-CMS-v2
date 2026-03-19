@@ -3,7 +3,7 @@ import { queryKeys } from '@/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Mùa'
+  title: 'Phần'
 };
 
 export default function MovieItemListPage() {

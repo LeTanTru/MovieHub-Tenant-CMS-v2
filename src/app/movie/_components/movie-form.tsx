@@ -388,8 +388,8 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                 <MultiSelectField
                   control={form.control}
                   name='categoryIds'
-                  label='Danh mục'
-                  placeholder='Danh mục'
+                  label='Thể loại'
+                  placeholder='Thể loại'
                   required
                   options={categoryList}
                 />
@@ -423,7 +423,7 @@ export default function MovieForm({ queryKey }: { queryKey: string }) {
                 <BooleanField
                   control={form.control}
                   name='isFeatured'
-                  label='Nổi bật'
+                  label='Hot'
                   required
                 />
               </Col>
